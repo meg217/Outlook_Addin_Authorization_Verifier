@@ -52,13 +52,8 @@ function checkRecipientClassification(recipients) {
         resolve(false); // Do not allow event to proceed
       }
 
-      // If not unauthorized, perform classification check based on the recipient's email address
-      const clearanceLevel = getClearanceLevel(emailAddress);
-
-      // Modify the email body to include the clearance level needed
-      if (clearanceLevel) {
-        const messageBody = `Classification level required: ${clearanceLevel}`;
-        Office.context.mailbox.item.body.prepend(messageBody);
+      else {
+        resolve(true);
       }
     });
 
