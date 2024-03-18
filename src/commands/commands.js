@@ -46,6 +46,7 @@ function checkRecipientClassification(recipients) {
   return new Promise((resolve, reject) => {
     recipients.forEach(function (recipient) {
       const emailAddress = recipient.emailAddress;
+      console.log(emailAddress);
 
       // Check if recipient is unauthorized
       if (isUnauthorized(emailAddress)) {
