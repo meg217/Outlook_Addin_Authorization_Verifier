@@ -50,22 +50,24 @@ function checkRecipientClassification(recipients) {
   console.log("checkRecipientClassification method"); //debugging
 
   return new Promise((resolve, reject) => {
+    let allowEvent = true;
+    
     recipients.forEach(function (recipient) {
       const emailAddress = recipient.emailAddress;
       console.log(emailAddress);
 
       // Check if recipient is unauthorized
       if (isUnauthorized(emailAddress)) {
-        resolve(false); // Do not allow event to proceed
+        console.log("isUnauthorized returned: " + isUnauthorized(emailAddress));
+        allowEvent = false;
       }
-      else {
-        resolve(true);
-        console.log("event should proceed since isUnauthorized returned false");
-      }
+
     });
 
+    console.log("event should proceed since isUnauthorized returned false");
+
     // Allow event to proceed if no unauthorized recipient found
-    resolve(true);
+    resolve(allowEvent);
   });
 }
 
