@@ -58,9 +58,9 @@ function checkRecipientClassification(recipients) {
       if (isUnauthorized(emailAddress)) {
         resolve(false); // Do not allow event to proceed
       }
-
       else {
         resolve(true);
+        console.log("event should proceed since isUnauthorized returned false");
       }
     });
 
