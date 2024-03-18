@@ -20,13 +20,19 @@ function MessageSendVerificationHandler(event) {
     }
     
     const toRecipients = asyncResult.value;
+    console.log("checking the classification of recipient: "+ toRecipients);
     checkRecipientClassification(toRecipients)
       .then(allowEvent => {
         if (!allowEvent) {
           // Prevent sending the email
           event.completed({ allowEvent: false });
-          // Show an alert or notification
-          alert("You are not authorized to send this email to meaganbmueller@gmail.com.");
+          Office.context.mailbox.item.notificationMessages.addAsync(
+            "unauthorizedSending",
+            {
+              type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
+              message: "You are not authorized to send this email to meaganbmueller@gmail.com."
+            }
+          );
         }
       })
       .catch(error => {
