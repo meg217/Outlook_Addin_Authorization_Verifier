@@ -47,14 +47,20 @@ Office.initialize = function (reason) {};
 // }
 
 function MessageSendVerificationHandler(event) {
-Office.context.mailbox.item.to.getAsync(function (asyncResult) {
-  if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-    console.error("Failed to get To recipients. " + JSON.stringify(asyncResult.error));
+Office.context.mailbox.item.to.getAsync(function (toAsyncResult) {
+  if (toAsyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+    console.error("Failed to get To recipients. " + JSON.stringify(toAsyncResult.error));
     return;
   }
   
-  const toRecipients = asyncResult.value;
-  console.log("checking the classification of recipient: "+ toRecipients);
+  const toRecipients = toAsyncResult.value;
+  console.log("checking the classification of recipient: ");
+    toRecipients.forEach(function (recipient) {
+      const emailAddress = recipient.emailAddress;
+      console.log(emailAddress);
+    });
+
+
   checkRecipientClassification(toRecipients)
     .then(allowEvent => {
       if (!allowEvent) {
