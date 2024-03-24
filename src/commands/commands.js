@@ -11,27 +11,27 @@ Office.initialize = function (reason) {};
  * Initializes all of the code.
  * @param {*} event The Office event object
  */
-function MessageSendVerificationHandler(event) {
-console.log("MessageSendVerificationHandler method"); //debugging
-console.log("event: " + JSON.stringify(event)); //debugging
-//First initialize all variables
-//Second get banner classification from body
-//Third check classification for sender
-//Fourth check classification for 'to' parameter
-//Fifth any extra for cc and bcc
-//Sixth output message to user upon failure, EX: "You are not authorized to send this." 
+// function MessageSendVerificationHandler(event) {
+// console.log("MessageSendVerificationHandler method"); //debugging
+// console.log("event: " + JSON.stringify(event)); //debugging
+// //First initialize all variables
+// //Second get banner classification from body
+// //Third check classification for sender
+// //Fourth check classification for 'to' parameter
+// //Fifth any extra for cc and bcc
+// //Sixth output message to user upon failure, EX: "You are not authorized to send this." 
 
 
-const item = Office.context.mailbox.item;
-console.log("subject is");
-const subject = item.subject;
-console.log("subject is");
-console.log(subject);
-// Continue with processing the subject of the current item,
-// which can be a message or appointment.
+// const item = Office.context.mailbox.item;
+// console.log("subject is");
+// const subject = item.subject;
+// console.log("subject is");
+// console.log(subject);
+// // Continue with processing the subject of the current item,
+// // which can be a message or appointment.
 
 
-}
+// }
 
 
 
@@ -45,6 +45,42 @@ console.log(subject);
 // console.log(", the sender is: " + sender);
 // console.log(", and the recipient is: " + to);
 // }
+
+function MessageSendVerificationHandler(event) {
+Office.context.mailbox.item.to.getAsync(function (asyncResult) {
+  if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+    console.error("Failed to get To recipients. " + JSON.stringify(asyncResult.error));
+    return;
+  }
+  
+  const toRecipients = asyncResult.value;
+  console.log("checking the classification of recipient: "+ toRecipients);
+  checkRecipientClassification(toRecipients)
+    .then(allowEvent => {
+      if (!allowEvent) {
+        // Prevent sending the email
+        event.completed({ allowEvent: false });
+        Office.context.mailbox.item.notificationMessages.addAsync(
+          "unauthorizedSending",
+          {
+            type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
+            message: "You are not authorized to send this email to meaganbmueller@gmail.com."
+          }
+        );
+      } else {
+        // Allow sending the email
+        event.completed({ allowEvent: true });
+      }
+    })
+    .catch(error => {
+      console.error("Error occurred while checking recipient classification: " + error);
+    });
+});
+
+}
+
+
+
 
 
 /**
