@@ -20,14 +20,35 @@ console.log("event: " + JSON.stringify(event)); //debugging
 //Fourth check classification for 'to' parameter
 //Fifth any extra for cc and bcc
 //Sixth output message to user upon failure, EX: "You are not authorized to send this." 
-body = bodyHandler();
-sender = senderHandler();
-to = toHandler();
-//console.log("the body is: " + body + ", the sender is: " + sender + ", and the recipient is: " + to);
-console.log("the body is: " + body);
-console.log(", the sender is: " + sender);
-console.log(", and the recipient is: " + to);
+
+// The initialize function is required for all apps.
+Office.initialize = function () {
+  // Checks for the DOM to load using the jQuery ready method.
+  $(document).ready(function () {
+    // After the DOM is loaded, app-specific code can run.
+    const item = Office.context.mailbox.item;
+    const subject = item.subject;
+    console.log("subject is");
+    console.log(subject);
+    // Continue with processing the subject of the current item,
+    // which can be a message or appointment.
+  });
+};
+
 }
+
+
+
+
+
+// body = bodyHandler();
+// sender = senderHandler();
+// to = toHandler();
+// //console.log("the body is: " + body + ", the sender is: " + sender + ", and the recipient is: " + to);
+// console.log("the body is: " + body);
+// console.log(", the sender is: " + sender);
+// console.log(", and the recipient is: " + to);
+// }
 
 
 /**
