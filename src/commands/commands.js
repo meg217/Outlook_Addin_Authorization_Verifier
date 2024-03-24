@@ -49,14 +49,16 @@ Office.initialize = function (reason) {};
 function MessageSendVerificationHandler(event) {
   Promise.all([
     getToRecipientsAsync(),
-    getSenderAsync()
+    getSenderAsync(),
+    getBodyAsync()
   ])
-  .then(([toRecipients, sender]) => {
+  .then(([toRecipients, sender, body]) => {
     console.log("To recipients:");
     toRecipients.forEach(recipient => console.log(recipient.emailAddress));
     console.log("Sender:");
     console.log(sender);
-
+    console.log("Body:");
+    console.log(body);
 
   checkRecipientClassification(toRecipients)
     .then(allowEvent => {
@@ -94,8 +96,6 @@ function getToRecipientsAsync() {
   });
 }
 
-
-
 function getSenderAsync() {
   return new Promise((resolve, reject) => {
     Office.context.mailbox.item.from.getAsync(result => {
@@ -108,6 +108,18 @@ function getSenderAsync() {
       }
     });
   });
+}
+
+function getBodyAsync() {
+Office.context.mailbox.item.body.getTypeAsync((asyncResult) => {
+  if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+    console.log("Action failed with error: " + asyncResult.error.message);
+    return;
+  }
+  const body = result.value;
+  console.log("body is: " + body );
+  resolve(result.value);
+});
 }
 
 
