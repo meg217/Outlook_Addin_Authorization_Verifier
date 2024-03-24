@@ -32,8 +32,8 @@ console.log(", and the recipient is: " + to);
  */
 function bodyHandler() {
   Office.context.mailbox.item.body.getAsync(function (bodyAsyncResult) {
-    if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-      console.error("Failed to get body from email. " + JSON.stringify(asyncResult.error));
+    if (bodyAsyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+      console.error("Failed to get body from email. " + JSON.stringify(bodyAsyncResult.error));
       return;
     }
     const body = bodyAsyncResult.value;
@@ -47,8 +47,8 @@ function bodyHandler() {
  */
 function toHandler() {
   Office.context.mailbox.item.to.getAsync(function (toAsyncResult) {
-    if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-      console.error("Failed to get To recipients. " + JSON.stringify(asyncResult.error));
+    if (toAsyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+      console.error("Failed to get To recipients. " + JSON.stringify(toAsyncResult.error));
       return;
     }
     const toRecipients = toAsyncResult.value;
@@ -60,12 +60,12 @@ function toHandler() {
  * Gets the 'sender' from email.
  */
 function senderHandler() {
-  Office.context.mailbox.item.to.getAsync(function (asyncResult) {
-    if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-      console.error("Failed to get sender email. " + JSON.stringify(asyncResult.error));
+  Office.context.mailbox.item.to.getAsync(function (senderAsyncResult) {
+    if (senderAsyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+      console.error("Failed to get sender email. " + JSON.stringify(senderAsyncResult.error));
       return; //should we change what this returns? what heppens if fail
     }
-    const sender = asyncResult.value;
+    const sender = senderAsyncResult.value;
     return sender;
   });
 }
