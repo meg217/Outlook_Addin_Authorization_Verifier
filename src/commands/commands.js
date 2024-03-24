@@ -11,41 +11,6 @@ Office.initialize = function (reason) {};
  * Initializes all of the code.
  * @param {*} event The Office event object
  */
-// function MessageSendVerificationHandler(event) {
-// console.log("MessageSendVerificationHandler method"); //debugging
-// console.log("event: " + JSON.stringify(event)); //debugging
-// //First initialize all variables
-// //Second get banner classification from body
-// //Third check classification for sender
-// //Fourth check classification for 'to' parameter
-// //Fifth any extra for cc and bcc
-// //Sixth output message to user upon failure, EX: "You are not authorized to send this." 
-
-
-// const item = Office.context.mailbox.item;
-// console.log("subject is");
-// const subject = item.subject;
-// console.log("subject is");
-// console.log(subject);
-// // Continue with processing the subject of the current item,
-// // which can be a message or appointment.
-
-
-// }
-
-
-
-
-
-// body = bodyHandler();
-// sender = senderHandler();
-// to = toHandler();
-// //console.log("the body is: " + body + ", the sender is: " + sender + ", and the recipient is: " + to);
-// console.log("the body is: " + body);
-// console.log(", the sender is: " + sender);
-// console.log(", and the recipient is: " + to);
-// }
-
 function MessageSendVerificationHandler(event) {
   Promise.all([
     getToRecipientsAsync(),
@@ -55,10 +20,8 @@ function MessageSendVerificationHandler(event) {
   .then(([toRecipients, sender, body]) => {
     console.log("To recipients:");
     toRecipients.forEach(recipient => console.log(recipient.emailAddress));
-    console.log("Sender:");
-    console.log(sender);
-    console.log("Body:");
-    console.log(body);
+    console.log("Sender:" + sender.displayName + " " + sender.emailAddress);
+    console.log("Body:" + body);
 
   checkRecipientClassification(toRecipients)
     .then(allowEvent => {
@@ -81,13 +44,16 @@ function MessageSendVerificationHandler(event) {
       console.error("Error occurred while checking recipient classification: " + error);
     });
 });
-
 }
 
+/**
+ * Gets the 'to' from email.
+ */
 function getToRecipientsAsync() {
   return new Promise((resolve, reject) => {
     Office.context.mailbox.item.to.getAsync(result => {
       if (result.status !== Office.AsyncResultStatus.Succeeded) {
+        console.log("unable to get recipients");
         reject("Failed to get To recipients. " + JSON.stringify(result.error));
       } else {
         resolve(result.value);
@@ -96,81 +62,45 @@ function getToRecipientsAsync() {
   });
 }
 
+/**
+ * Gets the 'sender' from email.
+ */
 function getSenderAsync() {
   return new Promise((resolve, reject) => {
     Office.context.mailbox.item.from.getAsync(result => {
       if (result.status !== Office.AsyncResultStatus.Succeeded) {
+        console.log("unable to get sender");
         reject("Failed to get sender. " + JSON.stringify(result.error));
       } else {
-        const msgFrom = result.value;
-        console.log("Message from: " + msgFrom.displayName + " (" + msgFrom.emailAddress + ")");
+        //const msgFrom = result.value;
+        //console.log("Message from: " + msgFrom.displayName + " (" + msgFrom.emailAddress + ")");
         resolve(result.value);
       }
     });
   });
 }
-
-function getBodyAsync() {
-  return new Promise((resolve, reject) => {
-    Office.context.mailbox.item.body.getAsync(Office.CoercionType.Text, result => {
-      if (result.status !== Office.AsyncResultStatus.Succeeded) {
-        console.log("this didnt work");
-        reject("Failed to get body. " + JSON.stringify(result.error));
-      } else {
-        console.log("this worked");
-        resolve(result.value);
-      }
-    });
-  });
-}
-
-
-
-
 
 /**
  * Gets the 'body' from email.
  */
-function bodyHandler() {
-  Office.context.mailbox.item.body.getAsync(function (asyncResult) {
-    if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-      console.error("Failed to get body from email. " + JSON.stringify(asyncResult.error));
-      return;
-    }
-    const body = asyncResult.value;
-    return body;
-  });
-}
-
-
-/**
- * Gets the 'to' from email.
- */
-function toHandler() {
-  Office.context.mailbox.item.to.getAsync(function (asyncResult) {
-    if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-      console.error("Failed to get To recipients. " + JSON.stringify(asyncResult.error));
-      return;
-    }
-    const toRecipients = asyncResult.value;
-    return toRecipients;
+function getBodyAsync() {
+  return new Promise((resolve, reject) => {
+    Office.context.mailbox.item.body.getAsync(Office.CoercionType.Text, result => {
+      if (result.status !== Office.AsyncResultStatus.Succeeded) {
+        console.log("unable to get body");
+        reject("Failed to get body. " + JSON.stringify(result.error));
+      } else {
+        //console.log("this worked");
+        resolve(result.value);
+      }
+    });
   });
 }
 
 /**
- * Gets the 'sender' from email.
+ * sets session data
+ * key and value parameters
  */
-function senderHandler() {
-  Office.context.mailbox.item.to.getAsync(function (asyncResult) {
-    if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-      console.error("Failed to get sender email. " + JSON.stringify(asyncResult.error));
-      return; //should we change what this returns? what heppens if fail
-    }
-    const sender = asyncResult.value;
-    return sender;
-  });
-}
-
 function _setSessionData(key, value) {
   Office.context.mailbox.item.sessionData.setAsync(
     key,
@@ -198,15 +128,7 @@ function _setSessionData(key, value) {
 
 
 
-
-
-
-
-
-
-
-
-
+//this is the old code from the example
 /**
  * Handles the 'to' authentication.
  * @param {*} event The Office event object
