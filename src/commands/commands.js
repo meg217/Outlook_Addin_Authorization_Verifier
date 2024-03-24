@@ -18,7 +18,7 @@ function MessageSendVerificationHandler(event) {
       console.log(", and the recipient is: " + toRecipients);
     })
     .catch(error => {
-      console.error("Error occurred: " + error);
+      console.error("Error occurred: ");
     });
 }
 
@@ -66,6 +66,30 @@ function senderHandler() {
     });
   });
 }
+
+function _setSessionData(key, value) {
+  Office.context.mailbox.item.sessionData.setAsync(
+    key,
+    value.toString(),
+    function(asyncResult) {
+      // Handle success or error.
+      if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+      console.log(`sessionData.setAsync(${key}) to ${value} succeeded`);
+      if (value) {
+        _tagExternal(value);
+      } else {
+        _checkForExternal();
+      }
+    } else {
+      console.error(`Failed to set ${key} sessionData to ${value}. Error: ${JSON.stringify(asyncResult.error)}`);
+      return;
+    }
+  });
+}
+
+
+
+
 
 
 
@@ -171,25 +195,25 @@ function getClearanceLevel(emailAddress) {
   return null;
 }
 
- function _setSessionData(key, value) {
-  Office.context.mailbox.item.sessionData.setAsync(
-    key,
-    value.toString(),
-    function(asyncResult) {
-      // Handle success or error.
-      if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-      console.log(`sessionData.setAsync(${key}) to ${value} succeeded`);
-      if (value) {
-        _tagExternal(value);
-      } else {
-        _checkForExternal();
-      }
-    } else {
-      console.error(`Failed to set ${key} sessionData to ${value}. Error: ${JSON.stringify(asyncResult.error)}`);
-      return;
-    }
-  });
-}
+//  function _setSessionData(key, value) {
+//   Office.context.mailbox.item.sessionData.setAsync(
+//     key,
+//     value.toString(),
+//     function(asyncResult) {
+//       // Handle success or error.
+//       if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+//       console.log(`sessionData.setAsync(${key}) to ${value} succeeded`);
+//       if (value) {
+//         _tagExternal(value);
+//       } else {
+//         _checkForExternal();
+//       }
+//     } else {
+//       console.error(`Failed to set ${key} sessionData to ${value}. Error: ${JSON.stringify(asyncResult.error)}`);
+//       return;
+//     }
+//   });
+// }
 
 
 // 1st parameter: FunctionName of LaunchEvent in the manifest; 2nd parameter: Its implementation in this .js file.
