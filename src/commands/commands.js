@@ -22,7 +22,9 @@ function MessageSendVerificationHandler(event) {
     toRecipients.forEach(recipient => console.log(recipient.emailAddress));
     console.log("Sender:" + sender.displayName + " " + sender.emailAddress);
     console.log("Body:" + body);
-    const bannerMarkings = parseBannerMarkings(body);
+    //const bannerMarkings = parseBannerMarkings(body);
+    const messageBodyTest = "TOP SECRET//COMINT-GAMMA/TALENT KEYHOLE//ORIGINATOR CONTROLLED";
+    const bannerMarkings = parseBannerMarkings(messageBodyTest);
     console.log(bannerMarkings);
 
   checkRecipientClassification(toRecipients)
@@ -113,7 +115,7 @@ function parseBannerMarkings(body){
   const cat7_regex = /ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*USA,\s*AUZ,\s*NZL|REL\s*TO\s*USA,\s*AUS,\s*NZL|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
   const cat4_and_cat7 = /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS|ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*USA,\s*AUZ,\s*NZL|REL\s*TO\s*USA,\s*AUS,\s*NZL|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
   
-  const Categories = banner.split("//");
+  const Categories = body.split("//");
   const Category_1 = Category1(Categories, cat1_regex);
   const Category_4 = Category4(Categories, cat4_and_cat7, cat7_regex);
   const Category_7 = Category7(Categories, cat7_regex);
