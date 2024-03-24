@@ -111,15 +111,15 @@ function getSenderAsync() {
 }
 
 function getBodyAsync() {
-Office.context.mailbox.item.body.getTypeAsync((asyncResult) => {
-  if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-    console.log("Action failed with error: " + asyncResult.error.message);
-    return;
-  }
-  const body = result.value;
-  console.log("body is: " + body );
-  resolve(result.value);
-});
+  return new Promise((resolve, reject) => {
+    Office.context.mailbox.item.body.getAsync(Office.CoercionType.Text, result => {
+      if (result.status !== Office.AsyncResultStatus.Succeeded) {
+        reject("Failed to get body. " + JSON.stringify(result.error));
+      } else {
+        resolve(result.value);
+      }
+    });
+  });
 }
 
 
