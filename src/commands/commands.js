@@ -5,54 +5,50 @@
 
 Office.initialize = function (reason) {};
 
- /**
+/**
  * Initializes all of the code.
  * @param {*} event The Office event object
  */
 function MessageSendVerificationHandler(event) {
-//First initialize all variables
-//Second get banner classification from body
-//Third check classification for sender
-//Fourth check classification for 'to' parameter
-//Fifth any extra for cc and bcc
-//Sixth output message to user upon failure, EX: "You are not authorized to send this." 
-body = bodyHandler();
-sender = senderHandler();
-to = toHandler();
-//console.log("the body is: " + body + ", the sender is: " + sender + ", and the recipient is: " + to);
-console.log("the body is: " + body);
-console.log(", the sender is: " + sender);
-console.log(", and the recipient is: " + to);
-
+  // Get the body, sender, and to recipients from asynch functions
+  Promise.all([bodyHandler(), senderHandler(), toHandler()])
+    .then(([body, sender, toRecipients]) => {
+      console.log("the body is: " + body);
+      console.log(", the sender is: " + sender);
+      console.log(", and the recipient is: " + toRecipients);
+    })
+    .catch(error => {
+      console.error("Error occurred: " + error);
+    });
 }
-
 
 /**
  * Gets the 'body' from email.
  */
 function bodyHandler() {
-  Office.context.mailbox.item.body.getAsync(function (bodyAsyncResult) {
-    if (bodyAsyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-      console.error("Failed to get body from email. " + JSON.stringify(bodyAsyncResult.error));
-      return;
-    }
-    const body = bodyAsyncResult.value;
-    return body;
+  return new Promise((resolve, reject) => {
+    Office.context.mailbox.item.body.getAsync(function (bodyAsyncResult) {
+      if (bodyAsyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+        reject("Failed to get body from email. " + JSON.stringify(bodyAsyncResult.error));
+      }
+      const body = bodyAsyncResult.value;
+      resolve(body);
+    });
   });
 }
-
 
 /**
  * Gets the 'to' from email.
  */
 function toHandler() {
-  Office.context.mailbox.item.to.getAsync(function (toAsyncResult) {
-    if (toAsyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-      console.error("Failed to get To recipients. " + JSON.stringify(toAsyncResult.error));
-      return;
-    }
-    const toRecipients = toAsyncResult.value;
-    return toRecipients;
+  return new Promise((resolve, reject) => {
+    Office.context.mailbox.item.to.getAsync(function (toAsyncResult) {
+      if (toAsyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+        reject("Failed to get To recipients. " + JSON.stringify(toAsyncResult.error));
+      }
+      const toRecipients = toAsyncResult.value;
+      resolve(toRecipients);
+    });
   });
 }
 
@@ -60,15 +56,17 @@ function toHandler() {
  * Gets the 'sender' from email.
  */
 function senderHandler() {
-  Office.context.mailbox.item.to.getAsync(function (senderAsyncResult) {
-    if (senderAsyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-      console.error("Failed to get sender email. " + JSON.stringify(senderAsyncResult.error));
-      return; //should we change what this returns? what heppens if fail
-    }
-    const sender = senderAsyncResult.value;
-    return sender;
+  return new Promise((resolve, reject) => {
+    Office.context.mailbox.item.sender.getAsync(function (senderAsyncResult) {
+      if (senderAsyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+        reject("Failed to get sender email. " + JSON.stringify(senderAsyncResult.error));
+      }
+      const sender = senderAsyncResult.value;
+      resolve(sender);
+    });
   });
 }
+
 
 
 
