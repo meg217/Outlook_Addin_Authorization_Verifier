@@ -21,19 +21,14 @@ console.log("event: " + JSON.stringify(event)); //debugging
 //Fifth any extra for cc and bcc
 //Sixth output message to user upon failure, EX: "You are not authorized to send this." 
 
-// The initialize function is required for all apps.
-Office.initialize = function () {
-  // Checks for the DOM to load using the jQuery ready method.
-  $(document).ready(function () {
-    // After the DOM is loaded, app-specific code can run.
-    const item = Office.context.mailbox.item;
-    const subject = item.subject;
-    console.log("subject is");
-    console.log(subject);
-    // Continue with processing the subject of the current item,
-    // which can be a message or appointment.
-  });
-};
+
+const item = Office.context.mailbox.item;
+const subject = item.subject;
+console.log("subject is");
+console.log(subject);
+// Continue with processing the subject of the current item,
+// which can be a message or appointment.
+
 
 }
 
