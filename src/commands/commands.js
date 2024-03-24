@@ -33,6 +33,9 @@ function MessageSendVerificationHandler(event) {
               message: "You are not authorized to send this email to meaganbmueller@gmail.com."
             }
           );
+        } else {
+          // Allow sending the email
+          event.completed({ allowEvent: true });
         }
       })
       .catch(error => {
