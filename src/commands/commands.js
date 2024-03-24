@@ -19,7 +19,11 @@ function MessageSendVerificationHandler(event) {
 body = bodyHandler();
 sender = senderHandler();
 to = toHandler();
-console.log("the body is: " + body + ", the sender is: " + sender + ", and the recipient is: " + to);
+//console.log("the body is: " + body + ", the sender is: " + sender + ", and the recipient is: " + to);
+console.log("the body is: " + body);
+console.log(", the sender is: " + sender);
+console.log(", and the recipient is: " + to);
+
 }
 
 
@@ -27,12 +31,12 @@ console.log("the body is: " + body + ", the sender is: " + sender + ", and the r
  * Gets the 'body' from email.
  */
 function bodyHandler() {
-  Office.context.mailbox.item.body.getAsync(function (asyncResult) {
+  Office.context.mailbox.item.body.getAsync(function (bodyAsyncResult) {
     if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
       console.error("Failed to get body from email. " + JSON.stringify(asyncResult.error));
       return;
     }
-    const body = asyncResult.value;
+    const body = bodyAsyncResult.value;
     return body;
   });
 }
@@ -42,12 +46,12 @@ function bodyHandler() {
  * Gets the 'to' from email.
  */
 function toHandler() {
-  Office.context.mailbox.item.to.getAsync(function (asyncResult) {
+  Office.context.mailbox.item.to.getAsync(function (toAsyncResult) {
     if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
       console.error("Failed to get To recipients. " + JSON.stringify(asyncResult.error));
       return;
     }
-    const toRecipients = asyncResult.value;
+    const toRecipients = toAsyncResult.value;
     return toRecipients;
   });
 }
