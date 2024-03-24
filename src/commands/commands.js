@@ -23,6 +23,7 @@ console.log("event: " + JSON.stringify(event)); //debugging
 
 
 const item = Office.context.mailbox.item;
+console.log("subject is");
 const subject = item.subject;
 console.log("subject is");
 console.log(subject);
