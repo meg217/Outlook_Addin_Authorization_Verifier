@@ -48,7 +48,7 @@ Office.initialize = function (reason) {};
 
 function MessageSendVerificationHandler(event) {
   Promise.all([
-    //getToRecipientsAsync(),
+    getToRecipientsAsync(),
     getSenderAsync()
   ])
   .then(([toRecipients, sender]) => {
