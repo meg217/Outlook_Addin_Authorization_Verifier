@@ -95,12 +95,14 @@ function getToRecipientsAsync() {
 }
 
 
+
 function getSenderAsync() {
   return new Promise((resolve, reject) => {
     Office.context.mailbox.item.from.getAsync(result => {
       if (result.status !== Office.AsyncResultStatus.Succeeded) {
         reject("Failed to get sender. " + JSON.stringify(result.error));
       } else {
+        const msgFrom = result.value;
         console.log("Message from: " + msgFrom.displayName + " (" + msgFrom.emailAddress + ")");
         resolve(result.value);
       }
