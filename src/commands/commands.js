@@ -47,32 +47,15 @@ Office.initialize = function (reason) {};
 // }
 
 function MessageSendVerificationHandler(event) {
-  //to: working
-Office.context.mailbox.item.to.getAsync(function (toAsyncResult) {
-  if (toAsyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-    console.error("Failed to get To recipients. " + JSON.stringify(toAsyncResult.error));
-    return;
-  }
-  
-  const toRecipients = toAsyncResult.value;
-  console.log("checking the classification of recipient: \n");
-    toRecipients.forEach(function (recipient) {
-      const emailAddress = recipient.emailAddress;
-      console.log(emailAddress);
-    });
-
-    //from: well see
-Office.context.mailbox.item.sender.getAsync(function (fromAsyncResult) {
-  if (fromAsyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-    console.error("Failed to get To recipients. " + JSON.stringify(fromAsyncResult.error));
-    return;
-  }
-  
-  const from = fromAsyncResult.value;
-  console.log("from is : ");
-  console.log(from);
-
-  });
+  Promise.all([
+    getToRecipientsAsync(),
+    getSenderAsync()
+  ])
+  .then(([toRecipients, sender]) => {
+    console.log("To recipients:");
+    toRecipients.forEach(recipient => console.log(recipient.emailAddress));
+    console.log("Sender:");
+    console.log(sender);
 
 
   checkRecipientClassification(toRecipients)
