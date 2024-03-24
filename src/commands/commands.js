@@ -5,13 +5,83 @@
 
 Office.initialize = function (reason) {};
 
-/**
- * Handles the OnMessageRecipientsChanged event.
+ /**
+ * Initializes all of the code.
  * @param {*} event The Office event object
  */
 function MessageSendVerificationHandler(event) {
-  console.log("MessageSendVerificationHandler method"); //debugging
-  console.log("event: " + JSON.stringify(event)); //debugging
+//First initialize all variables
+//Second get banner classification from body
+//Third check classification for sender
+//Fourth check classification for 'to' parameter
+//Fifth any extra for cc and bcc
+//Sixth output message to user upon failure, EX: "You are not authorized to send this." 
+body = bodyHandler();
+sender = senderHandler();
+to = toHandler();
+console.log("the body is: " + body + ", the sender is: " + sender + ", and the recipient is: " + to);
+}
+
+
+/**
+ * Gets the 'body' from email.
+ */
+function bodyHandler() {
+  Office.context.mailbox.item.body.getAsync(function (asyncResult) {
+    if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+      console.error("Failed to get body from email. " + JSON.stringify(asyncResult.error));
+      return;
+    }
+    const body = asyncResult.value;
+    return body;
+  });
+}
+
+
+/**
+ * Gets the 'to' from email.
+ */
+function toHandler() {
+  Office.context.mailbox.item.to.getAsync(function (asyncResult) {
+    if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+      console.error("Failed to get To recipients. " + JSON.stringify(asyncResult.error));
+      return;
+    }
+    const toRecipients = asyncResult.value;
+    return toRecipients;
+  });
+}
+
+/**
+ * Gets the 'sender' from email.
+ */
+function senderHandler() {
+  Office.context.mailbox.item.to.getAsync(function (asyncResult) {
+    if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
+      console.error("Failed to get sender email. " + JSON.stringify(asyncResult.error));
+      return; //should we change what this returns? what heppens if fail
+    }
+    const sender = asyncResult.value;
+    return sender;
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Handles the 'to' authentication.
+ * @param {*} event The Office event object
+ */
+function FAKEtoHandler(event) {
   
   Office.context.mailbox.item.to.getAsync(function (asyncResult) {
     if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
