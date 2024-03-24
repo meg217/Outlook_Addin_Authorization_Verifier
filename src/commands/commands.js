@@ -6,12 +6,13 @@
 Office.initialize = function (reason) {};
 
 /**
- * Handles the OnMessageRecipientsChanged event.
+ * Handles the OnMessageSend event.
  /**
- * Initializes all of the code.
+ * Initializes all of the code.\
  * @param {*} event The Office event object
  */
 function MessageSendVerificationHandler(event) {
+  //promise is to encapsulate all the asynch functions
   Promise.all([
     getToRecipientsAsync(),
     getSenderAsync(),
@@ -23,8 +24,9 @@ function MessageSendVerificationHandler(event) {
     console.log("Sender:" + sender.displayName + " " + sender.emailAddress);
     console.log("Body:" + body);
     //const bannerMarkings = parseBannerMarkings(body);
-    const messageBodyTest = "TOP SECRET//COMINT-GAMMA/TALENT KEYHOLE//ORIGINATOR CONTROLLED";
-    const bannerMarkings = parseBannerMarkings(messageBodyTest);
+    const banner = getBannerFromBody(body);
+    //const messageBodyTest = "TOP SECRET//COMINT-GAMMA/TALENT KEYHOLE//ORIGINATOR CONTROLLED";
+    const bannerMarkings = parseBannerMarkings(banner);
     console.log(bannerMarkings);
 
   checkRecipientClassification(toRecipients)
@@ -36,7 +38,7 @@ function MessageSendVerificationHandler(event) {
           "unauthorizedSending",
           {
             type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
-            message: "You are not authorized to send this email to meaganbmueller@gmail.com."
+            message: "You are not authorized to send this email"
           }
         );
       } else {
@@ -102,8 +104,28 @@ function getBodyAsync() {
 }
 
 /**
+ * function to extract banner from message body
+ * parameter is the message body contents
+ * returns the banner from the body
+ */
+function getBannerFromBody(body) {
+  const bannerRegex = /^(.*?\/\/.*)/;
+  const bannerFound = body.match(bannerRegex);
+  if(bannerFound){
+    console.log("banner found");
+    return bannerFound[1];
+  }
+  else{
+    console.log("banner null");
+    return null;
+  }
+}
+
+
+/**
  * function to parse banner markings
  * parameter is the message body contents
+ * returns an arra f each category being array[1] is cat1 nd on for 1, 4 and 7
  */
 function parseBannerMarkings(body){
   // const cat1_regex = "TOP[\s]*SECRET|TS|(TS)|SECRET|S|(S)|CONFIDENTIAL|C|(C)|UNCLASSIFIED|U|(U)";
@@ -123,6 +145,10 @@ function parseBannerMarkings(body){
   return Together;
 }
 
+/**
+ * function for category one parsing
+ * parameter is the categories and the cat1 regex
+ */
 function Category1(categories, cat1_regex) {
   if (!categories[0]) {
       console.log("cat one returned null");
@@ -136,6 +162,10 @@ function Category1(categories, cat1_regex) {
   return null;
 }
 
+/**
+ * function for category one parsing
+ * parameter is the categories and the cat7/cat4&7 regex
+ */
 function Category4(categories, cat4_and_cat7, cat7_regex) {
   if (categories.length < 2) {
       return null;
@@ -149,6 +179,10 @@ function Category4(categories, cat4_and_cat7, cat7_regex) {
   return null;
 }
 
+/**
+ * function for category one parsing
+ * parameter is the categories and the cat7 regex
+ */
 function Category7(categories, cat7_regex) {
   if (categories.length < 3) {
       return null;
