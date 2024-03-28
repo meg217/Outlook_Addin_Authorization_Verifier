@@ -139,6 +139,7 @@ function parseBannerMarkings(body){
   const cat4_and_cat7 = /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS|ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*USA,\s*AUZ,\s*NZL|REL\s*TO\s*USA,\s*AUS,\s*NZL|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
   
   const Categories = body.split("//");
+  console.log(Categories);
   let Category_1 = Category(Categories[0], cat1_regex, 1);
   let Category_4 = null;
   let Category_7 = null;
