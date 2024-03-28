@@ -157,7 +157,9 @@ function parseBannerMarkings(body){
       Category_7 = Category(Categories[2], cat7_regex, 7);
     }
   }
-  console.log("second category returned null");
+  else {
+    console.log("second category returned null");
+  }
   /**
    * FIX ME: We need to find a way to check to see if there is a category 4, if there isnt that means that the string needs to be 
    *        parsed into category 7.
