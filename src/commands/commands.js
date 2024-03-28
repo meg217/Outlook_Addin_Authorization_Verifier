@@ -148,7 +148,7 @@ function parseBannerMarkings(body){
       // If the second parse matches the regex for category 7, then we need to make category 4 null and run category 7
       console.log("second category matches category 7");
       Category_4 = null;
-      Category_7 = Category7(Categories[1], cat7_regex);
+      Category_7 = Category(Categories[1], cat7_regex, 7);
     }
     else{
       // If the second parse doesnt match, run each category with its corresponding regex
