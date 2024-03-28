@@ -143,7 +143,7 @@ function parseBannerMarkings(body){
   let Category_1 = Category(Categories[0], cat1_regex, 1);
   let Category_4 = null;
   let Category_7 = null;
-  if(Categories[1]){
+  if(Categories[1] != null){
     if(Categories[1].toUpperCase().match(cat7_regex)){
       // If the second parse matches the regex for category 7, then we need to make category 4 null and run category 7
       Category_4 = null;
@@ -154,6 +154,7 @@ function parseBannerMarkings(body){
       Category_4 = Category(Categories[1], cat4_regex, 4);
       Category_7 = Category(Categories[2], cat7_regex, 7);
     }
+    console.log("second category returned null");
   }
   /**
    * FIX ME: We need to find a way to check to see if there is a category 4, if there isnt that means that the string needs to be 
