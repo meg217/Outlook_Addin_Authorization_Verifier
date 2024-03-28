@@ -127,11 +127,11 @@ function getBannerFromBody(body) {
 
 /**
  * function to parse banner markings
- * parameter is the message body contents
+ * parameter is the banner
  * returns an array of each category being array[1] is cat1 and on for 1, 4 and 7
- * @param { String } body 
+ * @param { String } banner 
  */
-function parseBannerMarkings(body){
+function parseBannerMarkings(banner){
   // const cat1_regex = "TOP[\s]*SECRET|TS|(TS)|SECRET|S|(S)|CONFIDENTIAL|C|(C)|UNCLASSIFIED|U|(U)";
   // const cat4_regex = "COMINT|-GAMMA|\/|TALENT[\s]*KEYHOLE|SI-G\/TK|HCS|GCS";
   // const cat7_regex = "ORIGINATOR[\s]*CONTROLLED|ORCON|NOT[\s]*RELEASABLE[\s]*TO[\s]*FOREIGN[\s]*NATIONALS|NOFORN|AUTHORIZED[\s]*FOR[\s]*RELEASE[\s]*TO[\s]*USA,[\s]*AUZ,[\s]*NZL|REL[\s]*TO[\s]*USA,[\s]*AUS,[\s]*NZL|CAUTION-PROPERIETARY INFORMATION INVOLVED|PROPIN";
@@ -141,7 +141,7 @@ function parseBannerMarkings(body){
   const cat7_regex = /ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*((USA|AUS|NZL)(,)?( *))*|REL\s*TO\s*((USA|AUS|NZL)(,)?( *))*|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
   const cat4_and_cat7 = /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS|ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*((USA|AUS|NZL)(,)?( *))*|REL\s*TO\s*((USA|AUS|NZL)(,)?( *))*|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
 
-  const Categories = body.split("//");
+  const Categories = banner.split("//");
   console.log(Categories);
   let Category_1 = Category(Categories[0], cat1_regex, 1);
   let Category_4 = null;
@@ -163,12 +163,6 @@ function parseBannerMarkings(body){
   else {
     console.log("second category returned null");
   }
-  /**
-   * FIX ME: We need to find a way to check to see if there is a category 4, if there isnt that means that the string needs to be 
-   *        parsed into category 7.
-   */
-  //let Category_4 = Category4(Categories, cat4_and_cat7, cat7_regex);
-  //let Category_7 = Category7(Categories, cat7_regex);
   const Together = [Category_1, Category_4, Category_7];
   return Together;
 }
@@ -192,54 +186,6 @@ function Category(category, regex, categoryNum){
   console.log("String did not match category "+ categoryNum + "'s regex");
   return null;
 }
-
-/**
- * function for category one parsing
- * parameter is the categories and the cat1 regex
- */
-function Category1(categories, cat1_regex) {
-  if (!categories[0]) {
-      console.log("cat one returned null");
-      return null;
-  } else if (categories[0].toUpperCase().match(cat1_regex)) {
-      console.log("returning first category");
-      console.log(categories[0].toUpperCase());
-      return categories[0].toUpperCase();
-  }
-  console.log("cat one returned null location 2");
-  return null;
-}
-
-/**
- * function for category one parsing
- * parameter is the categories and the cat7/cat4&7 regex
- */
-function Category4(categories, cat4_and_cat7, cat7_regex) {
-  if (categories.length < 2) {
-      return null;
-  } else if (categories[1].toUpperCase().match(cat4_and_cat7)) {
-      if (categories[1].toUpperCase().match(cat7_regex)) {
-          return categories[1];
-      } else {
-          return categories[1].toUpperCase();
-      }
-  }
-  return null;
-}
-
-/**
- * function for category one parsing
- * parameter is the categories and the cat7 regex
- */
-function Category7(categories, cat7_regex) {
-  if (categories.length < 3) {
-      return null;
-  } else if (categories[2].toUpperCase().match(cat7_regex)) {
-      return categories[2].toUpperCase();
-  }
-  return null;
-}
-
 
 /**
  * sets session data
