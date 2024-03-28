@@ -107,17 +107,16 @@ function getBodyAsync() {
  * function to extract banner from message body
  * parameter is the message body contents
  * returns the banner from the body
+ * @param { String } body 
  */
 function getBannerFromBody(body) {
-  const banner_regex = /(^([Tt][Oo][Pp]\s*[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Ss]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Ss]|[Cc][Oo][Nn][Ff][Ii][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Cc]|[Uu][Nn][Cc][Ll][Aa][Ss][Ss][Ii][Ff][Ii][Ee][Dd]|[Uu])(\/\/)?(\w*)(\/\/)?(\w*))/m;
+  const banner_regex = /^(([Tt][Oo][Pp]\s*[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Ss]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Ss]|[Cc][Oo][Nn][Ff][Ii][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Cc]|[Uu][Nn][Cc][Ll][Aa][Ss][Ss][Ii][Ff][Ii][Ee][Dd]|[Uu])(\/\/)?((\w*\s*)*)(\/\/)?((\w*\s*)*)($\n)?)/m;
 
   const banner = body.match(banner_regex);
   console.log(banner);
-  const bannerRegex = /^(.*?\/\/.*)/;
-  const bannerFound = body.match(bannerRegex);
-  if(bannerFound){
+  if(banner){
     console.log("banner found");
-    return bannerFound[1];
+    return banner[0];
   }
   else{
     console.log("banner null");
@@ -141,8 +140,6 @@ function parseBannerMarkings(body){
   const cat4_regex = /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS/gi;
   const cat7_regex = /ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*USA,\s*AUZ,\s*NZL|REL\s*TO\s*USA,\s*AUS,\s*NZL|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
   const cat4_and_cat7 = /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS|ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*USA,\s*AUZ,\s*NZL|REL\s*TO\s*USA,\s*AUS,\s*NZL|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
-  
-  
 
   const Categories = body.split("//");
   console.log(Categories);
