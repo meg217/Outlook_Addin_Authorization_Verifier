@@ -125,7 +125,8 @@ function getBannerFromBody(body) {
 /**
  * function to parse banner markings
  * parameter is the message body contents
- * returns an arra f each category being array[1] is cat1 nd on for 1, 4 and 7
+ * returns an array of each category being array[1] is cat1 and on for 1, 4 and 7
+ * @param { String } body 
  */
 function parseBannerMarkings(body){
   // const cat1_regex = "TOP[\s]*SECRET|TS|(TS)|SECRET|S|(S)|CONFIDENTIAL|C|(C)|UNCLASSIFIED|U|(U)";
@@ -143,34 +144,31 @@ function parseBannerMarkings(body){
   let Category_7 = null;
   if(Categories[1]){
     if(Categories[1].toUpperCase().match(cat7_regex)){
-      // If the second parse matches the regex for category 7, then we need to make category4 null and run category7
+      // If the second parse matches the regex for category 7, then we need to make category 4 null and run category 7
       Category_4 = null;
       Category_7 = Category7(Categories, cat7_regex);
     }
     else{
+      // If the second parse doesnt match, run each category with its corresponding regex
       Category_4 = Category(Categories[1], cat4_regex, 4);
       Category_7 = Category(Categories[2], cat7_regex, 7);
     }
   }
-  
-
   /**
    * FIX ME: We need to find a way to check to see if there is a category 4, if there isnt that means that the string needs to be 
    *        parsed into category 7.
    */
   //let Category_4 = Category4(Categories, cat4_and_cat7, cat7_regex);
   //let Category_7 = Category7(Categories, cat7_regex);
-
-  
-
   const Together = [Category_1, Category_4, Category_7];
   return Together;
 }
 
 /**
- * 
+ * function that uses regex to match the input category string, if no match is found it returns null
  * @param { String } category 
  * @param { String } regex 
+ * @param { int } categoryNum
  */
 function Category(category, regex, categoryNum){
   if (!category){
@@ -183,6 +181,7 @@ function Category(category, regex, categoryNum){
     return category.toUpperCase();
   }
   console.log("String did not match category "+ categoryNum + "'s regex");
+  return null;
 }
 
 /**
