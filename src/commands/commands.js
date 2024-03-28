@@ -146,7 +146,7 @@ function parseBannerMarkings(body){
     if(Categories[1].toUpperCase().match(cat7_regex)){
       // If the second parse matches the regex for category 7, then we need to make category 4 null and run category 7
       Category_4 = null;
-      Category_7 = Category7(Categories, cat7_regex);
+      Category_7 = Category7(Categories[1], cat7_regex);
     }
     else{
       // If the second parse doesnt match, run each category with its corresponding regex
