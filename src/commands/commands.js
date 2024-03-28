@@ -109,7 +109,7 @@ function getBodyAsync() {
  * returns the banner from the body
  */
 function getBannerFromBody(body) {
-  const banner_regex = /^([Tt][Oo][Pp]\s*[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Ss]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Ss]|[Cc][Oo][Nn][Ff][Ii][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Cc]|[Uu][Nn][Cc][Ll][Aa][Ss][Ss][Ii][Ff][Ii][Ee][Dd]|[Uu])(\/\/)?(\w*)(\/\/)?(\w*)/gi;
+  const banner_regex = /(^([Tt][Oo][Pp]\s*[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Ss]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Ss]|[Cc][Oo][Nn][Ff][Ii][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Cc]|[Uu][Nn][Cc][Ll][Aa][Ss][Ss][Ii][Ff][Ii][Ee][Dd]|[Uu])(\/\/)?(\w*)(\/\/)?(\w*))/m;
 
   const banner = body.match(banner_regex);
   console.log(banner);
