@@ -138,11 +138,51 @@ function parseBannerMarkings(body){
   const cat4_and_cat7 = /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS|ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*USA,\s*AUZ,\s*NZL|REL\s*TO\s*USA,\s*AUS,\s*NZL|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
   
   const Categories = body.split("//");
-  const Category_1 = Category1(Categories, cat1_regex);
-  const Category_4 = Category4(Categories, cat4_and_cat7, cat7_regex);
-  const Category_7 = Category7(Categories, cat7_regex);
+  let Category_1 = Category(Categories[0], cat1_regex, 1);
+  let Category_4 = null;
+  let Category_7 = null;
+  if(Categories[1]){
+    if(Categories[1].toUpperCase().match(cat7_regex)){
+      // If the second parse matches the regex for category 7, then we need to make category4 null and run category7
+      Category_4 = null;
+      Category_7 = Category7(Categories, cat7_regex);
+    }
+    else{
+      Category_4 = Category(Categories[1], cat4_regex, 4);
+      Category_7 = Category(Categories[2], cat7_regex, 7);
+    }
+  }
+  
+
+  /**
+   * FIX ME: We need to find a way to check to see if there is a category 4, if there isnt that means that the string needs to be 
+   *        parsed into category 7.
+   */
+  //let Category_4 = Category4(Categories, cat4_and_cat7, cat7_regex);
+  //let Category_7 = Category7(Categories, cat7_regex);
+
+  
+
   const Together = [Category_1, Category_4, Category_7];
   return Together;
+}
+
+/**
+ * 
+ * @param { String } category 
+ * @param { String } regex 
+ */
+function Category(category, regex, categoryNum){
+  if (!category){
+    console.log("Category" + categoryNum + "string returned null");
+    return null;
+  }
+  else if(category.toUpperCase().match(regex)) {
+    console.log("returning category " + categoryNum);
+    console.log(category.toUpperCase());
+    return category.toUpperCase();
+  }
+  console.log("String did not match category "+ categoryNum + "'s regex");
 }
 
 /**
