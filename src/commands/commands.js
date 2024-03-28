@@ -109,6 +109,10 @@ function getBodyAsync() {
  * returns the banner from the body
  */
 function getBannerFromBody(body) {
+  const banner_regex = /^([Tt][Oo][Pp]\s*[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Ss]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Ss]|[Cc][Oo][Nn][Ff][Ii][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Cc]|[Uu][Nn][Cc][Ll][Aa][Ss][Ss][Ii][Ff][Ii][Ee][Dd]|[Uu])(\/\/)?(\w*)(\/\/)?(\w*)/gi;
+
+  const banner = body.match(banner_regex);
+  console.log(banner);
   const bannerRegex = /^(.*?\/\/.*)/;
   const bannerFound = body.match(bannerRegex);
   if(bannerFound){
@@ -138,10 +142,7 @@ function parseBannerMarkings(body){
   const cat7_regex = /ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*USA,\s*AUZ,\s*NZL|REL\s*TO\s*USA,\s*AUS,\s*NZL|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
   const cat4_and_cat7 = /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS|ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*USA,\s*AUZ,\s*NZL|REL\s*TO\s*USA,\s*AUS,\s*NZL|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
   
-  const banner_regex = /^([Tt][Oo][Pp]\s*[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Ss]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Ss]|[Cc][Oo][Nn][Ff][Ii][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Cc]|[Uu][Nn][Cc][Ll][Aa][Ss][Ss][Ii][Ff][Ii][Ee][Dd]|[Uu])(\/\/)?(\w*)(\/\/)?(\w*)/gi;
-
-  const banner = body.match(banner_regex);
-  console.log(banner);
+  
 
   const Categories = body.split("//");
   console.log(Categories);
