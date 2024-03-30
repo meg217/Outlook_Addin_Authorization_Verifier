@@ -34,6 +34,8 @@ function MessageSendVerificationHandler(event) {
       if (!allowEvent) {
         // Prevent sending the email
         event.completed({ allowEvent: false });
+        console.log("debugging");
+        Office.context.ui.messageParent("Hello");
         Office.context.mailbox.item.notificationMessages.addAsync(
           "unauthorizedSending",
           {
@@ -50,8 +52,6 @@ function MessageSendVerificationHandler(event) {
       console.error("Error occurred while checking recipient classification: " + error);
     });
 });
-  console.log("debugging");
-  Office.context.ui.messageParent("Hello");
 }
 
 /**
