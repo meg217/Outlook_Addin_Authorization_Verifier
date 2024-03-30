@@ -186,6 +186,9 @@ function parseBannerMarkings(banner){
  * @returns { array } || null
  */
 function getSubMarkings(category){
+  if (!category){
+    return null;
+  }
   submarkings = category.split('/');
   if (submarkings.length <= 1){
     console.log("There is only one submarking");
