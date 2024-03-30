@@ -23,7 +23,7 @@
   <FormSettings>
     <Form xsi:type="ItemRead">
       <DesktopSettings>
-        <SourceLocation DefaultValue="https://meg217.github.io/Outlook_Addin_Authorization_Verifier/src/commands/commands.html"/>
+        <SourceLocation DefaultValue="https://www.contoso.com/commands.html"/>
         <RequestedHeight>250</RequestedHeight>
       </DesktopSettings>
     </Form>
