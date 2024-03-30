@@ -163,17 +163,24 @@ function parseBannerMarkings(banner){
   else {
     console.log("second category returned null");
   }
+  getSubMarkings(Category_4);
+  getSubMarkings(Category_7);
+
   const Together = [Category_1, Category_4, Category_7];
   return Together;
 }
 
 /**
- * returns the submarkings of the category
+ * returns the submarkings of the category. if there is one category, then it returns null
  * @param { string } category 
- * @returns { array }
+ * @returns { array } || null
  */
 function getSubMarkings(category){
   submarkings = category.split('/');
+  if (submarkings.length <= 1){
+    console.log("There is only one submarking");
+    return null;
+  }
   console.log(submarkings);
   return submarkings;
 
