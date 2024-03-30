@@ -168,6 +168,18 @@ function parseBannerMarkings(banner){
 }
 
 /**
+ * returns the submarkings of the category
+ * @param { string } category 
+ * @returns { array }
+ */
+function getSubMarkings(category){
+  submarkings = category.split('/');
+  console.log(submarkings);
+  return submarkings;
+
+}
+
+/**
  * function that uses regex to match the input category string, if no match is found it returns null
  * @param { String } category 
  * @param { String } regex 
