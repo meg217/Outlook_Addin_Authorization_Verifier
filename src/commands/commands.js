@@ -54,8 +54,10 @@ function MessageSendVerificationHandler(event) {
   Office.context.ui.displayDialogAsync("https://meg217.github.io/Outlook_Addin_Authorization_Verifier/src/commands/commands.html", { height: 300, width: 200 },
     (asyncResult) => {
         const dialog = asyncResult.value;
+        console.log(dialog);
         dialog.addEventHandler(Office.EventType.DialogMessageReceived, (arg) => {
             dialog.close();
+            console.log(arg);
             processMessage(arg);
         });
     }
