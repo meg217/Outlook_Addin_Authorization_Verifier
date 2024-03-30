@@ -51,7 +51,7 @@ function MessageSendVerificationHandler(event) {
     });
 });
 
-  Office.context.ui.displayDialogAsync("https://meg217.github.io/Outlook_Addin_Authorization_Verifier/src/commands/commands.html", { height: 30, width: 20 },
+  Office.context.ui.displayDialogAsync("https://meg217.github.io/Outlook_Addin_Authorization_Verifier/src/commands/commands.html", { height: 300, width: 200 },
     (asyncResult) => {
         const dialog = asyncResult.value;
         dialog.addEventHandler(Office.EventType.DialogMessageReceived, (arg) => {
@@ -173,8 +173,7 @@ function parseBannerMarkings(banner){
   else {
     console.log("second category returned null");
   }
-  getSubMarkings(Category_4);
-  getSubMarkings(Category_7);
+
 
   const Together = [Category_1, Category_4, Category_7];
   return Together;
@@ -186,9 +185,6 @@ function parseBannerMarkings(banner){
  * @returns { array } || null
  */
 function getSubMarkings(category){
-  if (!category){
-    return null;
-  }
   submarkings = category.split('/');
   if (submarkings.length <= 1){
     console.log("There is only one submarking");
