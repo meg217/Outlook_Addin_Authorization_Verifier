@@ -50,18 +50,8 @@ function MessageSendVerificationHandler(event) {
       console.error("Error occurred while checking recipient classification: " + error);
     });
 });
-
-  Office.context.ui.displayDialogAsync("https://meg217.github.io/Outlook_Addin_Authorization_Verifier/src/commands/commands.html", { height: 300, width: 200 },
-    (asyncResult) => {
-        const dialog = asyncResult.value;
-        console.log(asyncResult.error);
-        dialog.addEventHandler(Office.EventType.DialogMessageReceived, (arg) => {
-            dialog.close();
-            console.log(arg);
-            processMessage(arg);
-        });
-    }
-  );
+  console.log("debugging");
+  Office.context.ui.messageParent("Hello");
 }
 
 /**
