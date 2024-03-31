@@ -40,7 +40,9 @@ function MessageSendVerificationHandler(event) {
             type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
             message: "You are not authorized to send this email"
           },
-          handleResult
+          (result) => {
+            console.log(result);
+          }
         );
         console.log(handleResult);
       } else {
