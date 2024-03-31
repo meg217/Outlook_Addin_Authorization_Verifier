@@ -33,6 +33,7 @@ function MessageSendVerificationHandler(event) {
     .then(allowEvent => {
       if (!allowEvent) {
         // Prevent sending the email
+        console.log("Prevent sending email");
         event.completed({ allowEvent: false });
         Office.context.mailbox.item.notificationMessages.addAsync(
           "unauthorizedSending",
@@ -44,7 +45,6 @@ function MessageSendVerificationHandler(event) {
             console.log(result);
           }
         );
-        console.log(handleResult);
       } else {
         // Allow sending the email
         event.completed({ allowEvent: true });
