@@ -57,7 +57,7 @@
             <!-- Enable launching the add-in on the included events. -->
             <ExtensionPoint xsi:type="LaunchEvent">
               <LaunchEvents>
-                <LaunchEvent Type="OnMessageSend" FunctionName="MessageSendVerificationHandler" />
+                <LaunchEvent Type="OnMessageSend" FunctionName="MessageSendVerificationHandler" sendMode="Block" />
               </LaunchEvents>
               <!-- Identifies the runtime to be used (also referenced by the Runtime element). -->
               <SourceLocation resid="WebViewRuntime.Url"/>
