@@ -34,15 +34,15 @@ function MessageSendVerificationHandler(event) {
       if (!allowEvent) {
         // Prevent sending the email
         event.completed({ allowEvent: false });
-        console.log("debugging");
-        Office.context.ui.messageParent("Hello");
         Office.context.mailbox.item.notificationMessages.addAsync(
           "unauthorizedSending",
           {
             type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
             message: "You are not authorized to send this email"
-          }
+          },
+          handleResult
         );
+        console.log(handleResult);
       } else {
         // Allow sending the email
         event.completed({ allowEvent: true });
