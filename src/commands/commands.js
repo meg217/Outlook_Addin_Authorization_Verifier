@@ -15,6 +15,7 @@ function MessageSendVerificationHandler(event) {
 
   //adding csv loading logic
   const csvUrl = 'https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv'
+  console.log("attempting to parse csv");
   Papa.parse(csvUrl, {
     download: true,
     complete: function(results) {
