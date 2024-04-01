@@ -13,7 +13,7 @@ Office.initialize = function (reason) {};
  */
 function MessageSendVerificationHandler(event) {
 
-  //adding csv loading logic
+  //Meagan: adding csv loading logic maybe need to add omise, so that it is async?
   const csvUrl = 'https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv'
   console.log("attempting to parse csv");
   Papa.parse(csvUrl, {
