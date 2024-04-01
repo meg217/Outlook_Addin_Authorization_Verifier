@@ -12,6 +12,25 @@ Office.initialize = function (reason) {};
  * @param {*} event The Office event object
  */
 function MessageSendVerificationHandler(event) {
+
+  //adding csv loading logic
+  const csvUrl = 'https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv'
+  Papa.parse(csvUrl, {
+    download: true,
+    complete: function(results) {
+      console.log(results)
+    }
+  })
+  
+  
+  // fetchCSVData(csvUrl)
+  //   .then(parsedData => {
+  //     console.log(parsedData);
+  //   })
+  //   .catch(error => {
+  //     console.error("Could not fetch the csv data");
+  //   })
+
   //promise is to encapsulate all the asynch functions
   Promise.all([
     getToRecipientsAsync(),
@@ -208,6 +227,14 @@ function Category(category, regex, categoryNum){
   console.log("String did not match category "+ categoryNum + "'s regex");
   return null;
 }
+
+
+function fetchCSVData(url) {
+  return fetch(url)
+    .then(csvData=> parseCSV(csvData));
+}
+
+
 
 /**
  * sets session data
