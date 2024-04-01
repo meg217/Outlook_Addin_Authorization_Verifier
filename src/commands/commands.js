@@ -20,6 +20,11 @@ function MessageSendVerificationHandler(event) {
     download: true,
     complete: function(results) {
       console.log(results)
+      resolve(results.data);
+    },
+    error: (error) => {
+      console.log("error orccured while trying to parse csv");
+      reject(error);
     }
   })
   
