@@ -19,7 +19,7 @@ function MessageSendVerificationHandler(event) {
   Papa.parse(csvUrl, {
     download: true,
     complete: function(results) {
-      console.log(results)
+      console.log("results are" + results);
       resolve(results.data);
     },
     error: (error) => {
