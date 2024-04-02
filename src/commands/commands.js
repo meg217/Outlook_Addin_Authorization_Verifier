@@ -3,11 +3,12 @@
  * See LICENSE in the project root for license information.
  */
 
-Office.initialize = function (reason) {};
+var mailboxItem;
 
-Office.onReady(function() {
-  // Add any initialization code for your dialog here.
-});
+Office.initialize = function (reason) {
+  mailboxItem = Office.context.mailbox.item;
+}
+
 
 // Called when dialog signs in the user.
 function userSignedIn() {
@@ -44,9 +45,8 @@ function MessageSendVerificationHandler(event) {
           
           //the commented out displays a new window...
           //Office.context.ui.displayDialogAsync('https://www.contoso.com/myDialog.html');
-          //this didnt work: Office.context.ui.messageParent( JSON.stringify({ status: 'failure' }));
-          showNotification("banner was not found!");
-          // event.completed({ allowEvent: false });
+          mailboxItem.notificationMessages.addAsync('NoSend', { type: 'errorMessage', message: 'Please enter a banner marking for this email.' });
+          event.completed({ allowEvent: false });
           return; 
         }
 
