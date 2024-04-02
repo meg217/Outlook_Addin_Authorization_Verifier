@@ -32,9 +32,10 @@ function MessageSendVerificationHandler(event) {
         // Check if the banner is null
         if (banner == null) {
           console.log("banner is null, so should not send email");
-    
-          Office.context.ui.displayDialogAsync('https://www.contoso.com/myDialog.html');
           
+          //the commented out displays a new window...
+          //Office.context.ui.displayDialogAsync('https://www.contoso.com/myDialog.html');
+          Office.context.ui.messageParent( JSON.stringify({ status: 'failure' }));
           // event.completed({ allowEvent: false });
           return; 
         }
