@@ -33,7 +33,7 @@ function MessageSendVerificationHandler(event) {
     console.log(bannerMarkings);
 
     // Check if the banner is null
-    if (!banner) {
+    if (banner == null) {
       console.log("banner is null, so should not send email");
       event.completed({ allowEvent: false });
 
