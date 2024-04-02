@@ -12,41 +12,14 @@ Office.initialize = function (reason) {};
  * @param {*} event The Office event object
  */
 function MessageSendVerificationHandler(event) {
-
-  //Meagan: adding csv loading logic maybe need to add omise, so that it is async?
-  const csvUrl = 'https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv'
-
-  function fetchAndParseCSV(csvUrl) {
-    console.log("attempting to parse csv");
-    return new Promise((resolve, reject) => {
-      Papa.parse(csvUrl, {
-        download: true,
-        complete: (result) => {
-          console.log("results are" + results);
-          resolve(result.data);
-        },
-        error: (error) => {
-          console.log("error orccured while trying to parse csv");
-          reject(error);
-        }
-      });
-    });
-  }
-
-  fetchAndParseCSV(csvUrl)
-    .then(parsedData => {
-      console.log(parsedData);
-    })
-    .catch(error => {
-      console.error("Could not fetch or parse the CSV data:", error);
-    })
   
 
   //promise is to encapsulate all the asynch functions
   Promise.all([
     getToRecipientsAsync(),
     getSenderAsync(),
-    getBodyAsync()
+    getBodyAsync(),
+    fetchAndParseCSV()
   ])
   .then(([toRecipients, sender, body]) => {
     console.log("To recipients:");
@@ -84,6 +57,28 @@ function MessageSendVerificationHandler(event) {
       console.error("Error occurred while checking recipient classification: " + error);
     });
 });
+}
+
+
+/**
+ * Gets the csv data file.
+ */
+function fetchAndParseCSV() {
+  const csvUrl = 'https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv';
+  console.log("attempting to parse csv");
+  return new Promise((resolve, reject) => {
+    Papa.parse(csvUrl, {
+      download: true,
+      complete: (result) => {
+        console.log("results are" + result);
+        resolve(result.data);
+      },
+      error: (error) => {
+        console.log("error orccured while trying to parse csv");
+        reject(error);
+      }
+    });
+  });
 }
 
 /**
