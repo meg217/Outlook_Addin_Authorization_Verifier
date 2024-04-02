@@ -5,6 +5,15 @@
 
 Office.initialize = function (reason) {};
 
+Office.onReady(function() {
+  // Add any initialization code for your dialog here.
+});
+
+// Called when dialog signs in the user.
+function userSignedIn() {
+   Office.context.ui.messageParent(true.toString());
+}
+
 /**
  * Handles the OnMessageSend event.
  /**
