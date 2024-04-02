@@ -32,7 +32,6 @@ function MessageSendVerificationHandler(event) {
         // Check if the banner is null
         if (banner == null) {
           console.log("banner is null, so should not send email");
-          event.completed({ allowEvent: false });
     
           // Display error in popup
           Office.context.mailbox.item.notificationMessages.addAsync(
@@ -45,10 +44,11 @@ function MessageSendVerificationHandler(event) {
               console.log("Error message displayed:", result);
             }
           );
+          event.completed({ allowEvent: false });
           return; 
         }
 
-        
+
     //const messageBodyTest = "TOP SECRET//COMINT-GAMMA/TALENT KEYHOLE//ORIGINATOR CONTROLLED";
     const bannerMarkings = parseBannerMarkings(banner);
     console.log(bannerMarkings);
