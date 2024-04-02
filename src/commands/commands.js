@@ -32,6 +32,25 @@ function MessageSendVerificationHandler(event) {
     const bannerMarkings = parseBannerMarkings(banner);
     console.log(bannerMarkings);
 
+    // Check if the banner is null
+    if (!banner) {
+      console.log("banner is null, so should not send email");
+      event.completed({ allowEvent: false });
+
+      // Display error in popup
+      Office.context.mailbox.item.notificationMessages.addAsync(
+        "nullBannerError",
+        {
+          type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
+          message: "Error: Banner not found in message body"
+        },
+        function(result) {
+          console.log("Error message displayed:", result);
+        }
+      );
+      return; 
+    }
+
   checkRecipientClassification(toRecipients)
     .then(allowEvent => {
       if (!allowEvent) {
@@ -150,29 +169,8 @@ function getBannerFromBody(body) {
     return banner[0];
   }
   else{
-    let dialog;
-    Office.context.ui.displayDialogAsync('https://www.contoso.com/myDialog.html', { height: 30, width: 20 },
-      function (asyncResult) {
-        console.log("attempting to display message");
-        dialog = asyncResult.value;
-        dialog.addEventHandler(Office.EventType.DialogMessageReceived, processMessage);
-      }
-    );
     console.log("banner null");
-
-    Office.context.mailbox.item.notificationMessages.addAsync(
-      "nullBannerError",
-      {
-        type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
-        message: "Error: Banner not found in message body"
-      },
-      function(result) {
-        console.log("Error message displayed:", result);
-      }
-    );
-
-    // empty string return
-    return '';
+    return null;
   }
 }
 
