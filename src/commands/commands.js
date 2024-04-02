@@ -70,7 +70,7 @@ function fetchAndParseCSV() {
     Papa.parse(csvUrl, {
       download: true,
       complete: (result) => {
-        console.log("results are" + result);
+        console.log("results are" + result.data);
         resolve(result.data);
       },
       error: (error) => {
