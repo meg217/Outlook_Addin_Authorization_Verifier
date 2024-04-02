@@ -150,6 +150,14 @@ function getBannerFromBody(body) {
     return banner[0];
   }
   else{
+    let dialog;
+    Office.context.ui.displayDialogAsync('https://www.contoso.com/myDialog.html', {height: 30, width: 20},
+    function (asyncResult) {
+      console.log("attempting to display message");
+        dialog = asyncResult.value;
+        dialog.addEventHandler(Office.EventType.DialogMessageReceived, processMessage);
+      }
+    )
     console.log("banner null");
     return null;
   }
