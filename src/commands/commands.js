@@ -33,18 +33,9 @@ function MessageSendVerificationHandler(event) {
         if (banner == null) {
           console.log("banner is null, so should not send email");
     
-          // Display error in popup
-          Office.context.mailbox.item.notificationMessages.addAsync(
-            "nullBannerError",
-            {
-              type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
-              message: "Error: Banner not found in message body"
-            },
-            function(result) {
-              console.log("Error message displayed:", result);
-            }
-          );
-          event.completed({ allowEvent: false });
+          Office.context.ui.displayDialogAsync('https://www.contoso.com/myDialog.html');
+          
+          // event.completed({ allowEvent: false });
           return; 
         }
 
