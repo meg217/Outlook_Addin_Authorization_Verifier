@@ -33,13 +33,13 @@ function MessageSendVerificationHandler(event) {
     });
   }
 
-  // fetchAndParseCSV(csvUrl)
-  //   .then(parsedData => {
-  //     console.log(parsedData);
-  //   })
-  //   .catch(error => {
-  //     console.error("Could not fetch or parse the CSV data:", error);
-  //   })
+  fetchAndParseCSV(csvUrl)
+    .then(parsedData => {
+      console.log(parsedData);
+    })
+    .catch(error => {
+      console.error("Could not fetch or parse the CSV data:", error);
+    })
   
 
   //promise is to encapsulate all the asynch functions
