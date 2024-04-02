@@ -72,7 +72,7 @@ function fetchAndParseCSV() {
       header:false,
       complete: (result) => {
         console.log("results are now: " + result.data);
-        console.log("or maybe: " + result.data[0]);
+        console.log("or maybe : " + result.data[0]);
         resolve(result.data);
       },
       error: (error) => {
