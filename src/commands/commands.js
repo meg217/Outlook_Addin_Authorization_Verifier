@@ -46,6 +46,7 @@ function MessageSendVerificationHandler(event) {
           //the commented out displays a new window...
           //Office.context.ui.displayDialogAsync('https://www.contoso.com/myDialog.html');
           mailboxItem.notificationMessages.addAsync('NoSend', { type: 'errorMessage', message: 'Please enter a banner marking for this email.' });
+          console.log("event should be denied");
           event.completed({ allowEvent: false });
           return; 
         }
