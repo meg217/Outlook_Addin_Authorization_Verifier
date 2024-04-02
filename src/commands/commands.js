@@ -28,28 +28,31 @@ function MessageSendVerificationHandler(event) {
     console.log("Body:" + body);
     //const bannerMarkings = parseBannerMarkings(body);
     const banner = getBannerFromBody(body);
+
+        // Check if the banner is null
+        if (banner == null) {
+          console.log("banner is null, so should not send email");
+          event.completed({ allowEvent: false });
+    
+          // Display error in popup
+          Office.context.mailbox.item.notificationMessages.addAsync(
+            "nullBannerError",
+            {
+              type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
+              message: "Error: Banner not found in message body"
+            },
+            function(result) {
+              console.log("Error message displayed:", result);
+            }
+          );
+          return; 
+        }
+
+        
     //const messageBodyTest = "TOP SECRET//COMINT-GAMMA/TALENT KEYHOLE//ORIGINATOR CONTROLLED";
     const bannerMarkings = parseBannerMarkings(banner);
     console.log(bannerMarkings);
 
-    // Check if the banner is null
-    if (banner == null) {
-      console.log("banner is null, so should not send email");
-      event.completed({ allowEvent: false });
-
-      // Display error in popup
-      Office.context.mailbox.item.notificationMessages.addAsync(
-        "nullBannerError",
-        {
-          type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
-          message: "Error: Banner not found in message body"
-        },
-        function(result) {
-          console.log("Error message displayed:", result);
-        }
-      );
-      return; 
-    }
 
   checkRecipientClassification(toRecipients)
     .then(allowEvent => {
