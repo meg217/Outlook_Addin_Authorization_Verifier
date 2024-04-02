@@ -15,27 +15,32 @@ function MessageSendVerificationHandler(event) {
 
   //Meagan: adding csv loading logic maybe need to add omise, so that it is async?
   const csvUrl = 'https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv'
-  console.log("attempting to parse csv");
-  Papa.parse(csvUrl, {
-    download: true,
-    complete: function(results) {
-      console.log("results are" + results);
-      resolve(results.data);
-    },
-    error: (error) => {
-      console.log("error orccured while trying to parse csv");
-      reject(error);
-    }
-  })
-  
-  
-  // fetchCSVData(csvUrl)
+
+  function fetchAndParseCSV(csvUrl) {
+    console.log("attempting to parse csv");
+    return new Promise((resolve, reject) => {
+      Papa.parse(csvUrl, {
+        download: true,
+        complete: (result) => {
+          console.log("results are" + results);
+          resolve(result.data);
+        },
+        error: (error) => {
+          console.log("error orccured while trying to parse csv");
+          reject(error);
+        }
+      });
+    });
+  }
+
+  // fetchAndParseCSV(csvUrl)
   //   .then(parsedData => {
   //     console.log(parsedData);
   //   })
   //   .catch(error => {
-  //     console.error("Could not fetch the csv data");
+  //     console.error("Could not fetch or parse the CSV data:", error);
   //   })
+  
 
   //promise is to encapsulate all the asynch functions
   Promise.all([
