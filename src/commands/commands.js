@@ -35,7 +35,7 @@ function MessageSendVerificationHandler(event) {
           
           //the commented out displays a new window...
           //Office.context.ui.displayDialogAsync('https://www.contoso.com/myDialog.html');
-          Office.context.ui.messageParent( JSON.stringify({ status: 'failure' }));
+          //this didnt work: Office.context.ui.messageParent( JSON.stringify({ status: 'failure' }));
           showNotification("banner was not found!");
           // event.completed({ allowEvent: false });
           return; 
