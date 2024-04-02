@@ -10,7 +10,7 @@ Office.initialize = function (reason) {
 }
 
 
-// Called when dialog signs in the user.
+// Called when dialog signs in the user. this is an example, can be deleted
 function userSignedIn() {
    Office.context.ui.messageParent(true.toString());
 }
@@ -46,7 +46,7 @@ function MessageSendVerificationHandler(event) {
           //the commented out displays a new window...
           //Office.context.ui.displayDialogAsync('https://www.contoso.com/myDialog.html');
           //difference between errorMessage and informationalMessage?
-          mailboxItem.notificationMessages.addAsync('NoSend', { type: 'InformationalMessage', message: 'Please enter a banner marking for this email.' });
+          mailboxItem.notificationMessages.addAsync('NoSend', { type: 'errorMessage', message: 'Please enter a banner marking for this email.' });
           console.log("event should be denied");
           event.completed({ allowEvent: false });
           return; 
