@@ -39,6 +39,7 @@ function MessageSendVerificationHandler(event) {
     if (banner == null) {
       console.log("banner is null, so should not send email");
 
+<<<<<<< HEAD
       //the commented out displays a new window...
       //Office.context.ui.displayDialogAsync('https://www.contoso.com/myDialog.html');
       //difference between errorMessage and informationalMessage?
@@ -64,6 +65,16 @@ function MessageSendVerificationHandler(event) {
       event.completed({ allowEvent: false });
       return;
     }
+=======
+        // check if banner is correct. Should be uppercase and lowercase letters and single and double slahes / and // like this and commas ,
+        if (banner == 'invalid_banner') {
+          console.log("banner is incorrect, so should not send email");
+          mailboxItem.notificationMessages.addAsync('NoSend', { type: 'errorMessage', message: 'You may have made a mistake in your banner. Please enter a correct banner marking for this email.' });
+          console.log("event should be denied");
+          event.completed({ allowEvent: false });
+          return; 
+        }
+>>>>>>> 570bbcc2f0366736d8f6b1a8c4f6d8bb0f08ddc7
 
     //const messageBodyTest = "TOP SECRET//COMINT-GAMMA/TALENT KEYHOLE//ORIGINATOR CONTROLLED";
     const bannerMarkings = parseBannerMarkings(banner);
@@ -184,28 +195,42 @@ function getBodyAsync() {
  * @param { String } body
  */
 function getBannerFromBody(body) {
+<<<<<<< HEAD
   const banner_regex =
     /^(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/im;
   const format_regex = /^[a-zA-Z\/\\,]*$/;
+=======
+  const banner_regex = /^(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/mi;
+  const format_regex = /\d/;
+>>>>>>> 570bbcc2f0366736d8f6b1a8c4f6d8bb0f08ddc7
 
   const banner = body.match(banner_regex);
   console.log(banner);
+
   if (banner) {
     console.log("banner found");
+<<<<<<< HEAD
     const bannerText = banner[0].trim(); // Trim whitespace
     if (bannerText === "") {
+=======
+    const bannerText = banner.join(' '); // Join all matches into a single string
+    
+    if (bannerText === '') {
+>>>>>>> 570bbcc2f0366736d8f6b1a8c4f6d8bb0f08ddc7
       console.log("banner is blank");
       return null;
     }
-    if (!format_regex.test(bannerText)) {
+
+    if (format_regex.test(bannerText)) {
       console.log("banner format is incorrect");
       return "invalid_banner";
     } else {
       console.log("banner format is correct");
       return bannerText;
     }
+
   } else {
-    console.log("banner null");
+    console.log("isn't catching");
     return null;
   }
 }
