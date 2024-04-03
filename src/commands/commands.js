@@ -43,7 +43,7 @@ function MessageSendVerificationHandler(event) {
         height: 30,
         width: 20,
         promptBeforeOpen: false,
-        displayInIframe: true,
+        //displayInIframe: true,
     };
       //the commented out displays a new window...
       Office.context.ui.displayDialogAsync('https://meg217.github.io/Outlook_Addin_Authorization_Verifier/src/commands/dialog.html', options);
@@ -53,9 +53,9 @@ function MessageSendVerificationHandler(event) {
         message: "Please enter a banner marking for this email.",
       });
 
-      //maybe shouln't de-allow event? instead make a dialog box show up?
-      // console.log("event should be denied");
-      // event.completed({ allowEvent: false });
+      //maybe shouln't de-allow event? instead make a dialog box show up? no just makes it stall and say working on request...
+      console.log("event should be denied");
+      event.completed({ allowEvent: false });
       
       var errorElement = document.querySelector('div.zezGF');
       var errorElement2 = document.querySelector('div.ms-Dialog-main');
