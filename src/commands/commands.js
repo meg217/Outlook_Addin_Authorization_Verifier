@@ -42,7 +42,7 @@ function MessageSendVerificationHandler(event) {
         height: 30,
         width: 20,
         promptBeforeOpen: false,
-        //displayInIframe: true,
+        displayInIframe: true
     };
       //the commented out displays a new window...
       Office.context.ui.displayDialogAsync('https://meg217.github.io/Outlook_Addin_Authorization_Verifier/src/commands/dialog.html', options);
