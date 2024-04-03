@@ -11,59 +11,24 @@
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" integrity="sha512-dfX5uYVXzyU8+KHqj8bjo7UkOdg18PaOtpa48djpNbZHwExddghZ+ZmzWT06R5v6NSk3ZUfsH6FNEDepLx9hPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
     <script type="text/javascript" src="promiseAll.js"></script>
     <script type="text/javascript" src="commands.js"></script>
-    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <!-- <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/office-ui-fabric-react/dist/office-ui-fabric-react.js"></script>
+    <script src="https://unpkg.com/office-ui-fabric-react/dist/office-ui-fabric-react.js"></script> -->
+    <style>
+      .ms-Dialog-main {
+          max-width: 100px !important;
+          max-height: 100px !important;
+          width: 100px;
+          height: 100px;
+      }
+    </style>
+
     <title>Verification Page</title>
 </head>
 
 <body>
   <h1>Welcome to the page that verifies the outlook emails</h1>
   <div id="content"></div>
-
-  <script>
-    let { Dialog, Fabric, IDialogStyles } = window.Fabric;
-
-    class Content extends React.Component {
-      constructor() {
-        super();
-      }
-
-      getStyles() {
-        return {
-          main: [{
-            selectors: {
-              ['@media (min-width: 480px)']: {
-                maxWidth: '900px',
-                minWidth: '800px'
-              }
-            }
-          }]
-        };
-      }
-
-      render() {
-        return (
-          <Fabric className='foo'>
-            <Dialog
-              hidden={false}
-              styles={this.getStyles}
-              dialogContentProps={{
-                title: "Title text",
-                subText: "Content text is a long text that should neeed more space than what is available. Content text is a long text that should neeed more space than what is available. Content text is a long text that should neeed more space than what is available. Content text is a long text that should neeed more space than what is available. Content text is a long text that should neeed more space than what is available. Content text is a long text that should neeed more space than what is available.  Content text is a long text that should neeed more space than what is available."
-              }}
-            >
-            </Dialog>
-          </Fabric>
-        );
-      }
-    }
-
-    ReactDOM.render( 
-      <Content />,
-      document.getElementById('content')
-    );
-  </script>
 </body>
 
 </html>
