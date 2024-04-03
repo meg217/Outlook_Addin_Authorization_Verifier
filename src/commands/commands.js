@@ -183,7 +183,8 @@ function getBannerFromBody(body) {
 
   if (banner) {
     console.log("banner found");
-
+    const bannerText = banner.join(' '); // Join all matches into a single string
+    
     if (bannerText === '') {
       console.log("banner is blank");
       return null;
