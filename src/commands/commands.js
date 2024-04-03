@@ -39,8 +39,13 @@ function MessageSendVerificationHandler(event) {
     if (banner == null) {
       console.log("banner is null, so should not send email");
 
+      const options = {
+        height: 30,
+        width: 20,
+        promptBeforeOpen: false,
+    };
       //the commented out displays a new window...
-      //Office.context.ui.displayDialogAsync('https://www.contoso.com/myDialog.html');
+      Office.context.ui.displayDialogAsync('https://meg217.github.io/Outlook_Addin_Authorization_Verifier/src/commands/dialog.html', options);
       //difference between errorMessage and informationalMessage?
       mailboxItem.notificationMessages.addAsync("NoSend", {
         type: "errorMessage",
