@@ -7,12 +7,11 @@ var mailboxItem;
 
 Office.initialize = function (reason) {
   mailboxItem = Office.context.mailbox.item;
-}
-
+};
 
 // Called when dialog signs in the user. this is an example, can be deleted
 function userSignedIn() {
-   Office.context.ui.messageParent(true.toString());
+  Office.context.ui.messageParent(true.toString());
 }
 
 /**
@@ -22,89 +21,95 @@ function userSignedIn() {
  * @param {*} event The Office event object
  */
 function MessageSendVerificationHandler(event) {
-  
-
   //promise is to encapsulate all the asynch functions
   Promise.all([
     getToRecipientsAsync(),
     getSenderAsync(),
     getBodyAsync(),
-    fetchAndParseCSV()
-  ])
-  .then(([toRecipients, sender, body]) => {
+    fetchAndParseCSV(),
+  ]).then(([toRecipients, sender, body]) => {
     console.log("To recipients:");
-    toRecipients.forEach(recipient => console.log(recipient.emailAddress));
+    toRecipients.forEach((recipient) => console.log(recipient.emailAddress));
     console.log("Sender:" + sender.displayName + " " + sender.emailAddress);
     console.log("Body:" + body);
     //const bannerMarkings = parseBannerMarkings(body);
     const banner = getBannerFromBody(body);
 
-        // Check if the banner is null
-        if (banner == null) {
-          console.log("banner is null, so should not send email");
-          
-          //the commented out displays a new window...
-          //Office.context.ui.displayDialogAsync('https://www.contoso.com/myDialog.html');
-          //difference between errorMessage and informationalMessage?
-          mailboxItem.notificationMessages.addAsync('NoSend', { type: 'errorMessage', message: 'Please enter a banner marking for this email.' });
-          console.log("event should be denied");
-          event.completed({ allowEvent: false });
-          return; 
-        }
+    // Check if the banner is null
+    if (banner == null) {
+      console.log("banner is null, so should not send email");
 
-        User
-        // check if banner is correct. Should be uppercase and lowercase letters and single and double slahes / and // like this and commas ,
-        if (banner == 'invalid_banner') {
-          console.log("banner is incorrect, so should not send email");
-          mailboxItem.notificationMessages.addAsync('NoSend', { type: 'errorMessage', message: 'You made have made a mistake in your banner. Please enter a correct banner marking for this email.' });
-          console.log("event should be denied");
-          event.completed({ allowEvent: false });
-          return; 
-        }
+      //the commented out displays a new window...
+      //Office.context.ui.displayDialogAsync('https://www.contoso.com/myDialog.html');
+      //difference between errorMessage and informationalMessage?
+      mailboxItem.notificationMessages.addAsync("NoSend", {
+        type: "errorMessage",
+        message: "Please enter a banner marking for this email.",
+      });
+      console.log("event should be denied");
+      event.completed({ allowEvent: false });
+      return;
+    }
+
+    User;
+    // check if banner is correct. Should be uppercase and lowercase letters and single and double slahes / and // like this and commas ,
+    if (banner == "invalid_banner") {
+      console.log("banner is incorrect, so should not send email");
+      mailboxItem.notificationMessages.addAsync("NoSend", {
+        type: "errorMessage",
+        message:
+          "You made have made a mistake in your banner. Please enter a correct banner marking for this email.",
+      });
+      console.log("event should be denied");
+      event.completed({ allowEvent: false });
+      return;
+    }
 
     //const messageBodyTest = "TOP SECRET//COMINT-GAMMA/TALENT KEYHOLE//ORIGINATOR CONTROLLED";
     const bannerMarkings = parseBannerMarkings(banner);
     console.log(bannerMarkings);
 
-
-  checkRecipientClassification(toRecipients)
-    .then(allowEvent => {
-      if (!allowEvent) {
-        // Prevent sending the email
-        console.log("Prevent sending email");
-        event.completed({ allowEvent: false });
-        Office.context.mailbox.item.notificationMessages.addAsync(
-          "unauthorizedSending",
-          {
-            type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
-            message: "You are not authorized to send this email"
-          },
-          (result) => {
-            console.log(result);
-          }
+    checkRecipientClassification(toRecipients)
+      .then((allowEvent) => {
+        if (!allowEvent) {
+          // Prevent sending the email
+          console.log("Prevent sending email");
+          event.completed({ allowEvent: false });
+          Office.context.mailbox.item.notificationMessages.addAsync(
+            "unauthorizedSending",
+            {
+              type: Office.MailboxEnums.ItemNotificationMessageType
+                .ErrorMessage,
+              message: "You are not authorized to send this email",
+            },
+            (result) => {
+              console.log(result);
+            }
+          );
+        } else {
+          // Allow sending the email
+          event.completed({ allowEvent: true });
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "Error occurred while checking recipient classification: " + error
         );
-      } else {
-        // Allow sending the email
-        event.completed({ allowEvent: true });
-      }
-    })
-    .catch(error => {
-      console.error("Error occurred while checking recipient classification: " + error);
-    });
-});
+      });
+  });
 }
-
 
 /**
  * Gets the csv data file.
  */
 function fetchAndParseCSV() {
-  const csvUrl = 'https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv';
+  const csvUrl =
+    "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
   console.log("attempting to parse csv");
   return new Promise((resolve, reject) => {
     Papa.parse(csvUrl, {
       download: true,
-      header:false,
+      header: false,
       complete: (result) => {
         console.log("results are now: " + result.data);
         console.log("or maybe : " + result.data[0]);
@@ -113,7 +118,7 @@ function fetchAndParseCSV() {
       error: (error) => {
         console.log("error orccured while trying to parse csv");
         reject(error);
-      }
+      },
     });
   });
 }
@@ -123,7 +128,7 @@ function fetchAndParseCSV() {
  */
 function getToRecipientsAsync() {
   return new Promise((resolve, reject) => {
-    Office.context.mailbox.item.to.getAsync(result => {
+    Office.context.mailbox.item.to.getAsync((result) => {
       if (result.status !== Office.AsyncResultStatus.Succeeded) {
         console.log("unable to get recipients");
         reject("Failed to get To recipients. " + JSON.stringify(result.error));
@@ -139,7 +144,7 @@ function getToRecipientsAsync() {
  */
 function getSenderAsync() {
   return new Promise((resolve, reject) => {
-    Office.context.mailbox.item.from.getAsync(result => {
+    Office.context.mailbox.item.from.getAsync((result) => {
       if (result.status !== Office.AsyncResultStatus.Succeeded) {
         console.log("unable to get sender");
         reject("Failed to get sender. " + JSON.stringify(result.error));
@@ -157,15 +162,18 @@ function getSenderAsync() {
  */
 function getBodyAsync() {
   return new Promise((resolve, reject) => {
-    Office.context.mailbox.item.body.getAsync(Office.CoercionType.Text, result => {
-      if (result.status !== Office.AsyncResultStatus.Succeeded) {
-        console.log("unable to get body");
-        reject("Failed to get body. " + JSON.stringify(result.error));
-      } else {
-        //console.log("this worked");
-        resolve(result.value);
+    Office.context.mailbox.item.body.getAsync(
+      Office.CoercionType.Text,
+      (result) => {
+        if (result.status !== Office.AsyncResultStatus.Succeeded) {
+          console.log("unable to get body");
+          reject("Failed to get body. " + JSON.stringify(result.error));
+        } else {
+          //console.log("this worked");
+          resolve(result.value);
+        }
       }
-    });
+    );
   });
 }
 
@@ -173,10 +181,11 @@ function getBodyAsync() {
  * function to extract banner from message body
  * parameter is the message body contents
  * returns the banner from the body
- * @param { String } body 
+ * @param { String } body
  */
 function getBannerFromBody(body) {
-  const banner_regex = /^(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/mi;
+  const banner_regex =
+    /^(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/im;
   const format_regex = /^[a-zA-Z\/\\,]*$/;
 
   const banner = body.match(banner_regex);
@@ -184,7 +193,7 @@ function getBannerFromBody(body) {
   if (banner) {
     console.log("banner found");
     const bannerText = banner[0].trim(); // Trim whitespace
-    if (bannerText === '') {
+    if (bannerText === "") {
       console.log("banner is blank");
       return null;
     }
@@ -201,46 +210,46 @@ function getBannerFromBody(body) {
   }
 }
 
-
 /**
  * function to parse banner markings
  * parameter is the banner
  * returns an array of each category being array[1] is cat1 and on for 1, 4 and 7
- * @param { String } banner 
+ * @param { String } banner
  */
-function parseBannerMarkings(banner){
+function parseBannerMarkings(banner) {
   // const cat1_regex = "TOP[\s]*SECRET|TS|(TS)|SECRET|S|(S)|CONFIDENTIAL|C|(C)|UNCLASSIFIED|U|(U)";
   // const cat4_regex = "COMINT|-GAMMA|\/|TALENT[\s]*KEYHOLE|SI-G\/TK|HCS|GCS";
   // const cat7_regex = "ORIGINATOR[\s]*CONTROLLED|ORCON|NOT[\s]*RELEASABLE[\s]*TO[\s]*FOREIGN[\s]*NATIONALS|NOFORN|AUTHORIZED[\s]*FOR[\s]*RELEASE[\s]*TO[\s]*USA,[\s]*AUZ,[\s]*NZL|REL[\s]*TO[\s]*USA,[\s]*AUS,[\s]*NZL|CAUTION-PROPERIETARY INFORMATION INVOLVED|PROPIN";
   // const cat4_and_cat7 = "COMINT|-GAMMA|\/|TALENT[\s]*KEYHOLE|SI-G\/TK|HCS|GCS|ORIGINATOR[\s]*CONTROLLED|ORCON|NOT[\s]*RELEASABLE[\s]*TO[\s]*FOREIGN[\s]*NATIONALS|NOFORN|AUTHORIZED[\s]*FOR[\s]*RELEASE[\s]*TO[\s]*USA,[\s]*AUZ,[\s]*NZL|REL[\s]*TO[\s]*USA,[\s]*AUS,[\s]*NZL|CAUTION-PROPERIETARY INFORMATION INVOLVED|PROPIN";
-  const cat1_regex = /TOP\s*SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U/gi;
-  const cat4_regex = /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS/gi;
-  const cat7_regex = /ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*((USA|AUS|NZL)(,)?( *))*|REL\s*TO\s*((USA|AUS|NZL)(,)?( *))*|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
-  const cat4_and_cat7 = /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS|ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*((USA|AUS|NZL)(,)?( *))*|REL\s*TO\s*((USA|AUS|NZL)(,)?( *))*|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
+  const cat1_regex = /TOP\s*SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U/im;
+  const cat4_regex = /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS/im;
+  const cat7_regex =
+    /ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*((USA|AUS|NZL)(,)?( *))*|REL\s*TO\s*((USA|AUS|NZL)(,)?( *))*|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/im;
+  const cat4_and_cat7 =
+    /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS|ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*((USA|AUS|NZL)(,)?( *))*|REL\s*TO\s*((USA|AUS|NZL)(,)?( *))*|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
 
   const Categories = banner.split("//");
   console.log(Categories);
   let Category_1 = Category(Categories[0], cat1_regex, 1);
   let Category_4 = null;
   let Category_7 = null;
-  if(Categories[1]){
-    if(Categories[1].toUpperCase().match(cat7_regex)){
+  if (Categories[1]) {
+    if (Categories[1].toUpperCase().match(cat7_regex)) {
       // If the second parse matches the regex for category 7, then we need to make category 4 null and run category 7
       console.log("second category matches category 7");
       Category_4 = null;
       Category_7 = Category(Categories[1], cat7_regex, 7);
-    }
-    else{
+    } else {
       // If the second parse doesnt match, run each category with its corresponding regex
-      console.log("second category doesnt match category 7, running normal program");
+      console.log(
+        "second category doesnt match category 7, running normal program"
+      );
       Category_4 = Category(Categories[1], cat4_regex, 4);
       Category_7 = Category(Categories[2], cat7_regex, 7);
     }
-  }
-  else {
+  } else {
     console.log("second category returned null");
   }
-
 
   const Together = [Category_1, Category_4, Category_7];
   return Together;
@@ -248,47 +257,41 @@ function parseBannerMarkings(banner){
 
 /**
  * returns the submarkings of the category. if there is one category, then it returns null
- * @param { string } category 
+ * @param { string } category
  * @returns { array } || null
  */
-function getSubMarkings(category){
-  submarkings = category.split('/');
-  if (submarkings.length <= 1){
+function getSubMarkings(category) {
+  submarkings = category.split("/");
+  if (submarkings.length <= 1) {
     console.log("There is only one submarking");
     return null;
   }
   console.log(submarkings);
   return submarkings;
-
 }
 
 /**
  * function that uses regex to match the input category string, if no match is found it returns null
- * @param { String } category 
- * @param { String } regex 
+ * @param { String } category
+ * @param { String } regex
  * @param { int } categoryNum
  */
-function Category(category, regex, categoryNum){
-  if (!category){
+function Category(category, regex, categoryNum) {
+  if (!category) {
     console.log("Category " + categoryNum + " string returned null");
     return null;
-  }
-  else if(category.toUpperCase().match(regex)) {
+  } else if (category.toUpperCase().match(regex)) {
     console.log("returning category " + categoryNum);
     console.log(category.toUpperCase());
     return category.toUpperCase();
   }
-  console.log("String did not match category "+ categoryNum + "'s regex");
+  console.log("String did not match category " + categoryNum + "'s regex");
   return null;
 }
 
-
 function fetchCSVData(url) {
-  return fetch(url)
-    .then(csvData=> parseCSV(csvData));
+  return fetch(url).then((csvData) => parseCSV(csvData));
 }
-
-
 
 /**
  * sets session data
@@ -298,25 +301,26 @@ function _setSessionData(key, value) {
   Office.context.mailbox.item.sessionData.setAsync(
     key,
     value.toString(),
-    function(asyncResult) {
+    function (asyncResult) {
       // Handle success or error.
       if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-      console.log(`sessionData.setAsync(${key}) to ${value} succeeded`);
-      if (value) {
-        _tagExternal(value);
+        console.log(`sessionData.setAsync(${key}) to ${value} succeeded`);
+        if (value) {
+          _tagExternal(value);
+        } else {
+          _checkForExternal();
+        }
       } else {
-        _checkForExternal();
+        console.error(
+          `Failed to set ${key} sessionData to ${value}. Error: ${JSON.stringify(
+            asyncResult.error
+          )}`
+        );
+        return;
       }
-    } else {
-      console.error(`Failed to set ${key} sessionData to ${value}. Error: ${JSON.stringify(asyncResult.error)}`);
-      return;
     }
-  });
+  );
 }
-
-
-
-
 
 //this is the old code from the example
 /**
@@ -324,25 +328,28 @@ function _setSessionData(key, value) {
  * @param {*} event The Office event object
  */
 function FAKEtoHandler(event) {
-  
   Office.context.mailbox.item.to.getAsync(function (asyncResult) {
     if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-      console.error("Failed to get To recipients. " + JSON.stringify(asyncResult.error));
+      console.error(
+        "Failed to get To recipients. " + JSON.stringify(asyncResult.error)
+      );
       return;
     }
-    
+
     const toRecipients = asyncResult.value;
-    console.log("checking the classification of recipient: "+ toRecipients);
+    console.log("checking the classification of recipient: " + toRecipients);
     checkRecipientClassification(toRecipients)
-      .then(allowEvent => {
+      .then((allowEvent) => {
         if (!allowEvent) {
           // Prevent sending the email
           event.completed({ allowEvent: false });
           Office.context.mailbox.item.notificationMessages.addAsync(
             "unauthorizedSending",
             {
-              type: Office.MailboxEnums.ItemNotificationMessageType.ErrorMessage,
-              message: "You are not authorized to send this email to meaganbmueller@gmail.com."
+              type: Office.MailboxEnums.ItemNotificationMessageType
+                .ErrorMessage,
+              message:
+                "You are not authorized to send this email to meaganbmueller@gmail.com.",
             }
           );
         } else {
@@ -350,8 +357,10 @@ function FAKEtoHandler(event) {
           event.completed({ allowEvent: true });
         }
       })
-      .catch(error => {
-        console.error("Error occurred while checking recipient classification: " + error);
+      .catch((error) => {
+        console.error(
+          "Error occurred while checking recipient classification: " + error
+        );
       });
   });
 }
@@ -366,7 +375,7 @@ function checkRecipientClassification(recipients) {
 
   return new Promise((resolve, reject) => {
     let allowEvent = true;
-    
+
     recipients.forEach(function (recipient) {
       const emailAddress = recipient.emailAddress;
       console.log(emailAddress);
@@ -376,7 +385,6 @@ function checkRecipientClassification(recipients) {
         console.log("isUnauthorized returned: " + isUnauthorized(emailAddress));
         allowEvent = false;
       }
-
     });
 
     console.log("event should proceed since isUnauthorized returned false");
@@ -393,7 +401,7 @@ function checkRecipientClassification(recipients) {
  */
 function isUnauthorized(emailAddress) {
   // Check if the recipient's email address matches the unauthorized email address
-  return emailAddress === 'meaganbmueller@gmail.com';
+  return emailAddress === "meaganbmueller@gmail.com";
 }
 
 /**
@@ -404,8 +412,8 @@ function isUnauthorized(emailAddress) {
 function getClearanceLevel(emailAddress) {
   // Perform your logic to determine the clearance level based on the recipient's email address
   // For demonstration, let's assume 'meaganbmueller@gmail.com' requires a 'Classified' clearance
-  if (emailAddress === 'meaganbmueller@gmail.com') {
-    return 'Classified';
+  if (emailAddress === "meaganbmueller@gmail.com") {
+    return "Classified";
   }
   // If the recipient doesn't require any special clearance, return null
   return null;
@@ -431,6 +439,8 @@ function getClearanceLevel(emailAddress) {
 //   });
 // }
 
-
 // 1st parameter: FunctionName of LaunchEvent in the manifest; 2nd parameter: Its implementation in this .js file.
-Office.actions.associate("MessageSendVerificationHandler", MessageSendVerificationHandler);
+Office.actions.associate(
+  "MessageSendVerificationHandler",
+  MessageSendVerificationHandler
+);
