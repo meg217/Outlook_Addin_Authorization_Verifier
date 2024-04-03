@@ -52,6 +52,15 @@ function MessageSendVerificationHandler(event) {
           return; 
         }
 
+        User
+        // check if banner is correct. Should be uppercase and lowercase letters and single and double slahes / and // like this and commas ,
+        if (banner == 'invalid_banner') {
+          console.log("banner is incorrect, so should not send email");
+          mailboxItem.notificationMessages.addAsync('NoSend', { type: 'errorMessage', message: 'You made have made a mistake in your banner. Please enter a correct banner marking for this email.' });
+          console.log("event should be denied");
+          event.completed({ allowEvent: false });
+          return; 
+        }
 
     //const messageBodyTest = "TOP SECRET//COMINT-GAMMA/TALENT KEYHOLE//ORIGINATOR CONTROLLED";
     const bannerMarkings = parseBannerMarkings(banner);
@@ -168,14 +177,25 @@ function getBodyAsync() {
  */
 function getBannerFromBody(body) {
   const banner_regex = /^(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/mi;
+  const format_regex = /^[a-zA-Z\/\\,]*$/;
 
   const banner = body.match(banner_regex);
   console.log(banner);
-  if(banner){
+  if (banner) {
     console.log("banner found");
-    return banner[0];
-  }
-  else{
+    const bannerText = banner[0].trim(); // Trim whitespace
+    if (bannerText === '') {
+      console.log("banner is blank");
+      return null;
+    }
+    if (!format_regex.test(bannerText)) {
+      console.log("banner format is incorrect");
+      return "invalid_banner";
+    } else {
+      console.log("banner format is correct");
+      return bannerText;
+    }
+  } else {
     console.log("banner null");
     return null;
   }
