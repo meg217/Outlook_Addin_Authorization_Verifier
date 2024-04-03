@@ -1,4 +1,8 @@
 
+// this file contains the banner etraction logic from the body as
+// well as parsing the banner and retrieving the categories
+
+
 /**
  * function to extract banner from message body
  * parameter is the message body contents

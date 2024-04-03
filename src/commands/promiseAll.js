@@ -1,4 +1,4 @@
-// all of the promise functions here
+// all of the promise functions here such as fetching csv, to, from, and body
 
 
 /**
