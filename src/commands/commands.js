@@ -38,6 +38,7 @@ function MessageSendVerificationHandler(event) {
     // Check if the banner is null
     if (banner == null) {
       console.log("banner is null, so should not send email");
+      showNotification("banner is null, so should not send email");
 
       const options = {
         height: 30,
