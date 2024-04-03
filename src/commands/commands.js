@@ -39,7 +39,6 @@ function MessageSendVerificationHandler(event) {
     if (banner == null) {
       console.log("banner is null, so should not send email");
 
-<<<<<<< HEAD
       //the commented out displays a new window...
       //Office.context.ui.displayDialogAsync('https://www.contoso.com/myDialog.html');
       //difference between errorMessage and informationalMessage?
@@ -51,30 +50,6 @@ function MessageSendVerificationHandler(event) {
       event.completed({ allowEvent: false });
       return;
     }
-
-    User;
-    // check if banner is correct. Should be uppercase and lowercase letters and single and double slahes / and // like this and commas ,
-    if (banner == "invalid_banner") {
-      console.log("banner is incorrect, so should not send email");
-      mailboxItem.notificationMessages.addAsync("NoSend", {
-        type: "errorMessage",
-        message:
-          "You made have made a mistake in your banner. Please enter a correct banner marking for this email.",
-      });
-      console.log("event should be denied");
-      event.completed({ allowEvent: false });
-      return;
-    }
-=======
-        // check if banner is correct. Should be uppercase and lowercase letters and single and double slahes / and // like this and commas ,
-        if (banner == 'invalid_banner') {
-          console.log("banner is incorrect, so should not send email");
-          mailboxItem.notificationMessages.addAsync('NoSend', { type: 'errorMessage', message: 'You may have made a mistake in your banner. Please enter a correct banner marking for this email.' });
-          console.log("event should be denied");
-          event.completed({ allowEvent: false });
-          return; 
-        }
->>>>>>> 570bbcc2f0366736d8f6b1a8c4f6d8bb0f08ddc7
 
     //const messageBodyTest = "TOP SECRET//COMINT-GAMMA/TALENT KEYHOLE//ORIGINATOR CONTROLLED";
     const bannerMarkings = parseBannerMarkings(banner);
@@ -195,31 +170,16 @@ function getBodyAsync() {
  * @param { String } body
  */
 function getBannerFromBody(body) {
-  const banner_regex = /^(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/mi;
-  const format_regex = /\d/;
+  const banner_regex =
+    /^(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/im;
 
   const banner = body.match(banner_regex);
   console.log(banner);
-
   if (banner) {
     console.log("banner found");
-    const bannerText = banner.join(' '); // Join all matches into a single string
-    
-    if (bannerText === '') {
-      console.log("banner is blank");
-      return null;
-    }
-
-    if (format_regex.test(bannerText)) {
-      console.log("banner format is incorrect");
-      return "invalid_banner";
-    } else {
-      console.log("banner format is correct");
-      return bannerText;
-    }
-
+    return banner[0];
   } else {
-    console.log("isn't catching");
+    console.log("banner null");
     return null;
   }
 }
@@ -235,9 +195,10 @@ function parseBannerMarkings(banner) {
   // const cat4_regex = "COMINT|-GAMMA|\/|TALENT[\s]*KEYHOLE|SI-G\/TK|HCS|GCS";
   // const cat7_regex = "ORIGINATOR[\s]*CONTROLLED|ORCON|NOT[\s]*RELEASABLE[\s]*TO[\s]*FOREIGN[\s]*NATIONALS|NOFORN|AUTHORIZED[\s]*FOR[\s]*RELEASE[\s]*TO[\s]*USA,[\s]*AUZ,[\s]*NZL|REL[\s]*TO[\s]*USA,[\s]*AUS,[\s]*NZL|CAUTION-PROPERIETARY INFORMATION INVOLVED|PROPIN";
   // const cat4_and_cat7 = "COMINT|-GAMMA|\/|TALENT[\s]*KEYHOLE|SI-G\/TK|HCS|GCS|ORIGINATOR[\s]*CONTROLLED|ORCON|NOT[\s]*RELEASABLE[\s]*TO[\s]*FOREIGN[\s]*NATIONALS|NOFORN|AUTHORIZED[\s]*FOR[\s]*RELEASE[\s]*TO[\s]*USA,[\s]*AUZ,[\s]*NZL|REL[\s]*TO[\s]*USA,[\s]*AUS,[\s]*NZL|CAUTION-PROPERIETARY INFORMATION INVOLVED|PROPIN";
-  const cat1_regex = /TOP\s*SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U/mi;
-  const cat4_regex = /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS/mi;
-  const cat7_regex = /ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*((USA|AUS|NZL)(,)?( *))*|REL\s*TO\s*((USA|AUS|NZL)(,)?( *))*|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/mi;
+  const cat1_regex = /TOP\s*SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U/gi;
+  const cat4_regex = /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS/gi;
+  const cat7_regex =
+    /ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*((USA|AUS|NZL)(,)?( *))*|REL\s*TO\s*((USA|AUS|NZL)(,)?( *))*|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
   const cat4_and_cat7 =
     /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS|ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*((USA|AUS|NZL)(,)?( *))*|REL\s*TO\s*((USA|AUS|NZL)(,)?( *))*|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
 
