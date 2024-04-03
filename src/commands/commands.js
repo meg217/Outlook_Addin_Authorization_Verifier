@@ -52,7 +52,6 @@ function MessageSendVerificationHandler(event) {
           return; 
         }
 
-        User
         // check if banner is correct. Should be uppercase and lowercase letters and single and double slahes / and // like this and commas ,
         if (banner == 'invalid_banner') {
           console.log("banner is incorrect, so should not send email");
@@ -181,13 +180,15 @@ function getBannerFromBody(body) {
 
   const banner = body.match(banner_regex);
   console.log(banner);
+
   if (banner) {
     console.log("banner found");
-    const bannerText = banner[0].trim(); // Trim whitespace
+
     if (bannerText === '') {
       console.log("banner is blank");
       return null;
     }
+
     if (!format_regex.test(bannerText)) {
       console.log("banner format is incorrect");
       return "invalid_banner";
@@ -195,8 +196,9 @@ function getBannerFromBody(body) {
       console.log("banner format is correct");
       return bannerText;
     }
+
   } else {
-    console.log("banner null");
+    console.log("isn't catching");
     return null;
   }
 }
