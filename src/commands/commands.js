@@ -52,8 +52,10 @@ function MessageSendVerificationHandler(event) {
         type: "errorMessage",
         message: "Please enter a banner marking for this email.",
       });
-      console.log("event should be denied");
-      event.completed({ allowEvent: false });
+
+      //maybe shouln't de-allow event? instead make a dialog box show up?
+      // console.log("event should be denied");
+      // event.completed({ allowEvent: false });
       
       var errorElement = document.querySelector('div.zezGF');
       var errorElement2 = document.querySelector('div.ms-Dialog-main');
