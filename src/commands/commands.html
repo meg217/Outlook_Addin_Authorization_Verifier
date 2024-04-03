@@ -11,11 +11,55 @@
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js" integrity="sha512-dfX5uYVXzyU8+KHqj8bjo7UkOdg18PaOtpa48djpNbZHwExddghZ+ZmzWT06R5v6NSk3ZUfsH6FNEDepLx9hPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
     <script type="text/javascript" src="promiseAll.js"></script>
     <script type="text/javascript" src="commands.js"></script>
+    <link rel="stylesheet" href="fabric.min.css" />
+    <link rel="stylesheet" href="fabric.components.min.css" />
+    <script src="fabric.min.js"></script>
+    <script type="text/javascript">
+      var DialogElements = document.querySelectorAll(".ms-Dialog");
+      var DialogComponents = [];
+      for (var i = 0; i < DialogElements.length; i++) {
+        (function() {
+          DialogComponents[i] = new fabric['Dialog'](DialogElements[i]);
+        }());
+      }
+    </script>
     <title>Verification Page</title>
 </head>
 
 <body>
   <h1>Welcome to the page that verifies the outlook emails</h1>
+
+  <div class="docs-DialogExample-default">
+    <div class="docs-DialogExample-default">
+      <div class="ms-Dialog">
+        <div class="ms-Dialog-title">All emails together</div>
+        <div class="ms-Dialog-content">
+          <p class="ms-Dialog-subText">Your Inbox has changed. No longer does it include favorites, it is a singular destination for your emails.</p>
+          <div class="ms-CheckBox">
+            <input tabindex="-1" type="checkbox" class="ms-CheckBox-input">
+            <label role="checkbox" class="ms-CheckBox-field" tabindex="0" aria-checked="false" name="checkboxa">
+              <span class="ms-Label">Option1</span> 
+            </label>
+          </div>
+          <div class="ms-CheckBox">
+            <input tabindex="-1" type="checkbox" class="ms-CheckBox-input">
+            <label role="checkbox" class="ms-CheckBox-field" tabindex="0" aria-checked="false" name="checkboxa">
+              <span class="ms-Label">Option2</span> 
+            </label>
+          </div>
+        </div>
+        <div class="ms-Dialog-actions">
+          <button class="ms-Button ms-Dialog-action ms-Button--primary">
+            <span class="ms-Button-label">Save</span> 
+          </button>
+          <button class="ms-Button ms-Dialog-action">
+            <span class="ms-Button-label">Cancel</span> 
+          </button>
+        </div>
+      </div>
+      <button class="ms-Button docs-DialogExample-button">Open Dialog</button>
+      <label class="docs-DialogExample-label"></label>
+    </div>
 </body>
 
 </html>
