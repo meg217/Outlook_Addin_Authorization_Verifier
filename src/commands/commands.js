@@ -48,6 +48,16 @@ function MessageSendVerificationHandler(event) {
       });
       console.log("event should be denied");
       event.completed({ allowEvent: false });
+      var errorElement = document.querySelector('div.zezGF');
+
+      // Check if the element exists
+      if (errorElement) {
+          // Update the text content
+          errorElement.textContent = 'Please enter a valid banner marking fdiuhvdfiuhvuyd';
+      } else {
+          console.error('Error element not found');
+      }
+
       return;
     }
 
