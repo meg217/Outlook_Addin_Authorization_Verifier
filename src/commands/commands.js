@@ -9,10 +9,6 @@ Office.initialize = function (reason) {
   mailboxItem = Office.context.mailbox.item;
 };
 
-// Called when dialog signs in the user. this is an example, can be deleted
-function userSignedIn() {
-  Office.context.ui.messageParent(true.toString());
-}
 
 /**
  * Handles the OnMessageSend event.
@@ -21,7 +17,7 @@ function userSignedIn() {
  * @param {*} event The Office event object
  */
 function MessageSendVerificationHandler(event) {
-  //promise is to encapsulate all the asynch functions
+  //promise is to encapsulate all the async functions
   Promise.all([
     getToRecipientsAsync(),
     getSenderAsync(),
@@ -32,49 +28,10 @@ function MessageSendVerificationHandler(event) {
     toRecipients.forEach((recipient) => console.log(recipient.emailAddress));
     console.log("Sender:" + sender.displayName + " " + sender.emailAddress);
     console.log("Body:" + body);
-    //const bannerMarkings = parseBannerMarkings(body);
     const banner = getBannerFromBody(body);
 
-    // Check if the banner is null
-    if (banner == null) {
-      console.log("banner is null, so should not send email");
-      const options = {
-        height: 30,
-        width: 20,
-        promptBeforeOpen: false,
-    };
-      //the commented out displays a new window...
-      Office.context.ui.displayDialogAsync('https://meg217.github.io/Outlook_Addin_Authorization_Verifier/src/commands/dialog.html', options);
-      //difference between errorMessage and informationalMessage?
-      mailboxItem.notificationMessages.addAsync("NoSend", {
-        type: "errorMessage",
-        message: "Please enter a banner marking for this email.",
-      });
-
-      //maybe shouln't de-allow event? instead make a dialog box show up? no just makes it stall and say working on request...
-      console.log("event should be denied");
-      //event.completed({ allowEvent: false });
-
-      event.completed(
-        {
-            allowEvent: false,
-            cancelLabel: "Add a location",
-            commandId: "msgComposeOpenPaneButton",
-            contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
-            errorMessage: "Don't forget to add a meeting location.",
-            sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser
-        }
-      );
-      
-      var errorElement = document.querySelector('div.Dialog1045-title');
-      var errorElement2 = document.querySelector('class.ms-Dialog-title title-758');
-
-      console.log(errorElement2);
-      console.log(errorElement);
-  
-
-      return;
-    }
+    // Check if the banner is null error
+    bannerNullHandler(banner);
 
     //const messageBodyTest = "TOP SECRET//COMINT-GAMMA/TALENT KEYHOLE//ORIGINATOR CONTROLLED";
     const bannerMarkings = parseBannerMarkings(banner);
