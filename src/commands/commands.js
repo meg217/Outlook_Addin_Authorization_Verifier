@@ -19,12 +19,12 @@ Office.initialize = function (reason) {
 function MessageSendVerificationHandler(event) {
   //promise is to encapsulate all the async functions
   Promise.all([
-    getCCAsync(),
-    getBCCAsync(),
     getToRecipientsAsync(),
     getSenderAsync(),
     getBodyAsync(),
     fetchAndParseCSV(),
+    getCCAsync(),
+    getBCCAsync(),
   ]).then(([toRecipients, sender, body, cc, bcc]) => {
     console.log("To recipients:");
     toRecipients.forEach((recipient) => console.log(recipient.emailAddress));
