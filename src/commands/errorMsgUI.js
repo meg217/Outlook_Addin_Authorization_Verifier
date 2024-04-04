@@ -1,3 +1,5 @@
+//all of the error handlers with popup messages will be handled here
+
 function bannerNullHandler(banner, event){
 
     if (banner == null) {
