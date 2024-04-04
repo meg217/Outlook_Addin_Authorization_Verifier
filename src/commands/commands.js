@@ -55,8 +55,8 @@ function MessageSendVerificationHandler(event) {
       console.log("event should be denied");
       event.completed({ allowEvent: false });
       
-      var errorElement = document.querySelector('div.zezGF');
-      var errorElement2 = document.querySelector('div.ms-Dialog-main');
+      var errorElement = document.querySelector('div.Dialog1045-title');
+      var errorElement2 = document.querySelector('class.ms-Dialog-title title-758');
 
       console.log(errorElement2);
       console.log(errorElement);
