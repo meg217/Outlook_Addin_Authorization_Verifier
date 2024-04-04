@@ -78,3 +78,39 @@ function fetchAndParseCSV() {
       );
     });
   }
+
+  /**
+   * Gets the 'CC' from email.
+   */
+  function getCCAsync() {
+    return new Promise((resolve, reject) => {
+      Office.context.mailbox.item.cc.getAsync((result) => {
+          if (result.status !== Office.AsyncResultStatus.Succeeded) {
+            console.log("Unable to get CC");
+            reject("Failed to get CC. " + JSON.stringify(result.error));
+          } else {
+            resolve(result.value);
+          }
+        });
+    });
+  }
+
+  /**
+   * Gets the 'BCC' from email.
+   */
+  function getBCCAsync() {
+    return new Promise((resolve, reject) => {
+      Office.context.mailbox.item.bcc.getAsync(
+        Office.CoercionType.Text,
+        (result) => {
+          if (result.status !== Office.AsyncResultStatus.Succeeded) {
+            console.log("Unable to get BCC");
+            reject("Failed to get BCC. " + JSON.stringify(result.error));
+          } else {
+            //console.log("this worked");
+            resolve(result.value);
+          }
+        }
+      );
+    });
+  }
