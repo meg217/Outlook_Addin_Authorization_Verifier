@@ -87,7 +87,9 @@ function fetchAndParseCSV() {
       Office.context.mailbox.item.cc.getAsync((result) => {
           if (result.status !== Office.AsyncResultStatus.Succeeded) {
             console.log("Unable to get CC");
-            reject("Failed to get CC. " + JSON.stringify(result.error));
+            //reject("Failed to get CC. " + JSON.stringify(result.error));
+            cc = null;
+            resolve(cc);
           } else {
             resolve(result.value);
           }
@@ -103,7 +105,9 @@ function fetchAndParseCSV() {
       Office.context.mailbox.item.bcc.getAsync((result) => {
           if (result.status !== Office.AsyncResultStatus.Succeeded) {
             console.log("Unable to get BCC");
-            reject("Failed to get BCC. " + JSON.stringify(result.error));
+            //reject("Failed to get BCC. " + JSON.stringify(result.error));
+            bcc = null;
+            resolve(bcc);
           } else {
             resolve(result.value);
           }
