@@ -1,8 +1,4 @@
-Office.initialize = function (reason) {
-    mailboxItem = Office.context.mailbox.item;
-  };
-
-function bannerNullHandler(banner){
+function bannerNullHandler(banner, event){
 
     if (banner == null) {
         console.log("banner is null");

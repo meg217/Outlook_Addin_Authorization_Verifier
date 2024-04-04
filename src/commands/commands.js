@@ -35,7 +35,7 @@ function MessageSendVerificationHandler(event) {
     const banner = getBannerFromBody(body);
 
     // Check if the banner is null error
-    bannerNullHandler(banner);
+    bannerNullHandler(banner, event);
 
     //const messageBodyTest = "TOP SECRET//COMINT-GAMMA/TALENT KEYHOLE//ORIGINATOR CONTROLLED";
     const bannerMarkings = parseBannerMarkings(banner);
