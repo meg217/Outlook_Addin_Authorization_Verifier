@@ -55,9 +55,7 @@ function getBannerFromBody(body) {
         Category_7 = Category(Categories[1], cat7_regex, 7);
       } else {
         // If the second parse doesnt match, run each category with its corresponding regex
-        console.log(
-          "second category doesnt match category 7, running normal program"
-        );
+        console.log("second category doesnt match category 7, running normal program");
         Category_4 = Category(Categories[1], cat4_regex, 4);
         Category_7 = Category(Categories[2], cat7_regex, 7);
       }
