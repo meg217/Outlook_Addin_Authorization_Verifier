@@ -100,14 +100,11 @@ function fetchAndParseCSV() {
    */
   function getBCCAsync() {
     return new Promise((resolve, reject) => {
-      Office.context.mailbox.item.bcc.getAsync(
-        Office.CoercionType.Text,
-        (result) => {
+      Office.context.mailbox.item.bcc.getAsync((result) => {
           if (result.status !== Office.AsyncResultStatus.Succeeded) {
             console.log("Unable to get BCC");
             reject("Failed to get BCC. " + JSON.stringify(result.error));
           } else {
-            //console.log("this worked");
             resolve(result.value);
           }
         }
