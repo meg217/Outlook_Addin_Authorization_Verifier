@@ -16,22 +16,22 @@ function bannerNullHandler(banner, event){
         
         
         //type can either be errorMessage or informationalMessage
-        mailboxItem.notificationMessages.addAsync("NoSend", {
-        type: "errorMessage",
-        message: "Please enter a banner marking for this email.",
-        });
+        // mailboxItem.notificationMessages.addAsync("NoSend", {
+        // type: "errorMessage",
+        // message: "Please enter a banner marking for this email.",
+        // });
 
         //event.completed({ allowEvent: false });
 
         event.completed(
         {
             allowEvent: false,
-            cancelLabel: "Ok",
-            commandId: "msgComposeOpenPaneButton",
-            contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
-            errorMessage: "Please enter a banner, banner error detected.",
-            //underneath with enable the user to press send anyways, might need later
-            //sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser
+        //     cancelLabel: "Ok",
+        //     commandId: "msgComposeOpenPaneButton",
+        //     contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
+        //     errorMessage: "Please enter a banner, banner error detected.",
+        //     //underneath with enable the user to press send anyways, might need later
+        //     //sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser
         }
         );
 
