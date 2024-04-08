@@ -9,7 +9,6 @@ Office.initialize = function (reason) {
   mailboxItem = Office.context.mailbox.item;
 };
 
-
 /**
  * Handles the OnMessageSend event.
  /**
@@ -102,49 +101,6 @@ function _setSessionData(key, value) {
       }
     }
   );
-}
-
-//this is the old code from the example
-/**
- * Handles the 'to' authentication.
- * @param {*} event The Office event object
- */
-function FAKEtoHandler(event) {
-  Office.context.mailbox.item.to.getAsync(function (asyncResult) {
-    if (asyncResult.status !== Office.AsyncResultStatus.Succeeded) {
-      console.error(
-        "Failed to get To recipients. " + JSON.stringify(asyncResult.error)
-      );
-      return;
-    }
-
-    const toRecipients = asyncResult.value;
-    console.log("checking the classification of recipient: " + toRecipients);
-    checkRecipientClassification(toRecipients)
-      .then((allowEvent) => {
-        if (!allowEvent) {
-          // Prevent sending the email
-          event.completed({ allowEvent: false });
-          Office.context.mailbox.item.notificationMessages.addAsync(
-            "unauthorizedSending",
-            {
-              type: Office.MailboxEnums.ItemNotificationMessageType
-                .ErrorMessage,
-              message:
-                "You are not authorized to send this email to meaganbmueller@gmail.com.",
-            }
-          );
-        } else {
-          // Allow sending the email
-          event.completed({ allowEvent: true });
-        }
-      })
-      .catch((error) => {
-        console.error(
-          "Error occurred while checking recipient classification: " + error
-        );
-      });
-  });
 }
 
 /**
