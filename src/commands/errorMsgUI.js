@@ -26,12 +26,12 @@ function bannerNullHandler(banner, event){
         event.completed(
         {
             allowEvent: false,
-        //     cancelLabel: "Ok",
-        //     commandId: "msgComposeOpenPaneButton",
-        //     contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
-        //     errorMessage: "Please enter a banner, banner error detected.",
+             cancelLabel: "Ok",
+             commandId: "msgComposeOpenPaneButton",
+             contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
+             errorMessage: "Please enter a banner, banner error detected.",
         //     //underneath with enable the user to press send anyways, might need later
-        //     //sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser
+             sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser
         }
         );
 
