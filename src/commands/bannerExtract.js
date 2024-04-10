@@ -64,6 +64,7 @@ function getBannerFromBody(body) {
     }
   
     const Together = [Category_1, Category_4, Category_7];
+    checkDisseminations(Category_1, Category_7);
     return Together;
   }
   
@@ -99,4 +100,14 @@ function getBannerFromBody(body) {
     }
     console.log("String did not match category " + categoryNum + "'s regex");
     return null;
+  }
+
+  /**
+   * 
+   * @param {String} classification 
+   * @param {String} dissemination 
+   */
+  function checkDisseminations(classification, dissemination) {
+    console.log("CLASSIFICATION: " + classification + "\n");
+    console.log("DISSEM: " + dissemination + "\n");
   }
