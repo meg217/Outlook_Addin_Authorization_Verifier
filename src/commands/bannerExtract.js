@@ -121,10 +121,6 @@ function getBannerFromBody(body) {
         dissPartsArray.push(dissParts[i]);
     }
 
-    for (let i = 0; i < dissPartsArray.length; i++) {
-        console.log(dissPartsArray[i] + "\n");
-    }
-
     let NOFORNEncountered = false;
     let EYESONLYEncountered = false;
     let RELIDOEncountered = false;
