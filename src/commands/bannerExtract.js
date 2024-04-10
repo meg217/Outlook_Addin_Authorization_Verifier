@@ -94,7 +94,7 @@ function getBannerFromBody(body) {
       console.log("Category " + categoryNum + " string returned null");
       return null;
     } else if (category.toUpperCase().match(regex)) {
-      console.log("returning category " + categoryNum);
+      console.log("returning category YAY " + categoryNum);
       console.log(category.toUpperCase());
       return category.toUpperCase();
     }
