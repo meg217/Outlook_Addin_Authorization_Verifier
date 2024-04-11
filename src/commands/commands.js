@@ -40,7 +40,7 @@ function MessageSendVerificationHandler(event) {
     const bannerMarkings = parseBannerMarkings(banner);
     console.log(bannerMarkings);
 
-    checkRecipientClassification(toRecipients)
+    checkRecipientClassification(toRecipients,bannerMarkings[0])
       .then((allowEvent) => {
         if (!allowEvent) {
           // Prevent sending the email
@@ -105,13 +105,33 @@ function _setSessionData(key, value) {
 
 /**
  * Checks the classification level of the recipients.
- * @param {array} recipients The array of recipients
- * @returns {Promise<boolean>} A promise that resolves with a boolean indicating whether the event should proceed
+ * @param {array} recipients An array of recipients
+ * @param {String} documentClassication The classication level of the email dictated by category 1 of banner
+ * @returns {Promise<boolean>} Returns true if all recipients are permitted to view the contents of the email
  */
-function checkRecipientClassification(recipients) {
+function checkRecipientClassification(recipients,documentClassification) {
   console.log("checkRecipientClassification method"); //debugging
+  //userMeetsSecurityClearance(filePath, documentClassification, email) {
 
   return new Promise((resolve, reject) => {
+    let allowEvent = true;
+    const csvFile = "./assets.users.csv";
+
+    // If a single recipient is not permitted, the entire send fails
+    recipients.forEach(function (recipient) {
+      const emailAddress = recipient.emailAddress;
+      if (userMeetsSecurityClearance(csvFile,documentClassification,emailAddress)) {
+        console.log(emailAddress + " is not authorized to view this email");
+        allowEvent = false;
+      }
+    });
+
+    resolve(allowEvent);
+  });
+
+  // Old Method
+  /**
+   * return new Promise((resolve, reject) => {
     let allowEvent = true;
 
     recipients.forEach(function (recipient) {
@@ -129,7 +149,7 @@ function checkRecipientClassification(recipients) {
 
     // Allow event to proceed if no unauthorized recipient found
     resolve(allowEvent);
-  });
+  });*/
 }
 
 /**
