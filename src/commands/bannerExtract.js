@@ -100,3 +100,71 @@ function getBannerFromBody(body) {
     console.log("String did not match category " + categoryNum + "'s regex");
     return null;
   }
+
+  /**
+   * given a string it validates that the first marking is classified or not
+   * returns a true or false value depending on if its valid or not
+   * @param {string} banner 
+   */
+  function ValidateClassification(banner){
+    regex = /TS|S|C|U/gi
+    if (banner.match(regex)){
+      return true;
+    }
+    return false;
+  }
+  function ValidateSCI(banner){
+    let subBanner = banner.split('/');
+    subBanner.ForEach( (marking) => {
+
+      /**
+       * May be used only with
+       * TOP SECRET, SECRET, or CONFIDENTIAL. NOFORN is required.
+       * 
+       */
+      if ( marking.match(/HCS/gi) ){
+
+      }
+
+      /**
+       * May be used only with
+       * TOP SECRET, SECRET, or CONFIDENTIAL.
+       * 
+       */
+      if ( marking.match(/SI/gi) ){
+
+      }
+
+      /**
+       * May be used only with
+       * TOP SECRET. Requires SI and ORCON
+       * 
+       */
+      if ( marking.match(/-G/gi) ){
+
+      }
+
+      /**
+       * May be used only with
+       * TOP SECRET. Requires SI
+       * 
+       */
+      if ( marking.match(/-ECI/gi) ){
+        
+
+      }
+
+      /**
+       * May be used only with
+       * TOP SECRET or SECRET. May require RSEN for imagery product
+       * 
+       */
+      if ( marking.match(/TK/gi) ){
+        
+
+      }
+
+    });
+
+
+  }
