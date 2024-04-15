@@ -65,6 +65,10 @@ function getBannerFromBody(body) {
   
     const Together = [Category_1, Category_4, Category_7];
     checkDisseminations(Category_1, Category_7);
+    let [valid, msg] = validateSCI(Category_1, Category_4, Category_7);
+    if( valid = 1 ){
+      console.log(msg);
+    }
     return Together;
   }
   
@@ -114,8 +118,10 @@ function getBannerFromBody(body) {
     }
     return false;
   }
-  function ValidateSCI(banner){
-    let subBanner = banner.split('/');
+  function validateSCI(classification, sci, dissemination){
+    let valid = 0;
+    let msg = '';
+    let subBanner = sci.split('/');
     subBanner.ForEach( (marking) => {
 
       /**
@@ -124,7 +130,18 @@ function getBannerFromBody(body) {
        * 
        */
       if ( marking.match(/HCS/gi) ){
+        if ( classification.includes('U') || classification.includes('UNCLASSIFIED')){
+          valid = 1;
+          msg += 'CANNOT USE HCS with UNCLASSIFIED. '
+        }
 
+        if ( dissemination.includes('NOFORN') || dissemination.includes('NOT RELEASABLE TO FOREIGN NATIONALS')){
+        }
+        else{
+          valid = 1;
+          msg += 'HCS MUST USE NOFORN. '
+        }
+        
       }
 
       /**
@@ -133,7 +150,10 @@ function getBannerFromBody(body) {
        * 
        */
       if ( marking.match(/SI/gi) ){
-
+        if ( classification.includes('U') || classification.includes('UNCLASSIFIED')){
+          valid = 1;
+          msg += 'CANNOT USE SI with UNCLASSIFIED. '
+        }
       }
 
       /**
@@ -142,7 +162,32 @@ function getBannerFromBody(body) {
        * 
        */
       if ( marking.match(/-G/gi) ){
+        if ( !classification.includes('TS')){
+          valid = 1;
+          msg += 'CANNOT USE -G with UNCLASSIFIED, CONFIDENTIAL, or SECRET. '
+        }
+        else if ( !classification.includes('TOP SECRET')){
+          valid = 1;
+          msg += 'CANNOT USE -G with UNCLASSIFIED, CONFIDENTIAL, or SECRET. '
+        }
 
+        if ( !sci.includes('SI')){
+          valid = 1;
+          msg += 'MUST USE -G with SI. '
+        }
+        else if ( !sci.includes('COMINT')){
+          valid = 1;
+          msg += 'MUST USE -G with SI. '
+        }
+        
+        if ( !sci.includes('ORCON')){
+          valid = 1;
+          msg += 'MUST USE -G with ORCON. '
+        }
+        else if ( !sci.includes('ORIGINATOR CONTROLLED')){
+          valid = 1;
+          msg += 'MUST USE -G with ORCON. '
+        }
       }
 
       /**
@@ -151,7 +196,23 @@ function getBannerFromBody(body) {
        * 
        */
       if ( marking.match(/-ECI/gi) ){
-        
+        if ( !classification.includes('TS')){
+          valid = 1;
+          msg += 'CANNOT USE -ECI with UNCLASSIFIED, CONFIDENTIAL, or SECRET. '
+        }
+        else if ( !classification.includes('TOP SECRET')){
+          valid = 1;
+          msg += 'CANNOT USE -ECI with UNCLASSIFIED, CONFIDENTIAL, or SECRET. '
+        }
+
+        if ( !sci.includes('SI')){
+          valid = 1;
+          msg += 'MUST USE -ECI with SI. '
+        }
+        else if ( !sci.includes('COMINT')){
+          valid = 1;
+          msg += 'MUST USE -ECI with SI. '
+        }
 
       }
 
@@ -161,11 +222,28 @@ function getBannerFromBody(body) {
        * 
        */
       if ( marking.match(/TK/gi) ){
-        
-
+        if ( !classification.includes('TS')){
+          valid = 1;
+          msg += 'CANNOT USE TK with UNCLASSIFIED, CONFIDENTIAL. '
+        }
+        else if ( !classification.includes('TOP SECRET')){
+          valid = 1;
+          msg += 'CANNOT USE TK with UNCLASSIFIED, CONFIDENTIAL. '
+        }
+        else{
+          if ( !classification.includes('S')){
+            valid = 1;
+            msg += 'CANNOT USE TK with UNCLASSIFIED, CONFIDENTIAL. '
+          }
+          else if ( !classification.includes('SECRET')){
+            valid = 1;
+            msg += 'CANNOT USE TK with UNCLASSIFIED, CONFIDENTIAL. '
+          }
+        }
       }
-
     });
+
+    return [valid, msg];
   }
 
    /**
