@@ -42,7 +42,10 @@ function MessageSendVerificationHandler(event) {
     console.log(bannerMarkings.banner);
 
     //CHANGE
-    errorPopupHandler(bannerMarkings.message, event);
+    if (bannerMarkings.message !== '') {
+      errorPopupHandler(bannerMarkings.message, event);
+    }
+    
 
     //CHANGE
     checkRecipientClassification(toRecipients,bannerMarkings.banner[0])
