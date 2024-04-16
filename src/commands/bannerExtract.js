@@ -64,12 +64,12 @@ function getBannerFromBody(body) {
     }
   
     const Together = [Category_1, Category_4, Category_7];
-    let [valid, msg] = validateSCI(Category_1, Category_4, Category_7);
+    // let [valid, msg] = validateSCI(Category_1, Category_4, Category_7);
     //CHANGE
     let errMsg = checkDisseminations(Category_1, Category_7);
-    if( valid = 1 ){
-      console.log(msg);
-    }
+    // if( valid = 1 ){
+    //   console.log(msg);
+    // }
     //return Together;
     //CHANGE
     return {
@@ -420,7 +420,7 @@ function getBannerFromBody(body) {
         //FOREIGN INTELLIGENCE SURVEILLANCE ACT (FISA): does not have any restrictions. 
         //No error checking needed.
 
-        console.log(errorMsg);
+        // console.log(errorMsg);
     }
 
     //CHANGE
