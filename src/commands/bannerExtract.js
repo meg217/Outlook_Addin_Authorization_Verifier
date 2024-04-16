@@ -64,12 +64,10 @@ function getBannerFromBody(body) {
     }
   
     const Together = [Category_1, Category_4, Category_7];
-    // let [valid, msg] = validateSCI(Category_1, Category_4, Category_7);
     //CHANGE
     let errMsg = checkDisseminations(Category_1, Category_7);
-    // if( valid = 1 ){
-    //   console.log(msg);
-    // }
+    //add Zach's stuff after testing
+    
     //return Together;
     //CHANGE
     return {
