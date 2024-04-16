@@ -49,7 +49,7 @@ function errorPopupHandler(errorMsg, event) {
         commandId: "msgComposeOpenPaneButton",
         contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
         errorMessage: errorMsg,
-        sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser
+        //sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser
     }
     );
     return;
