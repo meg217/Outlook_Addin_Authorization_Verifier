@@ -39,3 +39,19 @@ function bannerNullHandler(banner, event){
         return;
     }
 }
+
+//CHANGE:
+function errorPopupHandler(errorMsg, event) {
+    event.completed(
+    {
+        allowEvent: false,
+        cancelLabel: "Ok",
+        commandId: "msgComposeOpenPaneButton",
+        contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
+        errorMessage: errorMsg,
+        sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser
+    }
+    );
+    return;
+
+}

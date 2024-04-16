@@ -64,12 +64,18 @@ function getBannerFromBody(body) {
     }
   
     const Together = [Category_1, Category_4, Category_7];
-    checkDisseminations(Category_1, Category_7);
     let [valid, msg] = validateSCI(Category_1, Category_4, Category_7);
+    //CHANGE
+    let errMsg = checkDisseminations(Category_1, Category_7);
     if( valid = 1 ){
       console.log(msg);
     }
-    return Together;
+    //return Together;
+    //CHANGE
+    return {
+        banner: Together,
+        message: errMsg
+    };
   }
   
   /**
@@ -416,5 +422,8 @@ function getBannerFromBody(body) {
 
         console.log(errorMsg);
     }
+
+    //CHANGE
+    return errorMsg;
 
   }

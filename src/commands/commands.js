@@ -38,9 +38,14 @@ function MessageSendVerificationHandler(event) {
 
     //const messageBodyTest = "TOP SECRET//COMINT-GAMMA/TALENT KEYHOLE//ORIGINATOR CONTROLLED";
     const bannerMarkings = parseBannerMarkings(banner);
-    console.log(bannerMarkings);
+    //CHANGE
+    console.log(bannerMarkings.banner);
 
-    checkRecipientClassification(toRecipients,bannerMarkings[0])
+    //CHANGE
+    errorPopupHandler(bannerMarkings.message, event);
+
+    //CHANGE
+    checkRecipientClassification(toRecipients,bannerMarkings.banner[0])
       .then((allowEvent) => {
         if (!allowEvent) {
           // Prevent sending the email
