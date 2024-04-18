@@ -68,6 +68,11 @@ function getBannerFromBody(body) {
     //KEVIN - If dissem is null then returns "" err msg from checkdissem func. If there is an error with this later on, then maybe err handle before function is called if there is no dissem
     let errMsg = checkDisseminations(Category_1, Category_7);
     //add Zach's stuff after testing
+    let val = validateSCI(Category_1, Category_4, Category_7);
+    if (val[0] = 1){
+      errMsg += " " + val[1];
+    }
+    
     
     //return Together;
     //CHANGE
@@ -117,7 +122,7 @@ function getBannerFromBody(body) {
    * @param {string} banner 
    */
   function ValidateClassification(banner){
-    regex = /TS|S|C|U/gi
+    regex = /TS|TOP *SECRET|S|SECRET|C|CONFIDENTIAL|U|UNCLASSIFIED/gi
     if (banner.match(regex)){
       return true;
     }
@@ -127,7 +132,7 @@ function getBannerFromBody(body) {
     let valid = 0;
     let msg = '';
     let subBanner = sci.split('/');
-    subBanner.ForEach( (marking) => {
+    subBanner.forEach( (marking) => {
 
       /**
        * May be used only with
