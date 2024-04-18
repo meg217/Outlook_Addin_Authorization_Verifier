@@ -77,7 +77,7 @@ function getBannerFromBody(body) {
     }
     
     
-    
+    console.log(errMsg);
     //return Together;
     //CHANGE
     return {
