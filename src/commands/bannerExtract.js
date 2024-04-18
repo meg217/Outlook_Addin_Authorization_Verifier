@@ -180,11 +180,11 @@ function getBannerFromBody(body) {
        * 
        */
       if ( marking.match(/-G/gi) ){
-        if ( ! classification.includes('TS')){
+        if ( !(classification.includes('TS'))){
           valid = 1;
           msg += 'CANNOT USE -G with UNCLASSIFIED, CONFIDENTIAL, or SECRET. '
         }
-        else if ( ! classification.includes('TOP SECRET')){
+        else if ( !(classification.includes('TOP SECRET'))){
           valid = 1;
           msg += 'CANNOT USE -G with UNCLASSIFIED, CONFIDENTIAL, or SECRET. '
         }
@@ -198,11 +198,11 @@ function getBannerFromBody(body) {
           msg += 'MUST USE -G with SI. '
         }
         
-        if ( ! sci.includes('ORCON')){
+        if ( !(dissemination.includes('ORCON'))){
           valid = 1;
           msg += 'MUST USE -G with ORCON. '
         }
-        else if ( ! sci.includes('ORIGINATOR CONTROLLED')){
+        else if ( !(dissemination.includes('ORIGINATOR CONTROLLED'))){
           valid = 1;
           msg += 'MUST USE -G with ORCON. '
         }
