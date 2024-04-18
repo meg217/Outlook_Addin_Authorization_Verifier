@@ -133,7 +133,7 @@ function getBannerFromBody(body) {
     return false;
   }
   function validateSCI(classification, sci, dissemination){
-    let isDissemination;
+    let isDissemination = true;
     if ( dissemination === null){
       dissemination = "";
       isDissemination = false;
@@ -207,19 +207,20 @@ function getBannerFromBody(body) {
         }
         else{
           valid = 1;
-          msg += 'MUST USE -G with SI. '
+          msg += 'MUST USE SI with -G. '
         }
+
         if ( isDissemination ){
           if ( dissemination.match(/ORCON|ORIGINATOR CONTROLLED/gi) ){
           }
           else{
           valid = 1;
-          msg += 'MUST USE -G with ORCON. '
+          msg += 'MUST USE ORCON with -G. '
           }
         }
         else{
           valid = 1;
-          msg += 'MUST USE -G with ORCON. '
+          msg += 'MUST USE ORCON with -G. '
         }
         
       }
