@@ -196,7 +196,9 @@ function getBannerFromBody(body) {
        * 
        */
       if ( marking.match(/-G/gi) ){
-        if ( classification.match(/S|SECRET|C|CONFIDENTIAL|U|UNCLASSIFIED/gi)){
+        if ( classification.match(/TS|TOP SECRET/gi)){
+        }
+        else{
           valid = 1;
           msg += 'CANNOT USE -G with UNCLASSIFIED, CONFIDENTIAL, or SECRET. '
         }
@@ -228,7 +230,9 @@ function getBannerFromBody(body) {
        * 
        */
       if ( marking.match(/-ECI/gi) ){
-        if (classification.match(/S|SECRET|C|CONFIDENTIAL|U|UNCLASSIFIED/gi)){
+        if (classification.match(/TS|TOP SECRET/gi)){
+        }
+        else{
           valid = 1;
           msg += 'CANNOT USE -ECI with UNCLASSIFIED, CONFIDENTIAL, or SECRET. '
         }
