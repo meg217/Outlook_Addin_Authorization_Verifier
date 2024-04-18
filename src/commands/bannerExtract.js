@@ -69,12 +69,13 @@ function getBannerFromBody(body) {
     let errMsg = checkDisseminations(Category_1, Category_7);
     //add Zach's stuff after testing
     let val;
-    if ( Category_4 === null){
+    if ( Category_4 !== null){
       val = validateSCI(Category_1, Category_4, Category_7);
+      if (val[0] = 1){
+        errMsg += " " + val[1];
+      }
     }
-    if (val[0] = 1){
-      errMsg += " " + val[1];
-    }
+    
     
     
     //return Together;
