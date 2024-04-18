@@ -68,7 +68,10 @@ function getBannerFromBody(body) {
     //KEVIN - If dissem is null then returns "" err msg from checkdissem func. If there is an error with this later on, then maybe err handle before function is called if there is no dissem
     let errMsg = checkDisseminations(Category_1, Category_7);
     //add Zach's stuff after testing
-    let val = validateSCI(Category_1, Category_4, Category_7);
+    let val;
+    if ( Category_4 === null){
+      val = validateSCI(Category_1, Category_4, Category_7);
+    }
     if (val[0] = 1){
       errMsg += " " + val[1];
     }
@@ -129,6 +132,11 @@ function getBannerFromBody(body) {
     return false;
   }
   function validateSCI(classification, sci, dissemination){
+    let isDissemination;
+    if ( dissemination === null){
+      dissemination = "";
+      isDissemination = false;
+    }
     console.log(classification + " " + sci + " " + dissemination);
     let valid = 0;
     let msg = '';
@@ -153,12 +161,19 @@ function getBannerFromBody(body) {
           msg += 'CANNOT USE HCS with UNCLASSIFIED. '
         }
 
-        if ( dissemination.includes('NOFORN') || dissemination.includes('NOT RELEASABLE TO FOREIGN NATIONALS')){
+        if ( isDissemination ){
+          if ( dissemination.includes('NOFORN') || dissemination.includes('NOT RELEASABLE TO FOREIGN NATIONALS')){
+          }
+          else{
+          valid = 1;
+          msg += 'HCS MUST USE NOFORN. ';
+          }
         }
         else{
           valid = 1;
-          msg += 'HCS MUST USE NOFORN. '
+          msg += 'HCS MUST USE NOFORN. ';
         }
+        
         
       }
 
@@ -180,32 +195,30 @@ function getBannerFromBody(body) {
        * 
        */
       if ( marking.match(/-G/gi) ){
-        if ( !(classification.includes('TS'))){
-          valid = 1;
-          msg += 'CANNOT USE -G with UNCLASSIFIED, CONFIDENTIAL, or SECRET. '
-        }
-        else if ( !(classification.includes('TOP SECRET'))){
+        if ( classification.match(/S|SECRET|C|CONFIDENTIAL|U|UNCLASSIFIED/gi)){
           valid = 1;
           msg += 'CANNOT USE -G with UNCLASSIFIED, CONFIDENTIAL, or SECRET. '
         }
 
-        if ( ! sci.includes('SI')){
+        if (sci.match(/SI|COMINT/gi)){
+        }
+        else{
           valid = 1;
           msg += 'MUST USE -G with SI. '
         }
-        else if ( ! sci.includes('COMINT')){
+        if ( isDissemination ){
+          if ( dissemination.match(/ORCON|ORIGINATOR CONTROLLED/gi) ){
+          }
+          else{
           valid = 1;
-          msg += 'MUST USE -G with SI. '
+          msg += 'MUST USE -G with ORCON. '
+          }
+        }
+        else{
+          valid = 1;
+          msg += 'MUST USE -G with ORCON. '
         }
         
-        if ( !(dissemination.includes('ORCON'))){
-          valid = 1;
-          msg += 'MUST USE -G with ORCON. '
-        }
-        else if ( !(dissemination.includes('ORIGINATOR CONTROLLED'))){
-          valid = 1;
-          msg += 'MUST USE -G with ORCON. '
-        }
       }
 
       /**
@@ -214,20 +227,14 @@ function getBannerFromBody(body) {
        * 
        */
       if ( marking.match(/-ECI/gi) ){
-        if ( ! classification.includes('TS')){
-          valid = 1;
-          msg += 'CANNOT USE -ECI with UNCLASSIFIED, CONFIDENTIAL, or SECRET. '
-        }
-        else if ( ! classification.includes('TOP SECRET')){
+        if (classification.match(/S|SECRET|C|CONFIDENTIAL|U|UNCLASSIFIED/gi)){
           valid = 1;
           msg += 'CANNOT USE -ECI with UNCLASSIFIED, CONFIDENTIAL, or SECRET. '
         }
 
-        if ( ! sci.includes('SI')){
-          valid = 1;
-          msg += 'MUST USE -ECI with SI. '
+        if ( sci.match(/SI|COMINT/gi) ){
         }
-        else if ( ! sci.includes('COMINT')){
+        else{
           valid = 1;
           msg += 'MUST USE -ECI with SI. '
         }
@@ -240,23 +247,9 @@ function getBannerFromBody(body) {
        * 
        */
       if ( marking.match(/TK/gi) ){
-        if ( ! classification.includes('TS')){
+        if (classification.match(/C|CONFIDENTIAL|U|UNCLASSIFIED/gi)){
           valid = 1;
           msg += 'CANNOT USE TK with UNCLASSIFIED, CONFIDENTIAL. '
-        }
-        else if ( ! classification.includes('TOP SECRET')){
-          valid = 1;
-          msg += 'CANNOT USE TK with UNCLASSIFIED, CONFIDENTIAL. '
-        }
-        else{
-          if ( ! classification.includes('S')){
-            valid = 1;
-            msg += 'CANNOT USE TK with UNCLASSIFIED, CONFIDENTIAL. '
-          }
-          else if ( ! classification.includes('SECRET')){
-            valid = 1;
-            msg += 'CANNOT USE TK with UNCLASSIFIED, CONFIDENTIAL. '
-          }
         }
       }
     });
