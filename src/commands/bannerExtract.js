@@ -129,9 +129,13 @@ function getBannerFromBody(body) {
     return false;
   }
   function validateSCI(classification, sci, dissemination){
+    console.log(classification + " " + sci + " " + dissemination);
     let valid = 0;
     let msg = '';
-    let subBanner = sci.split('/');
+    if ( sci ){
+      let subBanner = sci.split('/');
+    }
+    
     subBanner.forEach( (marking) => {
 
       /**
