@@ -264,7 +264,8 @@ function getBannerFromBody(body) {
     if (dissemination != null){
       let dissParts = dissemination.split('/');
       let dissPartsArray = [];
-
+      
+      
       for (let i = 0; i < dissParts.length; i++) {
           dissPartsArray.push(dissParts[i]);
       }
