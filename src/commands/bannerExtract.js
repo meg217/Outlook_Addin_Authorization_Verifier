@@ -132,8 +132,12 @@ function getBannerFromBody(body) {
     console.log(classification + " " + sci + " " + dissemination);
     let valid = 0;
     let msg = '';
+    let subBanner = null;
     if ( sci ){
-      let subBanner = sci.split('/');
+      subBanner = sci.split('/');
+    }
+    if ( subBanner == null ){
+      subBanner = sci;
     }
     
     subBanner.forEach( (marking) => {
