@@ -260,8 +260,10 @@ function getBannerFromBody(body) {
 
     let errorMsg = "";
 
-    let dissParts = dissemination.split('/');
-
+    //KEVIN - Trying to fix split error when dissem is null - To remove my changes just remove the if statement from around the code
+    if (dissemination != null){
+     let dissParts = dissemination.split('/');
+    }
     let dissPartsArray = [];
 
     for (let i = 0; i < dissParts.length; i++) {
