@@ -136,7 +136,7 @@ function getBannerFromBody(body) {
     if ( sci ){
       subBanner = sci.split('/');
     }
-    if ( subBanner == null ){
+    if ( subBanner === null ){
       subBanner = sci;
     }
     
