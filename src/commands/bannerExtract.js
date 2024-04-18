@@ -36,7 +36,7 @@ function getBannerFromBody(body) {
     // const cat7_regex = "ORIGINATOR[\s]*CONTROLLED|ORCON|NOT[\s]*RELEASABLE[\s]*TO[\s]*FOREIGN[\s]*NATIONALS|NOFORN|AUTHORIZED[\s]*FOR[\s]*RELEASE[\s]*TO[\s]*USA,[\s]*AUZ,[\s]*NZL|REL[\s]*TO[\s]*USA,[\s]*AUS,[\s]*NZL|CAUTION-PROPERIETARY INFORMATION INVOLVED|PROPIN";
     // const cat4_and_cat7 = "COMINT|-GAMMA|\/|TALENT[\s]*KEYHOLE|SI-G\/TK|HCS|GCS|ORIGINATOR[\s]*CONTROLLED|ORCON|NOT[\s]*RELEASABLE[\s]*TO[\s]*FOREIGN[\s]*NATIONALS|NOFORN|AUTHORIZED[\s]*FOR[\s]*RELEASE[\s]*TO[\s]*USA,[\s]*AUZ,[\s]*NZL|REL[\s]*TO[\s]*USA,[\s]*AUS,[\s]*NZL|CAUTION-PROPERIETARY INFORMATION INVOLVED|PROPIN";
     const cat1_regex = /TOP\s*SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U/gi;
-    const cat4_regex = /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS/gi;
+    const cat4_regex = /COMINT|SI|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS/gi;
     const cat7_regex =
       /ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*((USA|AUS|NZL)(,)?( *))*|REL\s*TO\s*((USA|AUS|NZL)(,)?( *))*|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
     const cat4_and_cat7 =
@@ -180,29 +180,29 @@ function getBannerFromBody(body) {
        * 
        */
       if ( marking.match(/-G/gi) ){
-        if ( !classification.includes('TS')){
+        if ( ! classification.includes('TS')){
           valid = 1;
           msg += 'CANNOT USE -G with UNCLASSIFIED, CONFIDENTIAL, or SECRET. '
         }
-        else if ( !classification.includes('TOP SECRET')){
+        else if ( ! classification.includes('TOP SECRET')){
           valid = 1;
           msg += 'CANNOT USE -G with UNCLASSIFIED, CONFIDENTIAL, or SECRET. '
         }
 
-        if ( !sci.includes('SI')){
+        if ( ! sci.includes('SI')){
           valid = 1;
           msg += 'MUST USE -G with SI. '
         }
-        else if ( !sci.includes('COMINT')){
+        else if ( ! sci.includes('COMINT')){
           valid = 1;
           msg += 'MUST USE -G with SI. '
         }
         
-        if ( !sci.includes('ORCON')){
+        if ( ! sci.includes('ORCON')){
           valid = 1;
           msg += 'MUST USE -G with ORCON. '
         }
-        else if ( !sci.includes('ORIGINATOR CONTROLLED')){
+        else if ( ! sci.includes('ORIGINATOR CONTROLLED')){
           valid = 1;
           msg += 'MUST USE -G with ORCON. '
         }
@@ -214,20 +214,20 @@ function getBannerFromBody(body) {
        * 
        */
       if ( marking.match(/-ECI/gi) ){
-        if ( !classification.includes('TS')){
+        if ( ! classification.includes('TS')){
           valid = 1;
           msg += 'CANNOT USE -ECI with UNCLASSIFIED, CONFIDENTIAL, or SECRET. '
         }
-        else if ( !classification.includes('TOP SECRET')){
+        else if ( ! classification.includes('TOP SECRET')){
           valid = 1;
           msg += 'CANNOT USE -ECI with UNCLASSIFIED, CONFIDENTIAL, or SECRET. '
         }
 
-        if ( !sci.includes('SI')){
+        if ( ! sci.includes('SI')){
           valid = 1;
           msg += 'MUST USE -ECI with SI. '
         }
-        else if ( !sci.includes('COMINT')){
+        else if ( ! sci.includes('COMINT')){
           valid = 1;
           msg += 'MUST USE -ECI with SI. '
         }
@@ -240,20 +240,20 @@ function getBannerFromBody(body) {
        * 
        */
       if ( marking.match(/TK/gi) ){
-        if ( !classification.includes('TS')){
+        if ( ! classification.includes('TS')){
           valid = 1;
           msg += 'CANNOT USE TK with UNCLASSIFIED, CONFIDENTIAL. '
         }
-        else if ( !classification.includes('TOP SECRET')){
+        else if ( ! classification.includes('TOP SECRET')){
           valid = 1;
           msg += 'CANNOT USE TK with UNCLASSIFIED, CONFIDENTIAL. '
         }
         else{
-          if ( !classification.includes('S')){
+          if ( ! classification.includes('S')){
             valid = 1;
             msg += 'CANNOT USE TK with UNCLASSIFIED, CONFIDENTIAL. '
           }
-          else if ( !classification.includes('SECRET')){
+          else if ( ! classification.includes('SECRET')){
             valid = 1;
             msg += 'CANNOT USE TK with UNCLASSIFIED, CONFIDENTIAL. '
           }
