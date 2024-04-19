@@ -2,40 +2,43 @@
 //const csv = require('csv-parser');
 
 // This function checks if the user's clearance meets requirements
-async function userMeetsSecurityClearance(filePath, documentClassification, email1) {
+function userMeetsSecurityClearance(filePath, documentClassification, email1) {
     let accessGranted = false;
     let email = email1.toLowerCase();
     console.log("userMeetsSecurityClearance Function, checking for email: ", email);
 
-    try {
-        const response = await fetch(filePath);
-        const csvData = await response.text();
-        const results = Papa.parse(csvData, { header: true }).data;
+    fetch(filePath)
+        .then(response => response.text())
+        .then(csvData => {
+            const results = Papa.parse(csvData, { header: true }).data;
 
-        let foundEmail = false;
-        for (const row of results) {
-            if (row["Email"] === email) {
-                console.log("Found email in row: ", row);
-                foundEmail = true;
-                const userClearance = row["Authorization"];
-                if (canUserAccess(documentClassification, userClearance)) {
-                    accessGranted = true;
-                    console.log("accessGranted = true");
-                    return accessGranted;
+            let foundEmail = false;
+            for (const row of results) {
+                if (row["Email"] === email) {
+                    console.log("Found email in row: ", row);
+                    foundEmail = true;
+                    const userClearance = row["Authorization"];
+                    if (canUserAccess(documentClassification, userClearance)) {
+                        accessGranted = true;
+                        console.log("accessGranted = true");
+                        callback(accessGranted); 
+                        return; 
+                    }
                 }
             }
-        }
 
-        if (!foundEmail) {
-            console.log("Email not found in CSV");
-        }
+            if (!foundEmail) {
+                console.log("Email not found in CSV");
+            }
 
-        return accessGranted;
-    } catch (error) {
-        console.error("Error:", error);
-        throw error;
-    }
+            callback(accessGranted); // Callback with false if email is not found or access is not granted
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            callback(accessGranted); // Callback with false in case of error
+        });
 }
+
 function canUserAccess(documentClassification, userClearance) {
     console.log("canUserAccess Function")
     const levels = ['confidential', 'secret', 'top secret'];
