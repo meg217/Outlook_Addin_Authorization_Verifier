@@ -2,48 +2,38 @@
 //const csv = require('csv-parser');
 
 // This function checks if the user's clearance meets requirements
-function userMeetsSecurityClearance(filePath, documentClassification, email1) {
-    return new Promise((resolve, reject) => {
-        let accessGranted = false;
-        let email = email1.toLowerCase();
-        console.log("userMeetsSecurityClearance Function, checking for email: ", email)
-        // Fetch the CSV file
-        fetch(filePath)
-        .then(response => response.text())
-        .then(csvData => {
-            Papa.parse(csvData, {
-                header: true,
-                complete: (results) => {
-                    results.data.forEach(row => {
-                        //console.log("Email: ", row["Email"]);
-                        if (row["Email"] === email) {
-                            console.log("Found email in row: ", row);
-                            foundEmail = true;
-                            const userClearance = row["Authorization"];
+async function userMeetsSecurityClearance(filePath, documentClassification, email1) {
+    let accessGranted = false;
+    let email = email1.toLowerCase();
+    console.log("userMeetsSecurityClearance Function, checking for email: ", email);
 
-                            if (canUserAccess(documentClassification, userClearance)) {
-                                accessGranted = true;
-                                console.log("accessGranted = true");
-                            }
-                        }
-                    });
-                    if (foundEmail) {
-                        resolve(accessGranted);
-                    } else {
-                        reject("Email not found in CSV"); 
-                    }
-                },
-                error: (error) => {
-                    console.error("Error parsing CSV:", error);
-                    reject(error);
+    try {
+        const response = await fetch(filePath);
+        const csvData = await response.text();
+        const results = Papa.parse(csvData, { header: true }).data;
+
+        let foundEmail = false;
+        for (const row of results) {
+            if (row["Email"] === email) {
+                console.log("Found email in row: ", row);
+                foundEmail = true;
+                const userClearance = row["Authorization"];
+                if (canUserAccess(documentClassification, userClearance)) {
+                    accessGranted = true;
+                    console.log("accessGranted = true");
                 }
-            });
-        })
-        .catch(error => {
-            console.error("Error fetching CSV:", error);
-            reject(error);
-        });
-    });
+            }
+        }
+
+        if (!foundEmail) {
+            throw new Error("Email not found in CSV");
+        }
+
+        return accessGranted;
+    } catch (error) {
+        console.error("Error:", error);
+        throw error;
+    }
 }
 function canUserAccess(documentClassification, userClearance) {
     console.log("canUserAccess Function")
