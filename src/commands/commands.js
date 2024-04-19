@@ -25,11 +25,11 @@ function MessageSendVerificationHandler(event) {
     getCCAsync(),
     getBCCAsync(),
   ]).then(([toRecipients, sender, body, fetchAndParseCSV, cc, bcc]) => {
-    console.log("To recipients:");
-    toRecipients.forEach((recipient) => console.log(recipient.emailAddress));
-    console.log("Sender:" + sender.displayName + " " + sender.emailAddress);
-    console.log("CC: " + cc.emailAddress);
-    console.log("BCC: " + bcc.emailAddress);
+    const allRecipients = toRecipients.forEach((recipient) => console.log(recipient.emailAddress));
+    console.log("To recipients:" + allRecipients);
+    console.log("Sender:" + sender.emailAddress);
+    console.log("CC: " + cc);
+    console.log("BCC: " + bcc);
     console.log("Body:" + body);
     const banner = getBannerFromBody(body);
 

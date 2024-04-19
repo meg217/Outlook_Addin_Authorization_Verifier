@@ -12,14 +12,14 @@
 function getBannerFromBody(body) {
     const banner_regex =
       /^(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/im;
-  
+    console.log("Searching for Banner...")
     const banner = body.match(banner_regex);
-    console.log(banner);
+    //console.log(banner);
     if (banner) {
-      console.log("banner found");
+      console.log("Banner Found!");
       return banner[0];
     } else {
-      console.log("banner null");
+      console.log("Banner Null :(");
       return null;
     }
   }
@@ -43,7 +43,7 @@ function getBannerFromBody(body) {
       /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS|ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*((USA|AUS|NZL)(,)?( *))*|REL\s*TO\s*((USA|AUS|NZL)(,)?( *))*|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
   
     const Categories = banner.split("//");
-    console.log(Categories);
+    //console.log(Categories);
     let Category_1 = Category(Categories[0], cat1_regex, 1);
     let Category_4 = null;
     let Category_7 = null;
@@ -60,7 +60,8 @@ function getBannerFromBody(body) {
         Category_7 = Category(Categories[2], cat7_regex, 7);
       }
     } else {
-      console.log("second category returned null");
+      console.log("SCI: " + Category_4);
+      //console.log("second category returned null");
     }
   
     const Together = [Category_1, Category_4, Category_7];
@@ -112,8 +113,8 @@ function getBannerFromBody(body) {
       console.log("Category " + categoryNum + " string returned null");
       return null;
     } else if (category.toUpperCase().match(regex)) {
-      console.log("returning category " + categoryNum);
-      console.log(category.toUpperCase());
+      //console.log("returning category " + categoryNum);
+      //console.log(category.toUpperCase());
       return category.toUpperCase();
     }
     console.log("String did not match category " + categoryNum + "'s regex");
