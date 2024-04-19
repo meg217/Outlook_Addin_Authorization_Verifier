@@ -20,13 +20,14 @@ async function userMeetsSecurityClearance(filePath, documentClassification, emai
                 const userClearance = row["Authorization"];
                 if (canUserAccess(documentClassification, userClearance)) {
                     accessGranted = true;
-                    console.log("AccessGranted = true");
+                    console.log("accessGranted = true");
+                    return accessGranted;
                 }
             }
         }
 
         if (!foundEmail) {
-            throw new Error("Email not found in CSV");
+            console.log("Email not found in CSV");
         }
 
         return accessGranted;
