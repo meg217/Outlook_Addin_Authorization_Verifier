@@ -6,24 +6,33 @@ function userMeetsSecurityClearance(filePath, documentClassification, email) {
     return new Promise((resolve, reject) => {
         let accessGranted = false;
         console.log("userMeetsSecurityClearance Function")
-        fs.createReadStream(filePath)
-            .pipe(csv())
-            .on('data', (row) => {
-                if (row.Email === email) {
-                    const userClearance = row.Classification;
+        // Fetch the CSV file
+        fetch(filePath)
+        .then(response => response.text())
+        .then(csvData => {
+            Papa.parse(csvData, {
+                header: true,
+                complete: (results) => {
+                    results.data.forEach(row => {
+                        if (row.Email === email) {
+                            const userClearance = row.Classification;
 
-                    if (canUserAccess(documentClassification, userClearance)) {
-                        accessGranted = true;
-                        console.log("accessGranted = true")
-                    }
+                            if (canUserAccess(documentClassification, userClearance)) {
+                                accessGranted = true;
+                                console.log("accessGranted = true");
+                            }
+                        }
+                    });
+                    resolve(accessGranted);
+                },
+                error: (error) => {
+                    reject(error);
                 }
-            })
-            .on('end', () => {
-                resolve(accessGranted);
-            })
-            .on('error', (error) => {
-                reject(error);
             });
+        })
+        .catch(error => {
+            reject(error);
+        });
     });
 }
 function canUserAccess(documentClassification, userClearance) {
