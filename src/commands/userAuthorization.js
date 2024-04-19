@@ -15,7 +15,7 @@ function userMeetsSecurityClearance(filePath, documentClassification, email1) {
                 header: true,
                 complete: (results) => {
                     results.data.forEach(row => {
-                        console.log("Email: ", row["Email"]);
+                        //console.log("Email: ", row["Email"]);
                         if (row["Email"] === email) {
                             console.log("Found email in row: ", row);
                             const userClearance = row["Authorization"];
@@ -27,6 +27,7 @@ function userMeetsSecurityClearance(filePath, documentClassification, email1) {
                         }
                     });
                     resolve(accessGranted);
+                    return;
                 },
                 error: (error) => {
                     console.error("Error parsing CSV:", error);
