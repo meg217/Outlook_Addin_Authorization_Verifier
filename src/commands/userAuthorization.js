@@ -14,6 +14,7 @@ function userMeetsSecurityClearance(filePath, documentClassification, email) {
                 header: true,
                 complete: (results) => {
                     results.data.forEach(row => {
+                        console.log("Checking row:", row);
                         if (row.Email === email) {
                             const userClearance = row.Classification;
 
@@ -26,11 +27,13 @@ function userMeetsSecurityClearance(filePath, documentClassification, email) {
                     resolve(accessGranted);
                 },
                 error: (error) => {
+                    console.error("Error parsing CSV:", error);
                     reject(error);
                 }
             });
         })
         .catch(error => {
+            console.error("Error fetching CSV:", error);
             reject(error);
         });
     });
