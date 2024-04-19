@@ -49,27 +49,27 @@ function MessageSendVerificationHandler(event) {
 
     //CHANGE
     checkRecipientClassification(toRecipients,bannerMarkings.banner[0])
-      .then((allowEvent) => {
-        if (!allowEvent) {
-          // Prevent sending the email
-          console.log("Prevent sending email");
-          event.completed({ allowEvent: false });
-          Office.context.mailbox.item.notificationMessages.addAsync(
-            "unauthorizedSending",
-            {
-              type: Office.MailboxEnums.ItemNotificationMessageType
-                .ErrorMessage,
-              message: "You are not authorized to send this email",
-            },
-            (result) => {
-              console.log(result);
-            }
-          );
-        } else {
-          // Allow sending the email
-          event.completed({ allowEvent: true });
-        }
-      })
+      // .then((allowEvent) => {
+      //   if (!allowEvent) {
+      //     // Prevent sending the email
+      //     console.log("Prevent sending email");
+      //     event.completed({ allowEvent: false });
+      //     Office.context.mailbox.item.notificationMessages.addAsync(
+      //       "unauthorizedSending",
+      //       {
+      //         type: Office.MailboxEnums.ItemNotificationMessageType
+      //           .ErrorMessage,
+      //         message: "You are not authorized to send this email",
+      //       },
+      //       (result) => {
+      //         console.log(result);
+      //       }
+      //     );
+      //   } else {
+      //     // Allow sending the email
+      //     event.completed({ allowEvent: true });
+      //   }
+      // })
       .catch((error) => {
         console.error(
           "Error occurred while checking recipient classification: " + error
@@ -129,6 +129,7 @@ function checkRecipientClassification(recipients,documentClassification) {
     // If a single recipient is not permitted, the entire send fails
     recipients.forEach(function (recipient) {
       const emailAddress = recipient.emailAddress;
+      console.log("Recipient Email Address: " + emailAddress)
       const isClearance = userMeetsSecurityClearance(csvFile,documentClassification,emailAddress)
       if (isClearance) {
         console.log(emailAddress + " is not authorized to view this email");
