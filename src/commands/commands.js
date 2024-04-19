@@ -3,8 +3,6 @@
  * See LICENSE in the project root for license information.
  */
 
-import { userMeetsSecurityClearance } from './userAuthorization';
-
 var mailboxItem;
 
 Office.initialize = function (reason) {
@@ -134,13 +132,6 @@ function checkRecipientClassification(recipients,documentClassification) {
       const emailAddress = recipient.emailAddress;
       console.log("Recipient Email Address: " + emailAddress)
       const isClearance = userMeetsSecurityClearance(csvFile,documentClassification,emailAddress)
-      .then((result) => {
-        console.log(result); 
-      })
-      .catch((error) => {
-        console.error(`An error occurred: ${error}`);
-      });
-
       if (isClearance) {
         console.log(emailAddress + " is not authorized to view this email");
         allowEvent = false;

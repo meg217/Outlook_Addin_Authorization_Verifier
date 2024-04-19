@@ -1,8 +1,8 @@
-import * as fs from 'node:fs/promises';
-const csv = require('csv-parser');
+//import * as fs from 'node:fs/promises';
+//const csv = require('csv-parser');
 
 // This function checks if the user's clearance meets requirements
-export function userMeetsSecurityClearance(filePath, documentClassification, email) {
+function userMeetsSecurityClearance(filePath, documentClassification, email) {
     return new Promise((resolve, reject) => {
         let accessGranted = false;
         console.log("userMeetsSecurityClearance Function")
