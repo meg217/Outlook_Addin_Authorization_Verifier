@@ -16,8 +16,8 @@ function userMeetsSecurityClearance(filePath, documentClassification, email) {
                     results.data.forEach(row => {
                         console.log("Checking row:", row);
                         if (row.Email === email) {
-                            const userClearance = row.Classification;
-
+                            const userClearance = row[" Authorization"];
+                            
                             if (canUserAccess(documentClassification, userClearance)) {
                                 accessGranted = true;
                                 console.log("accessGranted = true");
