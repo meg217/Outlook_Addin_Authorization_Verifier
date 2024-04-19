@@ -1,4 +1,4 @@
-//const fs = require('fs');
+import * as fs from 'node:fs/promises';
 const csv = require('csv-parser');
 
 // This function checks if the user's clearance meets requirements
