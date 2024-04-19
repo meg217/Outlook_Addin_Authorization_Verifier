@@ -25,8 +25,8 @@ function MessageSendVerificationHandler(event) {
     getCCAsync(),
     getBCCAsync(),
   ]).then(([toRecipients, sender, body, fetchAndParseCSV, cc, bcc]) => {
-    const allRecipients = toRecipients.forEach((recipient) => console.log(recipient.emailAddress));
-    console.log("To recipients:" + allRecipients);
+    //const allRecipients = toRecipients.forEach((recipient) => console.log(recipient.emailAddress));
+    console.log("To recipients:" + toRecipients.emailAddress);
     console.log("Sender:" + sender.emailAddress);
     console.log("CC: " + cc);
     console.log("BCC: " + bcc);
@@ -133,7 +133,7 @@ function checkRecipientClassification(recipients,documentClassification) {
       const emailAddress = recipient.emailAddress;
       console.log("Recipient Email Address: " + emailAddress)
       const isClearance = userMeetsSecurityClearance(csvFile,documentClassification,emailAddress)
-      if (!isClearance) {
+      if (isClearance) {
         console.log(emailAddress + " is not authorized to view this email");
         allowEvent = false;
       }
