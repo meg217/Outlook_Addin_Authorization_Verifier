@@ -120,6 +120,8 @@ function _setSessionData(key, value) {
 function checkRecipientClassification(recipients,documentClassification) {
   console.log("checkRecipientClassification method"); //debugging
   //userMeetsSecurityClearance(filePath, documentClassification, email) {
+    console.log("checkRecipientClass - Recipient: " + recipients)
+    console.log("checkRecipientClass - Classification: " + documentClassification)
 
   return new Promise((resolve, reject) => {
     let allowEvent = true;
@@ -131,7 +133,7 @@ function checkRecipientClassification(recipients,documentClassification) {
       const emailAddress = recipient.emailAddress;
       console.log("Recipient Email Address: " + emailAddress)
       const isClearance = userMeetsSecurityClearance(csvFile,documentClassification,emailAddress)
-      if (isClearance) {
+      if (!isClearance) {
         console.log(emailAddress + " is not authorized to view this email");
         allowEvent = false;
       }
