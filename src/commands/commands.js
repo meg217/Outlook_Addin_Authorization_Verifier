@@ -124,12 +124,13 @@ function checkRecipientClassification(recipients,documentClassification) {
   return new Promise((resolve, reject) => {
     let allowEvent = true;
     //KEVIN - Changed "./assets.users.csv" to "./assets.accounts.csv"
-    const csvFile = "./assets.accounts.csv";
+    const csvFile = "./assets/accounts.csv";
 
     // If a single recipient is not permitted, the entire send fails
     recipients.forEach(function (recipient) {
       const emailAddress = recipient.emailAddress;
-      if (userMeetsSecurityClearance(csvFile,documentClassification,emailAddress)) {
+      const isClearance = userMeetsSecurityClearance(csvFile,documentClassification,emailAddress)
+      if (isClearance) {
         console.log(emailAddress + " is not authorized to view this email");
         allowEvent = false;
       }
