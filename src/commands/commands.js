@@ -168,6 +168,9 @@ function checkRecipientClassification(recipients,documentClassification) {
     resolve(allowEvent);
   });*/
 
+
+
+  
 /**
  * Determines if the recipient is unauthorized.
  * @param {string} emailAddress The recipient's email address
