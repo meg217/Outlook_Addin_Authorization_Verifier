@@ -167,7 +167,6 @@ function checkRecipientClassification(recipients,documentClassification) {
     // Allow event to proceed if no unauthorized recipient found
     resolve(allowEvent);
   });*/
-}
 
 /**
  * Determines if the recipient is unauthorized.
