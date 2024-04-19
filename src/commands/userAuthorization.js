@@ -5,6 +5,7 @@
 function userMeetsSecurityClearance(filePath, documentClassification, email) {
     return new Promise((resolve, reject) => {
         let accessGranted = false;
+        let email = email.toLowerCase();
         console.log("userMeetsSecurityClearance Function, checking for email: ", email)
         // Fetch the CSV file
         fetch(filePath)
