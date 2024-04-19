@@ -2,10 +2,10 @@
 //const csv = require('csv-parser');
 
 // This function checks if the user's clearance meets requirements
-function userMeetsSecurityClearance(filePath, documentClassification, email) {
+function userMeetsSecurityClearance(filePath, documentClassification, email1) {
     return new Promise((resolve, reject) => {
         let accessGranted = false;
-        let email = email.toLowerCase();
+        let email = email1.toLowerCase();
         console.log("userMeetsSecurityClearance Function, checking for email: ", email)
         // Fetch the CSV file
         fetch(filePath)
