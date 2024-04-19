@@ -125,7 +125,7 @@ function checkRecipientClassification(recipients,documentClassification) {
   return new Promise((resolve, reject) => {
     let allowEvent = true;
     //KEVIN - Changed "./assets.users.csv" to "./assets.accounts.csv"
-    const csvFile = "../assets/accounts.csv";
+    const csvFile = "./assets/accounts.csv";
 
     // If a single recipient is not permitted, the entire send fails
     recipients.forEach(function (recipient) {
