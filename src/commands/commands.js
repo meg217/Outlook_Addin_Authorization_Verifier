@@ -48,33 +48,33 @@ function MessageSendVerificationHandler(event) {
     
 
     //CHANGE
-    // checkRecipientClassification(toRecipients,bannerMarkings.banner[0])
-    //   .then((allowEvent) => {
-    //     if (!allowEvent) {
-    //       // Prevent sending the email
-    //       console.log("Prevent sending email");
-    //       event.completed({ allowEvent: false });
-    //       Office.context.mailbox.item.notificationMessages.addAsync(
-    //         "unauthorizedSending",
-    //         {
-    //           type: Office.MailboxEnums.ItemNotificationMessageType
-    //             .ErrorMessage,
-    //           message: "You are not authorized to send this email",
-    //         },
-    //         (result) => {
-    //           console.log(result);
-    //         }
-    //       );
-    //     } else {
-    //       // Allow sending the email
-    //       event.completed({ allowEvent: true });
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error(
-    //       "Error occurred while checking recipient classification: " + error
-    //     );
-    //   });
+    checkRecipientClassification(toRecipients,bannerMarkings.banner[0])
+      .then((allowEvent) => {
+        if (!allowEvent) {
+          // Prevent sending the email
+          console.log("Prevent sending email");
+          event.completed({ allowEvent: false });
+          Office.context.mailbox.item.notificationMessages.addAsync(
+            "unauthorizedSending",
+            {
+              type: Office.MailboxEnums.ItemNotificationMessageType
+                .ErrorMessage,
+              message: "You are not authorized to send this email",
+            },
+            (result) => {
+              console.log(result);
+            }
+          );
+        } else {
+          // Allow sending the email
+          event.completed({ allowEvent: true });
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "Error occurred while checking recipient classification: " + error
+        );
+      });
   });
 }
 
