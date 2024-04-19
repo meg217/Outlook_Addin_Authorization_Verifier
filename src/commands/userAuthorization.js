@@ -14,10 +14,10 @@ function userMeetsSecurityClearance(filePath, documentClassification, email) {
                 header: true,
                 complete: (results) => {
                     results.data.forEach(row => {
-                        console.log("Checking row:", row);
-                        if (row.Email === email) {
-                            const userClearance = row[" Authorization"];
-                            
+                        if (row["Email"] === email) {
+                            console.log("Found email in row: ", row);
+                            const userClearance = row["Authorization"];
+
                             if (canUserAccess(documentClassification, userClearance)) {
                                 accessGranted = true;
                                 console.log("accessGranted = true");
