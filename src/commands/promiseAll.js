@@ -11,7 +11,7 @@ function fetchAndParseCSV() {
     return new Promise((resolve, reject) => {
       Papa.parse(csvUrl, {
         download: true,
-        header: true,
+        header: false,
         complete: (result) => {
           console.log("results are now: " + result.data);
           console.log("or maybe : " + result.data[0]);
