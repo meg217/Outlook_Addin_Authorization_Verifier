@@ -4,6 +4,7 @@
 //with the rest of the promises, function times out with both promise and async
 // This function checks if the user's clearance meets requirements
 function userMeetsSecurityClearance(filePath, documentClassification, email1) {
+    return new Promise((resolve, reject) => {
     let accessGranted = false;
     let email = email1.toLowerCase();
     console.log("userMeetsSecurityClearance Function, checking for email: ", email);
@@ -22,7 +23,7 @@ function userMeetsSecurityClearance(filePath, documentClassification, email1) {
                     if (canUserAccess(documentClassification, userClearance)) {
                         accessGranted = true;
                         console.log("AccessGranted = true");
-                        callback(accessGranted); 
+                        resolve(accessGranted); 
                         return; 
                     }
                 }
@@ -32,12 +33,13 @@ function userMeetsSecurityClearance(filePath, documentClassification, email1) {
                 console.log("Email not found in CSV");
             }
 
-            callback(accessGranted); 
+            resolve(accessGranted); 
         })
         .catch(error => {
             console.error("Error:", error);
-            callback(accessGranted); 
+            reject(error); 
         });
+    });
 }
 
 function canUserAccess(documentClassification, userClearance) {
