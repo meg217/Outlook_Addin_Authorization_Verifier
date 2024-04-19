@@ -5,7 +5,7 @@ const csv = require('csv-parser');
 function userMeetsSecurityClearance(filePath, documentClassification, email) {
     return new Promise((resolve, reject) => {
         let accessGranted = false;
-
+        console.log("userMeetsSecurityClearance Function")
         fs.createReadStream(filePath)
             .pipe(csv())
             .on('data', (row) => {
@@ -14,6 +14,7 @@ function userMeetsSecurityClearance(filePath, documentClassification, email) {
 
                     if (canUserAccess(documentClassification, userClearance)) {
                         accessGranted = true;
+                        console.log("accessGranted = true")
                     }
                 }
             })
@@ -26,6 +27,7 @@ function userMeetsSecurityClearance(filePath, documentClassification, email) {
     });
 }
 function canUserAccess(documentClassification, userClearance) {
+    console.log("canUserAccess Function")
     const levels = ['confidential', 'secret', 'top secret'];
     const documentIndex = levels.indexOf(documentClassification.trim().toLowerCase());
     const userIndex = levels.indexOf(userClearance.trim().toLowerCase());
