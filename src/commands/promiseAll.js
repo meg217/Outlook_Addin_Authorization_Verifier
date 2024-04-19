@@ -5,16 +5,13 @@
  * Gets the csv data file.
  */
 function fetchAndParseCSV() {
-    const csvUrl =
-      "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
+    const csvPath = "./assets/accounts.csv";
     console.log("attempting to parse csv");
     return new Promise((resolve, reject) => {
-      Papa.parse(csvUrl, {
-        download: true,
-        header: false,
+      Papa.parse(csvPath, {
+        header: true,
         complete: (result) => {
-          console.log("results are now: " + result.data);
-          console.log("or maybe : " + result.data[0]);
+          console.log("results are: " + result.data);
           resolve(result.data);
         },
         error: (error) => {

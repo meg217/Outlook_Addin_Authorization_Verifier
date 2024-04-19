@@ -1,33 +1,4 @@
-import { createReadStream } from 'fs';
-import csv from 'csv-parser';
-
-// This function checks if the user's clearance meets requirements
-function userMeetsSecurityClearance(filePath, documentClassification, email) {
-    return new Promise((resolve, reject) => {
-        let accessGranted = false;
-
-        createReadStream(filePath)
-            .pipe(csv())
-            .on('data', (row) => {
-                if (row.Email === email) {
-                    const userClearance = row.Classification;
-
-                    if (canUserAccess(documentClassification, userClearance)) {
-                        accessGranted = true;
-                    }
-                }
-            })
-            .on('end', () => {
-                resolve(accessGranted);
-            })
-            .on('error', (error) => {
-                reject(error);
-            });
-    });
-}
-
-/**
-const fs = require('fs');
+//const fs = require('fs');
 const csv = require('csv-parser');
 
 // This function checks if the user's clearance meets requirements
@@ -53,7 +24,7 @@ function userMeetsSecurityClearance(filePath, documentClassification, email) {
                 reject(error);
             });
     });
-}*/
+}
 function canUserAccess(documentClassification, userClearance) {
     const levels = ['confidential', 'secret', 'top secret'];
     const documentIndex = levels.indexOf(documentClassification.trim().toLowerCase());
