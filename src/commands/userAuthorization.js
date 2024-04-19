@@ -18,6 +18,7 @@ function userMeetsSecurityClearance(filePath, documentClassification, email1) {
                         //console.log("Email: ", row["Email"]);
                         if (row["Email"] === email) {
                             console.log("Found email in row: ", row);
+                            foundEmail = true;
                             const userClearance = row["Authorization"];
 
                             if (canUserAccess(documentClassification, userClearance)) {
@@ -26,8 +27,11 @@ function userMeetsSecurityClearance(filePath, documentClassification, email1) {
                             }
                         }
                     });
-                    resolve(accessGranted);
-                    return;
+                    if (foundEmail) {
+                        resolve(accessGranted);
+                    } else {
+                        reject("Email not found in CSV"); 
+                    }
                 },
                 error: (error) => {
                     console.error("Error parsing CSV:", error);
