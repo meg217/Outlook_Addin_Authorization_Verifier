@@ -20,7 +20,7 @@ async function userMeetsSecurityClearance(filePath, documentClassification, emai
                 const userClearance = row["Authorization"];
                 if (canUserAccess(documentClassification, userClearance)) {
                     accessGranted = true;
-                    console.log("accessGranted = true");
+                    console.log("AccessGranted = true");
                 }
             }
         }
