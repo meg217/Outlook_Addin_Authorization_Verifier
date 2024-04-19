@@ -1,6 +1,7 @@
 //import * as fs from 'node:fs/promises';
 //const csv = require('csv-parser');
-
+//async and promise both dont seem to work, need to maybe make promise in
+//with the rest of the promises, function times out with both promise and async
 // This function checks if the user's clearance meets requirements
 function userMeetsSecurityClearance(filePath, documentClassification, email1) {
     let accessGranted = false;
@@ -20,7 +21,7 @@ function userMeetsSecurityClearance(filePath, documentClassification, email1) {
                     const userClearance = row["Authorization"];
                     if (canUserAccess(documentClassification, userClearance)) {
                         accessGranted = true;
-                        console.log("accessGranted = true");
+                        console.log("AccessGranted = true");
                         callback(accessGranted); 
                         return; 
                     }
@@ -31,11 +32,11 @@ function userMeetsSecurityClearance(filePath, documentClassification, email1) {
                 console.log("Email not found in CSV");
             }
 
-            callback(accessGranted); // Callback with false if email is not found or access is not granted
+            callback(accessGranted); 
         })
         .catch(error => {
             console.error("Error:", error);
-            callback(accessGranted); // Callback with false in case of error
+            callback(accessGranted); 
         });
 }
 
