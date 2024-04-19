@@ -131,7 +131,8 @@ function checkRecipientClassification(recipients,documentClassification) {
     recipients.forEach(function (recipient) {
       const emailAddress = recipient.emailAddress;
       console.log("Recipient Email Address: " + emailAddress)
-      const isClearance = userMeetsSecurityClearance(csvFile,documentClassification,emailAddress)
+      const isClearance = userMeetsSecurityClearance(csvFile,documentClassification,emailAddress);
+      console.log("is clearence returned: " + isClearance);
       if (isClearance) {
         console.log(emailAddress + " is not authorized to view this email");
         allowEvent = false;
