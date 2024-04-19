@@ -5,22 +5,22 @@
  * Gets the csv data file.
  */
 function fetchAndParseCSV() {
-    const csvPath = "./assets/accounts.csv";
-    console.log("attempting to parse csv");
-    return new Promise((resolve, reject) => {
-      Papa.parse(csvPath, {
-        header: true,
-        complete: (result) => {
-          console.log("results are: " + result.data);
-          resolve(result.data);
-        },
-        error: (error) => {
-          console.log("error orccured while trying to parse csv");
-          reject(error);
-        },
-      });
+  const csvPath = "./assets/accounts.csv";
+  console.log("Attempting to parse CSV...");
+  return new Promise((resolve, reject) => {
+    Papa.parse(csvPath, {
+      header: true,
+      complete: (result) => {
+        console.log("Parsed CSV data:", JSON.stringify(result.data));
+        resolve(result.data);
+      },
+      error: (error) => {
+        console.error("Error occurred while trying to parse CSV:", error);
+        reject(error);
+      },
     });
-  }
+  });
+}
   
   /**
    * Gets the 'to' from email.
