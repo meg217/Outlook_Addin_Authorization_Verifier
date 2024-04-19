@@ -14,6 +14,7 @@ function userMeetsSecurityClearance(filePath, documentClassification, email) {
                 header: true,
                 complete: (results) => {
                     results.data.forEach(row => {
+                        console.log("Email: ", row["Email"]);
                         if (row["Email"] === email) {
                             console.log("Found email in row: ", row);
                             const userClearance = row["Authorization"];
