@@ -47,33 +47,9 @@ function MessageSendVerificationHandler(event) {
     
 
     //CHANGE
-    checkRecipientClassification(toRecipients,bannerMarkings.banner[0])
-      .then((allowEvent) => {
-        if (!allowEvent) {
-          // Prevent sending the email
-          console.log("Prevent sending email");
-          event.completed({ allowEvent: false });
-          Office.context.mailbox.item.notificationMessages.addAsync(
-            "unauthorizedSending",
-            {
-              type: Office.MailboxEnums.ItemNotificationMessageType
-                .ErrorMessage,
-              message: "You are not authorized to send this email",
-            },
-            (result) => {
-              console.log(result);
-            }
-          );
-        } else {
-          // Allow sending the email
-          event.completed({ allowEvent: true });
-        }
-      })
-      .catch((error) => {
-        console.error(
-          "Error occurred while checking recipient classification: " + error
-        );
-      });
+    checkRecipientClassification(toRecipients,bannerMarkings.banner[0], event);
+
+
   });
 }
 
@@ -116,7 +92,7 @@ function _setSessionData(key, value) {
  * @param {String} documentClassication The classication level of the email dictated by category 1 of banner
  * @returns {Promise<boolean>} Returns true if all recipients are permitted to view the contents of the email
  */
-function checkRecipientClassification(recipients,documentClassification) {
+function checkRecipientClassification(recipients,documentClassification, event) {
   console.log("checkRecipientClassification method"); //debugging
   //userMeetsSecurityClearance(filePath, documentClassification, email) {
     console.log("checkRecipientClass - Recipient: " + recipients)
@@ -133,10 +109,20 @@ function checkRecipientClassification(recipients,documentClassification) {
       console.log("Recipient Email Address: " + emailAddress);
       userMeetsSecurityClearance(csvFile,documentClassification,emailAddress).then((isClearance) => {
       console.log("is clearence returned: " + isClearance);
-      if (isClearance) {
+      if (!isClearance) {
         console.log(emailAddress + " is not authorized to view this email");
-        allowEvent = false;
+        event.completed(
+        {
+            allowEvent: false,
+             cancelLabel: "Ok",
+             commandId: "msgComposeOpenPaneButton",
+             contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
+             errorMessage: "Recipient is NOT AUTHORIZED to see this email.",
+             sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser
+        }
+        );
       }
+      console.log("Recipient is Cleared");
     }) .catch ((error) => {
       console.error("Error while checking isClearance: ", error);
     });
