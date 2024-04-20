@@ -57,9 +57,11 @@ function MessageSendVerificationHandler(event) {
       for (let i = 0; i < dissParts.length; i++) {
           dissPartsArray.push(dissParts[i]);
       }
-      if (dissPartsArray[i] === "NOFORN") {
-        //NOFORNEncountered = true;
-        checkRecipientCountry(toRecipients, event);
+      for (let i = 0; i < dissPartsArray.length; i++) {
+        if (dissPartsArray[i] === "NOFORN") {
+          //NOFORNEncountered = true;
+          checkRecipientCountry(toRecipients, event);
+        }
       }
     }
 
