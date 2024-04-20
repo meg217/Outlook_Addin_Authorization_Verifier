@@ -48,23 +48,23 @@ function MessageSendVerificationHandler(event) {
 
     //CHANGE
     checkRecipientClassification(toRecipients,bannerMarkings.banner[0], event);
-    dissemination = bannerMarkings.banner[2];
-    if (dissemination != null){
-      let dissParts = dissemination.split('/');
-      let dissPartsArray = [];
+    // dissemination = bannerMarkings.banner[2];
+    // if (dissemination != null){
+    //   let dissParts = dissemination.split('/');
+    //   let dissPartsArray = [];
       
 
-      for (let i = 0; i < dissParts.length; i++) {
-          dissPartsArray.push(dissParts[i]);
-      }
-      for (let i = 0; i < dissPartsArray.length; i++) {
-        if (dissPartsArray[i] === "NOFORN") {
-          //NOFORNEncountered = true;
-          Msgreturn = checkRecipientCountry(toRecipients, event);
-          console.log("Function checkRecipientCountry returned: " + Msgreturn);
-        }
-      }
-    }
+    //   for (let i = 0; i < dissParts.length; i++) {
+    //       dissPartsArray.push(dissParts[i]);
+    //   }
+    //   for (let i = 0; i < dissPartsArray.length; i++) {
+    //     if (dissPartsArray[i] === "NOFORN") {
+    //       //NOFORNEncountered = true;
+    //       const Msgreturn = checkRecipientCountry(toRecipients, event);
+    //       console.log("Function checkRecipientCountry returned: " + Msgreturn);
+    //     }
+    //   }
+    // }
 
   });
 }
