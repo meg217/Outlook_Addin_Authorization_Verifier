@@ -60,7 +60,8 @@ function MessageSendVerificationHandler(event) {
       for (let i = 0; i < dissPartsArray.length; i++) {
         if (dissPartsArray[i] === "NOFORN") {
           //NOFORNEncountered = true;
-          checkRecipientCountry(toRecipients, event);
+          Msgreturn = checkRecipientCountry(toRecipients, event);
+          console.log("Function checkRecipientCountry returned: " + Msgreturn);
         }
       }
     }
@@ -178,6 +179,9 @@ function checkRecipientCountry(recipients, event){
       }
       else{
         console.log("Recipient is Cleared as USA");
+        resolve(allowEvent);
+        return;
+
       }
     }) .catch ((error) => {
       console.error("Error while checking isNOFORN: ", error);
