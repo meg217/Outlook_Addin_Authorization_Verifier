@@ -51,6 +51,45 @@ function canUserAccess(documentClassification, userClearance) {
     return userIndex >= documentIndex;
 }
 
+function check_NOFORN_Access(filePath, email1) {
+    return new Promise((resolve, reject) => {
+    let accessGranted = false;
+    let email = email1.toLowerCase();
+    console.log("check_NOFORN_Access Function, checking for email: ", email);
+
+    fetch(filePath)
+        .then(response => response.text())
+        .then(csvData => {
+            const results = Papa.parse(csvData, { header: true }).data;
+
+            let foundEmail = false;
+            for (const row of results) {
+                if (row["Email"] === email) {
+                    console.log("Found email in row: ", row);
+                    foundEmail = true;
+                    const userCountry = row["Country"];
+                    if (userCountry == "USA") {
+                        accessGranted = true;
+                        console.log("AccessGranted = true");
+                        resolve(accessGranted); 
+                        return; 
+                    }
+                }
+            }
+
+            if (!foundEmail) {
+                console.log("Email not found in CSV");
+            }
+
+            resolve(accessGranted); 
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            reject(error); 
+        });
+    });
+}
+
 // Example usage
 //const filePath = 'users.csv'; // Adjust as needed
 //const documentClassification = 'secret';
