@@ -131,14 +131,14 @@ function checkRecipientClassification(recipients,documentClassification) {
     for (const recipient of recipients) {
       const emailAddress = recipient.emailAddress;
       console.log("Recipient Email Address: " + emailAddress);
-      userMeetsSecurityClearance(csvFile,documentClassification,emailAddress).then((isClearence) => {
+      userMeetsSecurityClearance(csvFile,documentClassification,emailAddress).then((isClearance) => {
       console.log("is clearence returned: " + isClearance);
       if (isClearance) {
         console.log(emailAddress + " is not authorized to view this email");
         allowEvent = false;
       }
     }) .catch ((error) => {
-      console.error("Error while checking isClearence: ", error);
+      console.error("Error while checking isClearance: ", error);
     });
 
   }
