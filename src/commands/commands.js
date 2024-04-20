@@ -25,7 +25,7 @@ function MessageSendVerificationHandler(event) {
     getCCAsync(),
     getBCCAsync(),
   ]).then(([toRecipients, sender, body, fetchAndParseCSV, cc, bcc]) => {
-    console.log("To recipients:" + toRecipients.forEach((recipient) => console.log(recipient.emailAddress)));
+    console.log("To recipients change:" + toRecipients.forEach((recipient) => console.log(recipient.emailAddress)));
     console.log("Sender:" + sender.emailAddress);
     console.log("CC: " + cc);
     console.log("BCC: " + bcc);
