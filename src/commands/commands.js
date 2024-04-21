@@ -137,8 +137,10 @@ function checkRecipientClassification(recipients,documentClassification, event) 
              sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser
         }
         );
+      } 
+      else {
+        console.log("Recipient is Cleared");
       }
-      console.log("Recipient is Cleared");
     }) .catch ((error) => {
       console.error("Error while checking isClearance: ", error);
     });
