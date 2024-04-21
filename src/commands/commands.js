@@ -138,9 +138,7 @@ function checkRecipientClassification(recipients,documentClassification, event) 
         }
         );
       }
-      else{
-        console.log("Recipient is Cleared");
-      }
+      console.log("Recipient is Cleared");
     }) .catch ((error) => {
       console.error("Error while checking isClearance: ", error);
     });
