@@ -48,23 +48,23 @@ function MessageSendVerificationHandler(event) {
 
     //CHANGE
     checkRecipientClassification(toRecipients,bannerMarkings.banner[0], event);
-    // dissemination = bannerMarkings.banner[2];
-    // if (dissemination != null){
-    //   let dissParts = dissemination.split('/');
-    //   let dissPartsArray = [];
+    dissemination = bannerMarkings.banner[2];
+    if (dissemination != null){
+      let dissParts = dissemination.split('/');
+      let dissPartsArray = [];
       
 
-    //   for (let i = 0; i < dissParts.length; i++) {
-    //       dissPartsArray.push(dissParts[i]);
-    //   }
-    //   for (let i = 0; i < dissPartsArray.length; i++) {
-    //     if (dissPartsArray[i] === "NOFORN") {
-    //       //NOFORNEncountered = true;
-    //       const Msgreturn = checkRecipientCountry(toRecipients, event);
-    //       console.log("Function checkRecipientCountry returned: " + Msgreturn);
-    //     }
-    //   }
-    // }
+      for (let i = 0; i < dissParts.length; i++) {
+          dissPartsArray.push(dissParts[i]);
+      }
+      for (let i = 0; i < dissPartsArray.length; i++) {
+        if (dissPartsArray[i] === "NOFORN") {
+          //NOFORNEncountered = true;
+          const Msgreturn = checkRecipientCountry(toRecipients, event);
+          console.log("Function checkRecipientCountry returned: " + Msgreturn);
+        }
+      }
+    }
 
   });
 }
@@ -155,48 +155,50 @@ function checkRecipientClassification(recipients,documentClassification, event) 
   });
 }
 
-// function checkRecipientCountry(recipients, event){
-//   console.log("checkRecipientCountry Function");
+function checkRecipientCountry(recipients, event){
+  console.log("checkRecipientCountry Function");
 
-//   return new Promise((resolve, reject) => {
-//     let allowEvent = true;
-//     //KEVIN - Changed "./assets.users.csv" to "./assets.accounts.csv"
-//     const csvFile = "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
+  return new Promise((resolve, reject) => {
+    let allowEvent = true;
+    //KEVIN - Changed "./assets.users.csv" to "./assets.accounts.csv"
+    const csvFile = "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
 
-//     // If a single recipient is not permitted, the entire send fails
-//     for (const recipient of recipients) {
-//       const emailAddress = recipient.emailAddress;
-//       console.log("Recipient Email Address: " + emailAddress);
-//       check_NOFORN_Access(csvFile, emailAddress).then((isNOFORN) => {
-//       console.log("isNOFORN returned: " + isNOFORN);
-//       if (!isNOFORN) {
-//         console.log(emailAddress + " is a Foreign National and not authorized to view this email");
-//         event.completed(
-//         {
-//             allowEvent: false,
-//              cancelLabel: "Ok",
-//              commandId: "msgComposeOpenPaneButton",
-//              contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
-//              errorMessage: "Recipient is NOT AUTHORIZED to see this email: NOT RELEASABLE TO FOREIGN NATIONALS",
-//              sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser
-//         }
-//         );
-//       }
-//       else{
-//         console.log("Recipient is Cleared as USA");
-//         resolve(allowEvent);
-//         return;
+    // If a single recipient is not permitted, the entire send fails
+    for (const recipient of recipients) {
+      const emailAddress = recipient.emailAddress;
+      console.log("Recipient Email Address: " + emailAddress);
+      check_NOFORN_Access(csvFile, emailAddress).then((isNOFORN) => {
+      console.log("isNOFORN returned: " + isNOFORN);
+      if (!isNOFORN) {
+        console.log(emailAddress + " is a Foreign National and not authorized to view this email");
+        event.completed(
+        {
+            allowEvent: false,
+             cancelLabel: "Ok",
+             commandId: "msgComposeOpenPaneButton",
+             contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
+             errorMessage: "Recipient is NOT AUTHORIZED to see this email: NOT RELEASABLE TO FOREIGN NATIONALS",
+             sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser
+        }
+        );
+      }
+      else {
+        console.log("Recipient is Cleared as USA");
+        event.completed(
+          {
+              allowEvent: true
+          }
+          );
+      }
+    }) .catch ((error) => {
+      console.error("Error while checking isNOFORN: ", error);
+    });
 
-//       }
-//     }) .catch ((error) => {
-//       console.error("Error while checking isNOFORN: ", error);
-//     });
+  }
+    resolve(allowEvent);
+  });
 
-//   }
-//     resolve(allowEvent);
-//   });
-
-// }
+}
 
   // Old Method
   /**
