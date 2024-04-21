@@ -25,7 +25,7 @@ function MessageSendVerificationHandler(event) {
     getCCAsync(),
     getBCCAsync(),
   ]).then(([toRecipients, sender, body, fetchAndParseCSV, cc, bcc]) => {
-    console.log("To recipients change:" + toRecipients.forEach((recipient) => console.log(recipient.emailAddress)));
+    console.log("To recipients: " + toRecipients.forEach((recipient) => console.log(recipient.emailAddress)));
     console.log("Sender:" + sender.emailAddress);
     console.log("CC: " + cc);
     console.log("BCC: " + bcc);
@@ -140,6 +140,11 @@ function checkRecipientClassification(recipients,documentClassification, event) 
       } 
       else {
         console.log("Recipient is Cleared");
+        event.completed(
+          {
+              allowEvent: true
+          }
+          );
       }
     }) .catch ((error) => {
       console.error("Error while checking isClearance: ", error);
@@ -150,48 +155,48 @@ function checkRecipientClassification(recipients,documentClassification, event) 
   });
 }
 
-function checkRecipientCountry(recipients, event){
-  console.log("checkRecipientCountry Function");
+// function checkRecipientCountry(recipients, event){
+//   console.log("checkRecipientCountry Function");
 
-  return new Promise((resolve, reject) => {
-    let allowEvent = true;
-    //KEVIN - Changed "./assets.users.csv" to "./assets.accounts.csv"
-    const csvFile = "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
+//   return new Promise((resolve, reject) => {
+//     let allowEvent = true;
+//     //KEVIN - Changed "./assets.users.csv" to "./assets.accounts.csv"
+//     const csvFile = "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
 
-    // If a single recipient is not permitted, the entire send fails
-    for (const recipient of recipients) {
-      const emailAddress = recipient.emailAddress;
-      console.log("Recipient Email Address: " + emailAddress);
-      check_NOFORN_Access(csvFile, emailAddress).then((isNOFORN) => {
-      console.log("isNOFORN returned: " + isNOFORN);
-      if (!isNOFORN) {
-        console.log(emailAddress + " is a Foreign National and not authorized to view this email");
-        event.completed(
-        {
-            allowEvent: false,
-             cancelLabel: "Ok",
-             commandId: "msgComposeOpenPaneButton",
-             contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
-             errorMessage: "Recipient is NOT AUTHORIZED to see this email: NOT RELEASABLE TO FOREIGN NATIONALS",
-             sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser
-        }
-        );
-      }
-      else{
-        console.log("Recipient is Cleared as USA");
-        resolve(allowEvent);
-        return;
+//     // If a single recipient is not permitted, the entire send fails
+//     for (const recipient of recipients) {
+//       const emailAddress = recipient.emailAddress;
+//       console.log("Recipient Email Address: " + emailAddress);
+//       check_NOFORN_Access(csvFile, emailAddress).then((isNOFORN) => {
+//       console.log("isNOFORN returned: " + isNOFORN);
+//       if (!isNOFORN) {
+//         console.log(emailAddress + " is a Foreign National and not authorized to view this email");
+//         event.completed(
+//         {
+//             allowEvent: false,
+//              cancelLabel: "Ok",
+//              commandId: "msgComposeOpenPaneButton",
+//              contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
+//              errorMessage: "Recipient is NOT AUTHORIZED to see this email: NOT RELEASABLE TO FOREIGN NATIONALS",
+//              sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser
+//         }
+//         );
+//       }
+//       else{
+//         console.log("Recipient is Cleared as USA");
+//         resolve(allowEvent);
+//         return;
 
-      }
-    }) .catch ((error) => {
-      console.error("Error while checking isNOFORN: ", error);
-    });
+//       }
+//     }) .catch ((error) => {
+//       console.error("Error while checking isNOFORN: ", error);
+//     });
 
-  }
-    resolve(allowEvent);
-  });
+//   }
+//     resolve(allowEvent);
+//   });
 
-}
+// }
 
   // Old Method
   /**
