@@ -151,13 +151,20 @@ function checkRecipientClassification(
         });
     });
 
-    Promise.all(clearancePromises)
-      .then(() => {
-        resolve(allowEvent);
-      })
-      .catch((error) => {
-        reject(error);
+    Promise.all(clearancePromises).then(() => {
+      event.completed({
+        allowEvent: true,
       });
+    });
+    event.completed({
+      allowEvent: false,
+      cancelLabel: "Ok",
+      commandId: "msgComposeOpenPaneButton",
+      contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
+      errorMessage:
+        "Recipient is NOT AUTHORIZED to see this email: NOT RELEASABLE TO FOREIGN NATIONALS",
+      sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser,
+    });
   });
 }
 
