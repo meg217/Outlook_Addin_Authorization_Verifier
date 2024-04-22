@@ -8,10 +8,14 @@
  * @param { String } body
  */
 function getBannerFromBody(body) {
+
+  const classification_regex = /^(CLASSIFICATION:)(.*)$/im;
+    // Remove the classification line from the banner
+  const bannerWithoutClassification = body.replace(classification_regex, '');
   const banner_regex =
-    /^(?:.*CLASSIFICATION:)?\s*(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/im;
+  /^(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)(\/\/(.*))?/im;
   console.log("Searching for Banner...");
-  const banner = body.match(banner_regex);
+  const banner = bannerWithoutClassification.match(banner_regex);
   //console.log(banner);
   if (banner) {
     console.log("Banner Found!");
