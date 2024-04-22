@@ -122,56 +122,39 @@ function checkRecipientClassification(
 
   return new Promise((resolve, reject) => {
     let allowEvent = true;
+    //KEVIN - Changed "./assets.users.csv" to "./assets.accounts.csv"
     const csvFile =
       "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
 
-    const clearancePromises = recipients.map((recipient) => {
+    // If a single recipient is not permitted, the entire send fails
+    for (const recipient of recipients) {
       const emailAddress = recipient.emailAddress;
       console.log("Recipient Email Address: " + emailAddress);
-      return userMeetsSecurityClearance(
-        csvFile,
-        documentClassification,
-        emailAddress
-      )
+      userMeetsSecurityClearance(csvFile, documentClassification, emailAddress)
         .then((isClearance) => {
-          console.log("is clearance returned: " + isClearance);
+          console.log("is clearence returned: " + isClearance);
           if (!isClearance) {
             console.log(emailAddress + " is not authorized to view this email");
-            allowEvent = false;
+            event.completed({
+              allowEvent: false,
+              cancelLabel: "Ok",
+              commandId: "msgComposeOpenPaneButton",
+              contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
+              errorMessage: "Recipient is NOT AUTHORIZED to see this email.",
+              sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser,
+            });
           } else {
             console.log("Recipient is Cleared");
+            event.completed({
+              allowEvent: true,
+            });
           }
         })
         .catch((error) => {
           console.error("Error while checking isClearance: ", error);
-          // Reject the main promise if any clearance check fails
-          reject(error);
         });
-    });
-
-    Promise.all(clearancePromises)
-      .then(() => {
-        // Call event.completed after all clearance checks are done
-        if (allowEvent) {
-          event.completed({
-            allowEvent: true,
-          });
-        } else {
-          event.completed({
-            allowEvent: false,
-            cancelLabel: "Ok",
-            commandId: "msgComposeOpenPaneButton",
-            contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
-            errorMessage:
-              "One or more recipients are NOT AUTHORIZED to see this email.",
-            sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser,
-          });
-        }
-        resolve(allowEvent);
-      })
-      .catch((error) => {
-        reject(error);
-      });
+    }
+    resolve(allowEvent);
   });
 }
 
