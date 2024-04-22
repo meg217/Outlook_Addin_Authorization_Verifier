@@ -8,137 +8,163 @@
  * @param { String } body
  */
 function getBannerFromBody(body) {
-
-    const banner_regex =
-    /^(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/im;
-
-    const banner = bannerWithoutClassification.match(banner_regex);
-    console.log(banner);
-    if (banner) {
-      console.log("banner found");
-      return banner[0];
-    } else {
-      console.log("banner null");
-      return null;
-    }
-  }
-  
-  /**
-   * function to parse banner markings
-   * parameter is the banner
-   * returns an array of each category being array[1] is cat1 and on for 1, 4 and 7
-   * @param { String } banner
-   */
-  function parseBannerMarkings(banner) {
-    // const cat1_regex = "TOP[\s]*SECRET|TS|(TS)|SECRET|S|(S)|CONFIDENTIAL|C|(C)|UNCLASSIFIED|U|(U)";
-    // const cat4_regex = "COMINT|-GAMMA|\/|TALENT[\s]*KEYHOLE|SI-G\/TK|HCS|GCS";
-    // const cat7_regex = "ORIGINATOR[\s]*CONTROLLED|ORCON|NOT[\s]*RELEASABLE[\s]*TO[\s]*FOREIGN[\s]*NATIONALS|NOFORN|AUTHORIZED[\s]*FOR[\s]*RELEASE[\s]*TO[\s]*USA,[\s]*AUZ,[\s]*NZL|REL[\s]*TO[\s]*USA,[\s]*AUS,[\s]*NZL|CAUTION-PROPERIETARY INFORMATION INVOLVED|PROPIN";
-    // const cat4_and_cat7 = "COMINT|-GAMMA|\/|TALENT[\s]*KEYHOLE|SI-G\/TK|HCS|GCS|ORIGINATOR[\s]*CONTROLLED|ORCON|NOT[\s]*RELEASABLE[\s]*TO[\s]*FOREIGN[\s]*NATIONALS|NOFORN|AUTHORIZED[\s]*FOR[\s]*RELEASE[\s]*TO[\s]*USA,[\s]*AUZ,[\s]*NZL|REL[\s]*TO[\s]*USA,[\s]*AUS,[\s]*NZL|CAUTION-PROPERIETARY INFORMATION INVOLVED|PROPIN";
-    const cat1_regex = /TOP\s*SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U/gi;
-    const cat4_regex = /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS/gi;
-    const cat7_regex =
-      /ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*((USA|AUS|NZL)(,)?( *))*|REL\s*TO\s*((USA|AUS|NZL)(,)?( *))*|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
-    const cat4_and_cat7 =
-      /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS|ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*((USA|AUS|NZL)(,)?( *))*|REL\s*TO\s*((USA|AUS|NZL)(,)?( *))*|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
-  
-    const Categories = banner.split("//");
-    console.log(Categories);
-    let Category_1 = Category(Categories[0], cat1_regex, 1);
-    let Category_4 = null;
-    let Category_7 = null;
-    if (Categories[1]) {
-      if (Categories[1].toUpperCase().match(cat7_regex)) {
-        // If the second parse matches the regex for category 7, then we need to make category 4 null and run category 7
-        console.log("second category matches category 7");
-        Category_4 = null;
-        Category_7 = Category(Categories[1], cat7_regex, 7);
-      } else {
-        // If the second parse doesnt match, run each category with its corresponding regex
-        console.log("second category doesnt match category 7, running normal program");
-        Category_4 = Category(Categories[1], cat4_regex, 4);
-        Category_7 = Category(Categories[2], cat7_regex, 7);
-      }
-    } else {
-      console.log("second category returned null");
-    }
-  
-    const Together = [Category_1, Category_4, Category_7];
-    //CHANGE
-    let errMsg = checkDisseminations(Category_1, Category_7);
-    //add Zach's stuff after testing
-    
-    //return Together;
-    //CHANGE
-    return {
-        banner: Together,
-        message: errMsg
-    };
-  }
-  
-  /**
-   * returns the submarkings of the category. if there is one category, then it returns null
-   * @param { string } category
-   * @returns { array } || null
-   */
-  function getSubMarkings(category) {
-    submarkings = category.split("/");
-    if (submarkings.length <= 1) {
-      console.log("There is only one submarking");
-      return null;
-    }
-    console.log(submarkings);
-    return submarkings;
-  }
-  
-  /**
-   * function that uses regex to match the input category string, if no match is found it returns null
-   * @param { String } category
-   * @param { String } regex
-   * @param { int } categoryNum
-   */
-  function Category(category, regex, categoryNum) {
-    if (!category) {
-      console.log("Category " + categoryNum + " string returned null");
-      return null;
-    } else if (category.toUpperCase().match(regex)) {
-      console.log("returning category " + categoryNum);
-      console.log(category.toUpperCase());
-      return category.toUpperCase();
-    }
-    console.log("String did not match category " + categoryNum + "'s regex");
+  const banner_regex =
+    /^(?:.*CLASSIFICATION:)?\s*(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/im;
+  console.log("Searching for Banner...");
+  const banner = body.match(banner_regex);
+  //console.log(banner);
+  if (banner) {
+    console.log("Banner Found!");
+    return banner[0];
+  } else {
+    console.log("Banner Null :(");
     return null;
   }
+}
 
-  /**
-   * given a string it validates that the first marking is classified or not
-   * returns a true or false value depending on if its valid or not
-   * @param {string} banner 
-   */
-  function ValidateClassification(banner){
-    regex = /TS|S|C|U/gi
-    if (banner.match(regex)){
-      return true;
+/**
+ * function to parse banner markings
+ * parameter is the banner
+ * returns an array of each category being array[1] is cat1 and on for 1, 4 and 7
+ * @param { String } banner
+ */
+function parseBannerMarkings(banner) {
+  // const cat1_regex = "TOP[\s]*SECRET|TS|(TS)|SECRET|S|(S)|CONFIDENTIAL|C|(C)|UNCLASSIFIED|U|(U)";
+  // const cat4_regex = "COMINT|-GAMMA|\/|TALENT[\s]*KEYHOLE|SI-G\/TK|HCS|GCS";
+  // const cat7_regex = "ORIGINATOR[\s]*CONTROLLED|ORCON|NOT[\s]*RELEASABLE[\s]*TO[\s]*FOREIGN[\s]*NATIONALS|NOFORN|AUTHORIZED[\s]*FOR[\s]*RELEASE[\s]*TO[\s]*USA,[\s]*AUZ,[\s]*NZL|REL[\s]*TO[\s]*USA,[\s]*AUS,[\s]*NZL|CAUTION-PROPERIETARY INFORMATION INVOLVED|PROPIN";
+  // const cat4_and_cat7 = "COMINT|-GAMMA|\/|TALENT[\s]*KEYHOLE|SI-G\/TK|HCS|GCS|ORIGINATOR[\s]*CONTROLLED|ORCON|NOT[\s]*RELEASABLE[\s]*TO[\s]*FOREIGN[\s]*NATIONALS|NOFORN|AUTHORIZED[\s]*FOR[\s]*RELEASE[\s]*TO[\s]*USA,[\s]*AUZ,[\s]*NZL|REL[\s]*TO[\s]*USA,[\s]*AUS,[\s]*NZL|CAUTION-PROPERIETARY INFORMATION INVOLVED|PROPIN";
+  const cat1_regex = /TOP\s*SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U/gi;
+  const cat4_regex = /COMINT|SI|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS/gi;
+  const cat7_regex =
+    /ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*((USA|AUS|NZL)(,)?( *))*|REL\s*TO\s*((USA|AUS|NZL)(,)?( *))*|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
+  const cat4_and_cat7 =
+    /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS|ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*((USA|AUS|NZL)(,)?( *))*|REL\s*TO\s*((USA|AUS|NZL)(,)?( *))*|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
+  console.log("BEFORE Banner: " + banner);
+  const Categories = banner.split("//");
+  //console.log(Categories);
+  let Category_1 = Category(Categories[0], cat1_regex, 1);
+  let Category_4 = null;
+  let Category_7 = null;
+  if (Categories[1]) {
+    if (Categories[1].toUpperCase().match(cat7_regex)) {
+      // If the second parse matches the regex for category 7, then we need to make category 4 null and run category 7
+      console.log("second category matches category 7");
+      Category_4 = null;
+      Category_7 = Category(Categories[1], cat7_regex, 7);
+    } else {
+      // If the second parse doesnt match, run each category with its corresponding regex
+      console.log(
+        "second category doesnt match category 7, running normal program"
+      );
+      Category_4 = Category(Categories[1], cat4_regex, 4);
+      Category_7 = Category(Categories[2], cat7_regex, 7);
     }
-    msg += 'Not a valid Classification';
-    return false;
+  } else {
+    console.log("SCI: " + Category_4);
+    //console.log("second category returned null");
   }
 
-  function validateSCI(classification, sci, dissemination){
-    let valid = 0;
-    let msg = '';
-    let subBanner = sci.split('/');
-    subBanner.ForEach( (marking) => {
+  const Together = [Category_1, Category_4, Category_7];
+  console.log("AFTER Banner: " + banner);
+  console.log("TOGETHER: " + Together);
+  //CHANGE
+  //KEVIN - If dissem is null then returns "" err msg from checkdissem func. If there is an error with this later on, then maybe err handle before function is called if there is no dissem
+  let errMsg = checkDisseminations(Category_1, Category_7);
+  //add Zach's stuff after testing
+  let val;
+  if (Category_4 !== null) {
+    val = validateSCI(Category_1, Category_4, Category_7);
+    if ((val[0] = 1)) {
+      errMsg += " " + val[1];
+    }
+  }
 
-      /**
-       * May be used only with
-       * TOP SECRET, SECRET, or CONFIDENTIAL. NOFORN is required.
-       * 
-       */
-      if ( marking.match(/HCS/gi) ){
-        if ( classification.includes('U') || classification.includes('UNCLASSIFIED')){
-          valid = 1;
-          msg += 'CANNOT USE HCS with UNCLASSIFIED. '
-        }
+  console.log(errMsg);
+  //return Together;
+  //CHANGE
+  return {
+    banner: Together,
+    message: errMsg,
+  };
+}
+
+/**
+ * returns the submarkings of the category. if there is one category, then it returns null
+ * @param { string } category
+ * @returns { array } || null
+ */
+function getSubMarkings(category) {
+  submarkings = category.split("/");
+  if (submarkings.length <= 1) {
+    console.log("There is only one submarking");
+    return null;
+  }
+  console.log(submarkings);
+  return submarkings;
+}
+
+/**
+ * function that uses regex to match the input category string, if no match is found it returns null
+ * @param { String } category
+ * @param { String } regex
+ * @param { int } categoryNum
+ */
+function Category(category, regex, categoryNum) {
+  if (!category) {
+    console.log("Category " + categoryNum + " string returned null");
+    return null;
+  } else if (category.toUpperCase().match(regex)) {
+    //console.log("returning category " + categoryNum);
+    //console.log(category.toUpperCase());
+    return category.toUpperCase();
+  }
+  console.log("String did not match category " + categoryNum + "'s regex");
+  return null;
+}
+
+/**
+ * given a string it validates that the first marking is classified or not
+ * returns a true or false value depending on if its valid or not
+ * @param {string} banner
+ */
+function ValidateClassification(banner) {
+  regex = /TS|TOP *SECRET|S|SECRET|C|CONFIDENTIAL|U|UNCLASSIFIED/gi;
+  if (banner.match(regex)) {
+    return true;
+  }
+  return false;
+}
+function validateSCI(classification, sci, dissemination) {
+  let isDissemination = true;
+  if (dissemination === null) {
+    dissemination = "";
+    isDissemination = false;
+  }
+  console.log(classification + " " + sci + " " + dissemination);
+  let valid = 0;
+  let msg = "";
+  let subBanner = null;
+  if (sci) {
+    subBanner = sci.split("/");
+  }
+  if (subBanner === null) {
+    subBanner = sci;
+  }
+
+  subBanner.forEach((marking) => {
+    /**
+     * May be used only with
+     * TOP SECRET, SECRET, or CONFIDENTIAL. NOFORN is required.
+     *
+     */
+    if (marking.match(/HCS/gi)) {
+      if (
+        classification.includes("U") ||
+        classification.includes("UNCLASSIFIED")
+      ) {
+        valid = 1;
+        msg += "CANNOT USE HCS with UNCLASSIFIED. ";
+      }
 
       if (isDissemination) {
         if (
