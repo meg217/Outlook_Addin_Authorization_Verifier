@@ -14,7 +14,7 @@ function getBannerFromBody(body) {
     const bannerWithoutClassification = body.replace(classification_regex, '');
 
     const banner_regex =
-      /^(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)(\/\/(.*))?/im;
+    /^(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/im;
 
     const banner = bannerWithoutClassification.match(banner_regex);
     console.log(banner);
@@ -126,7 +126,7 @@ function getBannerFromBody(body) {
     msg += 'Not a valid Classification';
     return false;
   }
-  
+
   function validateSCI(classification, sci, dissemination){
     let valid = 0;
     let msg = '';
