@@ -30,8 +30,8 @@ function MessageSendVerificationHandler(event) {
         toRecipients.forEach((recipient) => console.log(recipient.emailAddress))
     );
     console.log("Sender:" + sender.emailAddress);
-    console.log("CC: " + cc.emailAddress);
-    console.log("BCC: " + bcc.emailAddress);
+    console.log("CC: " + cc);
+    console.log("BCC: " + bcc);
     console.log("Body:" + body);
     const banner = getBannerFromBody(body);
 
