@@ -9,7 +9,7 @@
  */
 function getBannerFromBody(body) {
   const banner_regex =
-    /^(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/im;
+    /^(?:.*CLASSIFICATION:)?\s*(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/im;
   console.log("Searching for Banner...");
   const banner = body.match(banner_regex);
   //console.log(banner);
