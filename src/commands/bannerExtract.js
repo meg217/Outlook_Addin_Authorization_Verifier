@@ -1,7 +1,5 @@
-
 // this file contains the banner etraction logic from the body as
 // well as parsing the banner and retrieving the categories
-
 
 /**
  * function to extract banner from message body
@@ -10,16 +8,11 @@
  * @param { String } body
  */
 function getBannerFromBody(body) {
-
-    const classification_regex = /^(CLASSIFICATION:)(.*)$/im;
-    // Remove the classification line from the banner
-    const bannerWithoutClassification = body.replace(classification_regex, '');
-
     const banner_regex =
-      /^(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)(\/\/(.*))?/im;
+      /^(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/im;
   
-      const banner = bannerWithoutClassification.match(banner_regex);
-      console.log(banner);
+    const banner = body.match(banner_regex);
+    console.log(banner);
     if (banner) {
       console.log("banner found");
       return banner[0];
@@ -125,10 +118,8 @@ function getBannerFromBody(body) {
     if (banner.match(regex)){
       return true;
     }
-    msg += 'Not a valid Classification';
     return false;
   }
-
   function validateSCI(classification, sci, dissemination){
     let valid = 0;
     let msg = '';
@@ -146,133 +137,119 @@ function getBannerFromBody(body) {
           msg += 'CANNOT USE HCS with UNCLASSIFIED. '
         }
 
-        if ( dissemination.includes('NOFORN') || dissemination.includes('NOT RELEASABLE TO FOREIGN NATIONALS')){
-        }
-        else{
+      if (isDissemination) {
+        if (
+          dissemination.includes("NOFORN") ||
+          dissemination.includes("NOT RELEASABLE TO FOREIGN NATIONALS")
+        ) {
+        } else {
           valid = 1;
-          msg += 'HCS MUST USE NOFORN. '
+          msg += "HCS MUST USE NOFORN. ";
         }
-        
+      } else {
+        valid = 1;
+        msg += "HCS MUST USE NOFORN. ";
+      }
+    }
+
+    /**
+     * May be used only with
+     * TOP SECRET, SECRET, or CONFIDENTIAL.
+     *
+     */
+    if (marking.match(/SI/gi)) {
+      if (
+        classification.includes("U") ||
+        classification.includes("UNCLASSIFIED")
+      ) {
+        valid = 1;
+        msg += "CANNOT USE SI with UNCLASSIFIED. ";
+      }
+    }
+
+    /**
+     * May be used only with
+     * TOP SECRET. Requires SI and ORCON
+     *
+     */
+    if (marking.match(/-G/gi)) {
+      if (classification.match(/TS|TOP SECRET/gi)) {
+      } else {
+        valid = 1;
+        msg += "CANNOT USE -G with UNCLASSIFIED, CONFIDENTIAL, or SECRET. ";
       }
 
-      /**
-       * May be used only with
-       * TOP SECRET, SECRET, or CONFIDENTIAL.
-       * 
-       */
-      if ( marking.match(/SI/gi) ){
-        if ( classification.includes('U') || classification.includes('UNCLASSIFIED')){
-          valid = 1;
-          msg += 'CANNOT USE SI with UNCLASSIFIED. '
-        }
+      if (sci.match(/SI|COMINT/gi)) {
+      } else {
+        valid = 1;
+        msg += "MUST USE SI with -G. ";
       }
 
-      /**
-       * May be used only with
-       * TOP SECRET. Requires SI and ORCON
-       * 
-       */
-      if ( marking.match(/-G/gi) ){
-        if ( !classification.includes('TS')){
+      if (isDissemination) {
+        if (dissemination.match(/ORCON|ORIGINATOR CONTROLLED/gi)) {
+        } else {
           valid = 1;
-          msg += 'CANNOT USE -G with UNCLASSIFIED, CONFIDENTIAL, or SECRET. '
+          msg += "MUST USE ORCON with -G. ";
         }
-        else if ( !classification.includes('TOP SECRET')){
-          valid = 1;
-          msg += 'CANNOT USE -G with UNCLASSIFIED, CONFIDENTIAL, or SECRET. '
-        }
+      } else {
+        valid = 1;
+        msg += "MUST USE ORCON with -G. ";
+      }
+    }
 
-        if ( !sci.includes('SI')){
-          valid = 1;
-          msg += 'MUST USE -G with SI. '
-        }
-        else if ( !sci.includes('COMINT')){
-          valid = 1;
-          msg += 'MUST USE -G with SI. '
-        }
-        
-        if ( !sci.includes('ORCON')){
-          valid = 1;
-          msg += 'MUST USE -G with ORCON. '
-        }
-        else if ( !sci.includes('ORIGINATOR CONTROLLED')){
-          valid = 1;
-          msg += 'MUST USE -G with ORCON. '
-        }
+    /**
+     * May be used only with
+     * TOP SECRET. Requires SI
+     *
+     */
+    if (marking.match(/-ECI/gi)) {
+      if (classification.match(/TS|TOP SECRET/gi)) {
+      } else {
+        valid = 1;
+        msg += "CANNOT USE -ECI with UNCLASSIFIED, CONFIDENTIAL, or SECRET. ";
       }
 
-      /**
-       * May be used only with
-       * TOP SECRET. Requires SI
-       * 
-       */
-      if ( marking.match(/-ECI/gi) ){
-        if ( !classification.includes('TS')){
-          valid = 1;
-          msg += 'CANNOT USE -ECI with UNCLASSIFIED, CONFIDENTIAL, or SECRET. '
-        }
-        else if ( !classification.includes('TOP SECRET')){
-          valid = 1;
-          msg += 'CANNOT USE -ECI with UNCLASSIFIED, CONFIDENTIAL, or SECRET. '
-        }
-
-        if ( !sci.includes('SI')){
-          valid = 1;
-          msg += 'MUST USE -ECI with SI. '
-        }
-        else if ( !sci.includes('COMINT')){
-          valid = 1;
-          msg += 'MUST USE -ECI with SI. '
-        }
-
+      if (sci.match(/SI|COMINT/gi)) {
+      } else {
+        valid = 1;
+        msg += "MUST USE -ECI with SI. ";
       }
+    }
 
-      /**
-       * May be used only with
-       * TOP SECRET or SECRET. May require RSEN for imagery product
-       * 
-       */
-      if ( marking.match(/TK/gi) ){
-        if ( !classification.includes('TS')){
-          valid = 1;
-          msg += 'CANNOT USE TK with UNCLASSIFIED, CONFIDENTIAL. '
-        }
-        else if ( !classification.includes('TOP SECRET')){
-          valid = 1;
-          msg += 'CANNOT USE TK with UNCLASSIFIED, CONFIDENTIAL. '
-        }
-        else{
-          if ( !classification.includes('S')){
-            valid = 1;
-            msg += 'CANNOT USE TK with UNCLASSIFIED, CONFIDENTIAL. '
-          }
-          else if ( !classification.includes('SECRET')){
-            valid = 1;
-            msg += 'CANNOT USE TK with UNCLASSIFIED, CONFIDENTIAL. '
-          }
-        }
+    /**
+     * May be used only with
+     * TOP SECRET or SECRET. May require RSEN for imagery product
+     *
+     */
+    if (marking.match(/TK/gi)) {
+      if (classification.match(/C|CONFIDENTIAL|U|UNCLASSIFIED/gi)) {
+        valid = 1;
+        msg += "CANNOT USE TK with UNCLASSIFIED, CONFIDENTIAL. ";
       }
-    });
+    }
+  });
 
-    return [valid, msg];
-  }
+  return [valid, msg];
+}
 
-   /**
-   * @param {String} classification 
-   * @param {String} dissemination 
-   */
-  function checkDisseminations(classification, dissemination) {
-    console.log("CLASSIFICATION: " + classification + "\n");
-    console.log("DISSEM: " + dissemination + "\n");
+/**
+ * @param {String} classification
+ * @param {String} dissemination
+ */
+function checkDisseminations(classification, dissemination) {
+  console.log("CLASSIFICATION: " + classification + "\n");
+  console.log("DISSEM: " + dissemination + "\n");
 
-    let errorMsg = "";
+  let errorMsg = "";
 
-    let dissParts = dissemination.split('/');
-
+  //KEVIN - Trying to fix split error when dissem is null - To remove my changes just remove the if statement from around the whole code
+  // KEVIN - Edit UPDATE - 4/18/24 - I think it fixed the error....
+  if (dissemination != null) {
+    let dissParts = dissemination.split("/");
     let dissPartsArray = [];
 
     for (let i = 0; i < dissParts.length; i++) {
-        dissPartsArray.push(dissParts[i]);
+      dissPartsArray.push(dissParts[i]);
     }
 
     let NOFORNEncountered = false;
@@ -282,153 +259,169 @@ function getBannerFromBody(body) {
 
     //check disseminations
     for (let i = 0; i < dissPartsArray.length; i++) {
+      //FOR OFFICIAL USE ONLY (FOUO): cannot be used with classified information.
+      if (dissPartsArray[i] === "FOUO" && classification !== "UNCLASSIFIED") {
+        errorMsg = "Cannot use FOUO with classified information.";
+      }
 
-        //FOR OFFICIAL USE ONLY (FOUO): cannot be used with classified information.
-        if (dissPartsArray[i] === "FOUO" && classification !== "UNCLASSIFIED") {
-            errorMsg = "Cannot use FOUO with classified information.";
+      //ORIGINATOR CONTROLLED (ORCON): can only be used with TOP SECRET, SECRET, or CONFIDENTIAL.
+      if (dissPartsArray[i] === "ORCON" && classification === "UNCLASSIFIED") {
+        errorMsg = "Cannot use ORCON with unclassified information.";
+      }
+
+      //CONTROLLED IMAGERY (IMCON): can only be used with SECRET. May require NOFORN.
+      if (dissPartsArray[i] === "IMCON" && classification !== "SECRET") {
+        errorMsg = "IMCON can only be used with SECRET information.";
+      }
+
+      //SOURCES AND METHODS (SAMI): can only be used with TOP SECRET, SECRET, or CONFIDENTIAL.
+      //Can be used with REL TO or RELIDO.
+      if (dissPartsArray[i] === "SAMI" && classification === "UNCLASSIFIED") {
+        errorMsg = "Cannot use SAMI with unclassified information.";
+      }
+
+      /** BIG CODE CHUNK THAT HANDLES NOFORN, REL TO, RELIDO, EYES ONLY **/
+      //NOT RELEASABLE TO FOREIGN NATIONALS (NOFORN): can only be used with TOP SECRET, SECRET, or CONFIDENTIAL.
+      //Cannot be used with REL TO, RELIDO, or EYES ONLY.
+      if (dissPartsArray[i] === "NOFORN") {
+        NOFORNEncountered = true;
+        if (classification === "UNCLASSIFIED") {
+          errorMsg = "Cannot use NOFORN with unclassified information.";
         }
-
-        //ORIGINATOR CONTROLLED (ORCON): can only be used with TOP SECRET, SECRET, or CONFIDENTIAL.
-        if (dissPartsArray[i] === "ORCON" && classification === "UNCLASSIFIED") {
-            errorMsg = "Cannot use ORCON with unclassified information.";
-        }   
-
-        //CONTROLLED IMAGERY (IMCON): can only be used with SECRET. May require NOFORN.
-        if (dissPartsArray[i] === "IMCON" && classification !== "SECRET") {
-            errorMsg = "IMCON can only be used with SECRET information.";
+      }
+      //EYES ONLY: can only be used with TOP SECRET, SECRET, or CONFIDENTIAL.
+      //Cannot be used with NOFORN or REL TO. Can be used wth RELIDO.
+      else if (dissPartsArray[i].includes("EYES ONLY")) {
+        if (dissPartsArray[i].match(/[A-Z]{3}\sEYES ONLY/g)) {
+          EYESONLYEncountered = true;
+        } else {
+          errorMsg = "Wrong formatting of EYES ONLY.";
         }
-
-        //SOURCES AND METHODS (SAMI): can only be used with TOP SECRET, SECRET, or CONFIDENTIAL.
-        //Can be used with REL TO or RELIDO.
-        if (dissPartsArray[i] === "SAMI" && classification === "UNCLASSIFIED") {
-            errorMsg = "Cannot use SAMI with unclassified information.";
+        if (classification === "UNCLASSIFIED") {
+          errorMsg = "EYES ONLY cannot be used with unclassified information.";
         }
-
-
-        /** BIG CODE CHUNK THAT HANDLES NOFORN, REL TO, RELIDO, EYES ONLY **/
-        //NOT RELEASABLE TO FOREIGN NATIONALS (NOFORN): can only be used with TOP SECRET, SECRET, or CONFIDENTIAL.
-        //Cannot be used with REL TO, RELIDO, or EYES ONLY. 
-        if (dissPartsArray[i] === "NOFORN") {
-            NOFORNEncountered = true;
-            if (classification === "UNCLASSIFIED") {
-                errorMsg = "Cannot use NOFORN with unclassified information.";
-            }
-        } 
-        //EYES ONLY: can only be used with TOP SECRET, SECRET, or CONFIDENTIAL.
-        //Cannot be used with NOFORN or REL TO. Can be used wth RELIDO. 
-        else if (dissPartsArray[i].includes("EYES ONLY")) {
-            if (dissPartsArray[i].match(/[A-Z]{3}\sEYES ONLY/g)) {
-                EYESONLYEncountered = true;
-            } else {
-                errorMsg = "Wrong formatting of EYES ONLY.";
-            }
-            if (classification === "UNCLASSIFIED") {
-                errorMsg = "EYES ONLY cannot be used with unclassified information.";
-            }
+      }
+      //RELEASABLE BY INFORMATION DISCLOSURE OFFICIAL (RELIDO): may be used independently or with REL TO.
+      //Cannot be used with NOFORN.
+      else if (dissPartsArray[i] === "RELIDO") {
+        RELIDOEncountered = true;
+      }
+      //AUTHORIZED FOR RELEASE TO (REL TO): can only be used with TOP SECRET, SECRET, or CONFIDENTIAL.
+      //May be used with RELIDO. Cannot be used with NOFORN or EYES ONLY.
+      else if (dissPartsArray[i].includes("REL TO")) {
+        if (dissPartsArray[i].match(/REL TO\s[A-Z]{3}/g)) {
+          RELTOEncountered = true;
+        } else {
+          errorMsg = "Wrong formatting of REL TO.";
         }
-        //RELEASABLE BY INFORMATION DISCLOSURE OFFICIAL (RELIDO): may be used independently or with REL TO.
-        //Cannot be used with NOFORN.
-        else if (dissPartsArray[i] === "RELIDO") {
-            RELIDOEncountered = true;
+        if (classification === "UNCLASSIFIED") {
+          errorMsg = "Cannot use REL TO with unclassified information.";
         }
-        //AUTHORIZED FOR RELEASE TO (REL TO): can only be used with TOP SECRET, SECRET, or CONFIDENTIAL.
-        //May be used with RELIDO. Cannot be used with NOFORN or EYES ONLY.
-        else if (dissPartsArray[i].includes("REL TO")) {
-            if (dissPartsArray[i].match(/REL TO\s[A-Z]{3}/g)) {
-                RELTOEncountered = true;
-            } else {
-                errorMsg = "Wrong formatting of REL TO.";
-            }
-            if (classification === "UNCLASSIFIED") {
-                errorMsg = "Cannot use REL TO with unclassified information.";
-            }
+      }
+
+      if (NOFORNEncountered && dissPartsArray[i] === "EYES ONLY") {
+        errorMsg = "NOFORN cannot be used with EYES ONLY.";
+      } else if (EYESONLYEncountered && dissPartsArray[i] === "NOFORN") {
+        errorMsg = "EYES ONLY cannot be used with NOFORN.";
+      } else if (NOFORNEncountered && dissPartsArray[i] === "RELIDO") {
+        errorMsg = "NOFORN cannot be used with RELIDO.";
+      } else if (RELIDOEncountered && dissPartsArray[i] === "NOFORN") {
+        errorMsg = "RELIDO cannot be used with NOFORN.";
+      } else if (NOFORNEncountered && dissPartsArray[i].includes("REL TO")) {
+        errorMsg = "NOFORN cannot be used with REL TO.";
+      } else if (RELTOEncountered && dissPartsArray[i] === "NOFORN") {
+        errorMsg = "REL TO cannot be used with NOFORN.";
+      } else if (EYESONLYEncountered && dissPartsArray[i].includes("REL TO")) {
+        errorMsg = "EYES ONLY cannot be used with REL TO.";
+      } else if (RELTOEncountered && dissPartsArray === "EYES ONLY") {
+        errorMsg = "REL TO cannot be used with EYES ONLY.";
+      }
+
+      //CAUTION PROPRIETARY INFORMATION INVOLVED (PROPIN): can be used with all classifications.
+      //No error checking needed because there are no restrictions.
+
+      /** BIG CODE CHUNK FOR RD/FRD AND CNDWI/SG **/
+      //RESTRICTED DATA (RD): can be used with TOP SECRET, SECRET, or CONFIDENTIAL.
+      //FORMERLY RESTRICTED DATA (RD): can be used with TOP SECRET, SECRET, or CONFIDENTIAL.
+      if (
+        dissPartsArray[i].includes("RD") ||
+        dissPartsArray[i].includes("FRD")
+      ) {
+        if (dissPartsArray[i] === "RD" || dissPartsArray[i] === "FRD") {
+          if (classification === "UNCLASSIFIED") {
+            errorMsg = "Cannot use RD or FRD with unclassified information.";
+          }
+
+          //-CRITICAL NUCLEAR WEAPON DESIGN INFORMATION (-CNWDI): can be used with TOP SECRET or SECRET.
+          //Requires RD or FRD.
+        } else if (dissPartsArray[i].match(/(RD|FRD)-CNWDI/g)) {
+          if (
+            classification === "CONFIDENTIAL" ||
+            classification === "UNCLASSIFIED"
+          ) {
+            errorMsg =
+              "-CNWDI cannot be used with CONFIDENTIAL or UNCLASSIFIED.";
+          }
+
+          //-SIGMA[#] (-SG[#]): may be used with TOP SECRET, SECRET, or CONDFIDENTIAL.
+          //Requires RD or FRD. [#] represents the SIGMA number, ranges from 1-99.
+        } else if (
+          dissPartsArray[i].match(/(RD|FRD)-SG\[(?:[1-9]|[1-9][0-9]|99)\]/g)
+        ) {
+          if (classification === "UNCLASSIFIED") {
+            errorMsg = "-SG cannot be used with UNCLASSIFIED information.";
+          }
+        } else {
+          errorMsg = "Wrong format of banner of RD and FRD.";
         }
-
-        if (NOFORNEncountered && dissPartsArray[i] === "EYES ONLY") {
-            errorMsg = "NOFORN cannot be used with EYES ONLY.";
-        } else if (EYESONLYEncountered && dissPartsArray[i] === "NOFORN") {
-            errorMsg = "EYES ONLY cannot be used with NOFORN.";
-        } else if (NOFORNEncountered && dissPartsArray[i] === "RELIDO") {
-            errorMsg = "NOFORN cannot be used with RELIDO.";
-        } else if (RELIDOEncountered && dissPartsArray[i] === "NOFORN") {
-            errorMsg = "RELIDO cannot be used with NOFORN.";
-        } else if (NOFORNEncountered && dissPartsArray[i].includes("REL TO")) {
-            errorMsg = "NOFORN cannot be used with REL TO.";
-        } else if (RELTOEncountered && dissPartsArray[i] === "NOFORN") {
-            errorMsg = "REL TO cannot be used with NOFORN.";
-        } else if (EYESONLYEncountered && dissPartsArray[i].includes("REL TO")) {
-            errorMsg = "EYES ONLY cannot be used with REL TO.";
-        } else if (RELTOEncountered && dissPartsArray === "EYES ONLY") {
-            errorMsg = "REL TO cannot be used with EYES ONLY.";
-        } 
-    
-
-        //CAUTION PROPRIETARY INFORMATION INVOLVED (PROPIN): can be used with all classifications.
-        //No error checking needed because there are no restrictions.
-
-        /** BIG CODE CHUNK FOR RD/FRD AND CNDWI/SG **/
-        //RESTRICTED DATA (RD): can be used with TOP SECRET, SECRET, or CONFIDENTIAL. 
-        //FORMERLY RESTRICTED DATA (RD): can be used with TOP SECRET, SECRET, or CONFIDENTIAL. 
-        if (dissPartsArray[i].includes("RD") || dissPartsArray[i].includes("FRD")) {
-            if (dissPartsArray[i] === "RD" || dissPartsArray[i] === "FRD") {
-                if (classification === "UNCLASSIFIED") {
-                    errorMsg = "Cannot use RD or FRD with unclassified information.";
-                }
-
-            //-CRITICAL NUCLEAR WEAPON DESIGN INFORMATION (-CNWDI): can be used with TOP SECRET or SECRET.
-            //Requires RD or FRD.
-            } else if (dissPartsArray[i].match(/(RD|FRD)-CNWDI/g)) {
-                if (classification === "CONFIDENTIAL" || classification === "UNCLASSIFIED") {
-                    errorMsg = "-CNWDI cannot be used with CONFIDENTIAL or UNCLASSIFIED.";
-                }
-    
-            //-SIGMA[#] (-SG[#]): may be used with TOP SECRET, SECRET, or CONDFIDENTIAL.
-            //Requires RD or FRD. [#] represents the SIGMA number, ranges from 1-99.
-            } else if (dissPartsArray[i].match(/(RD|FRD)-SG\[(?:[1-9]|[1-9][0-9]|99)\]/g)) {
-                if (classification === "UNCLASSIFIED") {
-                    errorMsg = "-SG cannot be used with UNCLASSIFIED information.";
-                }
-            } else {
-                errorMsg = "Wrong format of banner of RD and FRD.";
-            }
-        } else if (dissPartsArray[i].includes("-CNWDI")) {
-            if (dissPartsArray[i].match(/(RD|FRD)-CNWDI/g)) {
-                if (classification === "CONFIDENTIAL" || classification === "UNCLASSIFIED") {
-                    errorMsg = "-CNWDI cannot be used with CONFIDENTIAL or UNCLASSIFIED.";
-                }
-            } else {
-                errorMsg = "RD or FRD is required for -CNWDI.";
-            }
-        } else if (dissPartsArray[i].includes("-SG")) {
-            if (dissPartsArray[i].match(/(RD|FRD)-SG\[(?:[1-9]|[1-9][0-9]|99)\]/g)) {
-                if (classification === "UNCLASSIFIED") {
-                    errorMsg = "-SG cannot be used with UNCLASSIFIED information.";
-                }
-            } else {
-                errorMsg = "RD or FRD is required for -SG[#].";
-            }
+      } else if (dissPartsArray[i].includes("-CNWDI")) {
+        if (dissPartsArray[i].match(/(RD|FRD)-CNWDI/g)) {
+          if (
+            classification === "CONFIDENTIAL" ||
+            classification === "UNCLASSIFIED"
+          ) {
+            errorMsg =
+              "-CNWDI cannot be used with CONFIDENTIAL or UNCLASSIFIED.";
+          }
+        } else {
+          errorMsg = "RD or FRD is required for -CNWDI.";
         }
-
-        
-        //DOD or DOE CONTROLLED NUCLEAR INFORMATION (DOD UCNI or DOE UCNI): can only be used with UNCLASSIFIED.
-        if (dissPartsArray[i] === "DOD UCNI" || dissPartsArray[i] === "DOE UCNI") {
-            if (classification !== "UNCLASSIFIED") {
-                errorMsg = "DOD/DOE UCNI can only be used with unclassified information.";
-            }
+      } else if (dissPartsArray[i].includes("-SG")) {
+        if (
+          dissPartsArray[i].match(/(RD|FRD)-SG\[(?:[1-9]|[1-9][0-9]|99)\]/g)
+        ) {
+          if (classification === "UNCLASSIFIED") {
+            errorMsg = "-SG cannot be used with UNCLASSIFIED information.";
+          }
+        } else {
+          errorMsg = "RD or FRD is required for -SG[#].";
         }
+      }
 
-        //DEA SENSITIVE (DSEN): can only be used with unclassified.
-        if (dissPartsArray[i] === "DSEN" && classification !== "UNCLASSIFIED") {
-            errorMsg = "DSEN can only be used with unclassified.";
+      //DOD or DOE CONTROLLED NUCLEAR INFORMATION (DOD UCNI or DOE UCNI): can only be used with UNCLASSIFIED.
+      if (
+        dissPartsArray[i] === "DOD UCNI" ||
+        dissPartsArray[i] === "DOE UCNI"
+      ) {
+        if (classification !== "UNCLASSIFIED") {
+          errorMsg =
+            "DOD/DOE UCNI can only be used with unclassified information.";
         }
+      }
 
-        //FOREIGN INTELLIGENCE SURVEILLANCE ACT (FISA): does not have any restrictions. 
-        //No error checking needed.
+      //DEA SENSITIVE (DSEN): can only be used with unclassified.
+      if (dissPartsArray[i] === "DSEN" && classification !== "UNCLASSIFIED") {
+        errorMsg = "DSEN can only be used with unclassified.";
+      }
 
-        // console.log(errorMsg);
+      //FOREIGN INTELLIGENCE SURVEILLANCE ACT (FISA): does not have any restrictions.
+      //No error checking needed.
+
+      // console.log(errorMsg);
     }
 
     //CHANGE
     return errorMsg;
-
   }
+  return errorMsg;
+}
