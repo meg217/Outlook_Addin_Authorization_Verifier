@@ -78,11 +78,11 @@ function parseBannerMarkings(banner) {
   let catAbbreviations = convertCatToAbrev(Category_1, Category_4, Category_7);
   //CHANGE
   //KEVIN - If dissem is null then returns "" err msg from checkdissem func. If there is an error with this later on, then maybe err handle before function is called if there is no dissem
-  let errMsg = checkDisseminations(Category_1, Category_7);
+  let errMsg = checkDisseminations(catAbbreviations.classification, catAbbreviations.dissemination);
   //add Zach's stuff after testing
   let val;
   if (Category_4 !== null) {
-    val = validateSCI(Category_1, Category_4, Category_7);
+    val = validateSCI(catAbbreviations.classification, catAbbreviations.sci, catAbbreviations.dissemination);
     if ((val[0] = 1)) {
       errMsg += " " + val[1];
     }
@@ -652,8 +652,8 @@ function checkDisseminations(classification, dissemination) {
       }
 
       //DEA SENSITIVE (DSEN): can only be used with unclassified.
-      if (dissPartsArray[i] === "DSEN" && classification !== "UNCLASSIFIED") {
-        errorMsg = "DSEN can only be used with unclassified.";
+      if (dissPartsArray[i] === "DEA SENSITIVE" && classification !== "UNCLASSIFIED") {
+        errorMsg = "DEA SENSITIVE can only be used with unclassified.";
       }
 
       //FOREIGN INTELLIGENCE SURVEILLANCE ACT (FISA): does not have any restrictions.
