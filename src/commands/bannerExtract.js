@@ -64,6 +64,7 @@ function getBannerFromBody(body) {
     }
   
     const Together = [Category_1, Category_4, Category_7];
+    let abbrevBanner = convertCatToAbrev(Category_1, Category_4, Category_7);
     //CHANGE
     let errMsg = checkDisseminations(Category_1, Category_7);
     //add Zach's stuff after testing
@@ -75,7 +76,6 @@ function getBannerFromBody(body) {
         message: errMsg
     };
   }
-  
   /**
    * returns the submarkings of the category. if there is one category, then it returns null
    * @param { string } category
