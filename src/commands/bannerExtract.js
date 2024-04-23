@@ -142,6 +142,7 @@ function convertCatToAbrev(classification, sci, dissemination) {
   let abbrevDissemination = "";
 
   // Abbreviate classification
+  if (classification != null) {
   if (classification === "TOP SECRET" || classification === "TS") {
       abbrevClassification = "TOP SECRET";
   }
@@ -154,8 +155,10 @@ function convertCatToAbrev(classification, sci, dissemination) {
   else if (classification === "UNCLASSIFIED" || classification === "U") {
       abbrevClassification = "UNCLASSIFIED";
   }
+}
 
   // Abbreviate SCI
+  if (sci != null) {
   if (sci.includes("/")) {
       const sciArray = sci.split("/");
       const abbreviatedSCIs = sciArray.map(sciItem => {
@@ -208,8 +211,9 @@ function convertCatToAbrev(classification, sci, dissemination) {
           abbrevSCI = "TK";
       }
   }
-
+}
   // Abbreviate dissemination
+  if (dissemination != null) {
   if (dissemination.includes("/")) {
   const disseminationArray = dissemination.split("/"); 
   const abbreviatedDisseminations = disseminationArray.map(disseminationItem => {
@@ -327,6 +331,7 @@ function convertCatToAbrev(classification, sci, dissemination) {
   else if (dissemination === "FOREIGN INTELLIGENCE SURVEILLANCE ACT" || dissemination === "FISA") {
       abbrevDissemination = "FISA";
   }
+}
 }
   return {
       classification: abbrevClassification,
