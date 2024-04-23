@@ -104,6 +104,61 @@ function _setSessionData(key, value) {
 
 /**
  * Checks the classification level of the recipients.
+ * @param {array} sender The sender
+ * @param {String} documentClassication The classication level of the email dictated by category 1 of banner
+ * @returns {Promise<boolean>} Returns true the sender is permitted to view the information they are sending
+ */
+function checkSenderClassification(
+  sender,
+  documentClassification,
+  event
+) {
+  console.log("checkSenderClassification method"); //debugging
+  //userMeetsSecurityClearance(filePath, documentClassification, email) {
+  console.log("checkSenderClass - Sender: " + sender);
+  console.log(
+    "checkSenderClass - Sender: " + documentClassification
+  );
+
+  return new Promise((resolve, reject) => {
+    let allowEvent = true;
+    const csvFile =
+      "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
+
+    // If a single recipient is not permitted, the entire send fails
+    for (const sender of sender) {
+      const emailAddress = sender.emailAddress;
+      console.log("Sender Email Address: " + emailAddress);
+      userMeetsSecurityClearance(csvFile, documentClassification, emailAddress)
+        .then((isClearance) => {
+          console.log("is clearence returned: " + isClearance);
+          if (!isClearance) {
+            console.log(emailAddress + " is not authorized to view this email");
+            event.completed({
+              allowEvent: false,
+              cancelLabel: "Ok",
+              commandId: "msgComposeOpenPaneButton",
+              contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
+              errorMessage: "Sender is NOT AUTHORIZED to send information contained in this email.",
+              sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser,
+            });
+          } else {
+            console.log("Sender is Cleared");
+            event.completed({
+              allowEvent: true,
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error while checking isClearance: ", error);
+        });
+    }
+    resolve(allowEvent);
+  });
+}
+
+/**
+ * Checks the classification level of the recipients.
  * @param {array} recipients An array of recipients
  * @param {String} documentClassication The classication level of the email dictated by category 1 of banner
  * @returns {Promise<boolean>} Returns true if all recipients are permitted to view the contents of the email
