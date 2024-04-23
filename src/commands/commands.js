@@ -144,6 +144,7 @@ function checkSenderClassification(
             });
           } else {
             console.log("Sender is Cleared");
+            // Jonathan: This block of code would ignore a previous fail case, but this should never happen as there can only be one sender for an email
             event.completed({
               allowEvent: true,
             });
@@ -200,8 +201,9 @@ function checkRecipientClassification(
             });
           } else {
             console.log("Recipient is Cleared");
+            // Jonathan: This block of code would ignore a previous fail case when it comes to multiple recepients
             event.completed({
-              allowEvent: true,
+              //allowEvent: true,
             });
           }
         })
@@ -245,8 +247,9 @@ function checkRecipientCountry(recipients, event) {
             });
           } else {
             console.log("Recipient is Cleared as USA");
+            // Jonathan: This block of code would ignore a previous fail case when it comes to multiple recepients
             event.completed({
-              allowEvent: true,
+              //allowEvent: true,
             });
           }
         })
