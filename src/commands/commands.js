@@ -372,15 +372,15 @@ function check_CC_Classification(
   documentClassification,
   event
 ) {
-  if(typeof CCs == "undefined"){
+  if(typeof CCs.emailAddress == "undefined"){
     console.log("RETURNED UNDEFINED FOR CC");
     return false;
   }
-  if(CCs == 'undefined'){
+  if(CCs.emailAddress == 'undefined'){
     console.log("RETURNED UNDEFINED PT 2 FOR CC");
     return false;
   }
-  if(!CCs){
+  if(!CCs.emailAddress){
     console.log("RETURNED  FOR CC");
     return false;
   }
