@@ -291,14 +291,15 @@ function checkRecipientClassification(
           console.log("is clearence returned: " + isClearance);
           if (!isClearance) {
             console.log(emailAddress + " is not authorized to view this email");
-            event.completed({
-              allowEvent: false,
-              cancelLabel: "Ok",
-              commandId: "msgComposeOpenPaneButton",
-              contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
-              errorMessage: "Recipient is NOT AUTHORIZED to see this email.",
-              sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser,
-            });
+            // event.completed({
+            //   allowEvent: false,
+            //   cancelLabel: "Ok",
+            //   commandId: "msgComposeOpenPaneButton",
+            //   contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
+            //   errorMessage: "Recipient is NOT AUTHORIZED to see this email.",
+            //   sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser,
+            // });
+            return false;
           } else {
             console.log("Recipient is Cleared");
             return true;
