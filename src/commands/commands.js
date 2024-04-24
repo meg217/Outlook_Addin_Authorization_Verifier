@@ -334,9 +334,9 @@ function checkRecipientCountry(recipients, event) {
             });
           } else {
             console.log("Recipient is Cleared as USA");
-            event.completed({
-              allowEvent: true,
-            });
+            // event.completed({
+            //   allowEvent: true,
+            // });
           }
         })
         .catch((error) => {
@@ -434,9 +434,9 @@ function check_CC_Country(CCs, event) {
             });
           } else {
             console.log("CCed user is Cleared as USA");
-            event.completed({
-              allowEvent: true,
-            });
+            // event.completed({
+            //   allowEvent: true,
+            // });
           }
         })
         .catch((error) => {
@@ -534,9 +534,9 @@ function check_BCC_Country(BCCs, event) {
             });
           } else {
             console.log("BCCed user is Cleared as USA");
-            event.completed({
-              allowEvent: true,
-            });
+            // event.completed({
+            //   allowEvent: true,
+            // });
           }
         })
         .catch((error) => {
