@@ -8,14 +8,17 @@
  * @param { String } body
  */
 function getBannerFromBody(body) {
-
   const classification_regex = /^(CLASSIFICATION:)/im;
-    // Remove the classification line from the banner
-  const bannerWithoutClassification1 = body.replace(classification_regex, '');
-  const bannerWithoutClassification2 = bannerWithoutClassification1.replace(classification_regex, '');
+  // Remove the classification line from the banner
+  const bannerWithoutClassification1 = body.replace(classification_regex, "");
+  const bannerWithoutClassification2 = bannerWithoutClassification1.replace(
+    classification_regex,
+    ""
+  );
   console.log(bannerWithoutClassification2);
 
-  const banner_regex = /^\s*(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/im;
+  const banner_regex =
+    /^\s*(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/im;
   console.log("Searching for Banner...");
   const banner = bannerWithoutClassification2.match(banner_regex);
   //console.log(banner);
@@ -42,7 +45,7 @@ function parseBannerMarkings(banner) {
   const cat1_regex = /TOP\s*SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U/gi;
   const cat4_regex = /COMINT|SI|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS/gi;
   const cat7_regex =
-    /ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*((USA|AUS|NZL)(,)?( *))*|REL\s*TO\s*((USA|AUS|NZL)(,)?( *))*|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
+    /ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*((USA|AUS|NZL)(,)?( *))*|REL\s*TO\s*((USA|AUS|NZL)(,)?( *))*|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN|FOR\s*OFFICIAL\s*USE\s*ONLY/gi;
   const cat4_and_cat7 =
     /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G\/TK|HCS|GCS|ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*((USA|AUS|NZL)(,)?( *))*|REL\s*TO\s*((USA|AUS|NZL)(,)?( *))*|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
   console.log("BEFORE Banner: " + banner);
@@ -78,11 +81,18 @@ function parseBannerMarkings(banner) {
   let catAbbreviations = convertCatToAbrev(Category_1, Category_4, Category_7);
   //CHANGE
   //KEVIN - If dissem is null then returns "" err msg from checkdissem func. If there is an error with this later on, then maybe err handle before function is called if there is no dissem
-  let errMsg = checkDisseminations(catAbbreviations.classification, catAbbreviations.dissemination);
+  let errMsg = checkDisseminations(
+    catAbbreviations.classification,
+    catAbbreviations.dissemination
+  );
   //add Zach's stuff after testing
   let val;
   if (Category_4 !== null) {
-    val = validateSCI(catAbbreviations.classification, catAbbreviations.sci, catAbbreviations.dissemination);
+    val = validateSCI(
+      catAbbreviations.classification,
+      catAbbreviations.sci,
+      catAbbreviations.dissemination
+    );
     if ((val[0] = 1)) {
       errMsg += " " + val[1];
     }
@@ -143,200 +153,261 @@ function convertCatToAbrev(classification, sci, dissemination) {
 
   // Abbreviate classification
   if (classification != null) {
-  if (classification === "TOP SECRET" || classification === "TS") {
+    if (classification === "TOP SECRET" || classification === "TS") {
       abbrevClassification = "TOP SECRET";
-  }
-  else if (classification === "SECRET" || classification === "S") {
+    } else if (classification === "SECRET" || classification === "S") {
       abbrevClassification = "SECRET";
-  }
-  else if (classification === "CONFIDENTIAL" || classification === "C") {
+    } else if (classification === "CONFIDENTIAL" || classification === "C") {
       abbrevClassification = "CONFIDENTIAL";
-  }
-  else if (classification === "UNCLASSIFIED" || classification === "U") {
+    } else if (classification === "UNCLASSIFIED" || classification === "U") {
       abbrevClassification = "UNCLASSIFIED";
+    }
   }
-}
 
   // Abbreviate SCI
   if (sci != null) {
-  if (sci.includes("/")) {
+    if (sci.includes("/")) {
       const sciArray = sci.split("/");
-      const abbreviatedSCIs = sciArray.map(sciItem => {
-          // Abbreviate each SCI individually
-          if (sciItem === "HCS") {
-              return "HCS";
-          }
-          else if (sciItem === "COMINT" || sciItem === "SI") {
-              return "SI";
-          }
-          else if (sciItem.startsWith("COMINT-GAMMA")) {
-              return sciItem.replace("COMINT-GAMMA", "SI-G");
-          }
-          else if (/^COMINT-ECI [A-Z]+$/.test(sciItem)) {
-              return sciItem.replace("COMINT", "SI");
-          }
-          else if (/^COMINT-GAMMA-ECI [A-Z]+$/.test(sciItem)) {
-              return sciItem.replace("COMINT-GAMMA", "SI-G");
-          }
-          else if (sciItem === "TALENT KEYHOLE" || sciItem === "TK") {
-              return "TK";
-          }
-          // If the SCI abbreviation is not recognized, keep it unchanged
-          else {
-              return sciItem;
-          }
+      const abbreviatedSCIs = sciArray.map((sciItem) => {
+        // Abbreviate each SCI individually
+        if (sciItem === "HCS") {
+          return "HCS";
+        } else if (sciItem === "COMINT" || sciItem === "SI") {
+          return "SI";
+        } else if (sciItem.startsWith("COMINT-GAMMA")) {
+          return sciItem.replace("COMINT-GAMMA", "SI-G");
+        } else if (/^COMINT-ECI [A-Z]+$/.test(sciItem)) {
+          return sciItem.replace("COMINT", "SI");
+        } else if (/^COMINT-GAMMA-ECI [A-Z]+$/.test(sciItem)) {
+          return sciItem.replace("COMINT-GAMMA", "SI-G");
+        } else if (sciItem === "TALENT KEYHOLE" || sciItem === "TK") {
+          return "TK";
+        }
+        // If the SCI abbreviation is not recognized, keep it unchanged
+        else {
+          return sciItem;
+        }
       });
       // Join the abbreviated SCIs back into a single string
       abbrevSCI = abbreviatedSCIs.join("/");
-  } else {
+    } else {
       // If there's no "/", abbreviate the single SCI as before
       if (sci === "HCS") {
-          abbrevSCI = "HCS";
+        abbrevSCI = "HCS";
+      } else if (sci === "COMINT" || sci === "SI") {
+        abbrevSCI = "SI";
+      } else if (sci.startsWith("COMINT-GAMMA")) {
+        abbrevSCI = sci.replace("COMINT", "SI");
+        abbrevSCI = sci.replace("GAMMA", "G");
+      } else if (/^COMINT-ECI [A-Z]+$/.test(sci)) {
+        abbrevSCI = sci.replace("COMINT", "SI");
+      } else if (/^COMINT-GAMMA-ECI [A-Z]+$/.test(sci)) {
+        abbrevSCI = sci.replace("COMINT", "SI");
+        abbrevSCI = sci.replace("GAMMA", "G");
+      } else if (sci === "TALENT KEYHOLE" || sci === "TK") {
+        abbrevSCI = "TK";
       }
-      else if (sci === "COMINT" || sci === "SI") {
-          abbrevSCI = "SI";
-      }
-      else if (sci.startsWith("COMINT-GAMMA")) {
-          abbrevSCI = sci.replace("COMINT", "SI");
-          abbrevSCI = sci.replace("GAMMA", "G");
-      }
-      else if (/^COMINT-ECI [A-Z]+$/.test(sci)) {
-          abbrevSCI = sci.replace("COMINT", "SI");
-      }
-      else if (/^COMINT-GAMMA-ECI [A-Z]+$/.test(sci)) {
-          abbrevSCI = sci.replace("COMINT", "SI");
-          abbrevSCI = sci.replace("GAMMA", "G");
-      }
-      else if (sci === "TALENT KEYHOLE" || sci === "TK") {
-          abbrevSCI = "TK";
-      }
+    }
   }
-}
   // Abbreviate dissemination
   if (dissemination != null) {
-  if (dissemination.includes("/")) {
-  const disseminationArray = dissemination.split("/"); 
-  const abbreviatedDisseminations = disseminationArray.map(disseminationItem => {
-      // Abbreviate each dissemination individually
-      if (disseminationItem === "FOR OFFICIAL USE ONLY" || disseminationItem === "FOUO") {
-          return "FOUO";
+    if (dissemination.includes("/")) {
+      const disseminationArray = dissemination.split("/");
+      const abbreviatedDisseminations = disseminationArray.map(
+        (disseminationItem) => {
+          // Abbreviate each dissemination individually
+          if (
+            disseminationItem === "FOR OFFICIAL USE ONLY" ||
+            disseminationItem === "FOUO"
+          ) {
+            return "FOUO";
+          } else if (
+            disseminationItem === "ORIGINATOR CONTROLLED" ||
+            disseminationItem === "ORCON"
+          ) {
+            return "ORCON";
+          } else if (
+            disseminationItem === "CONTROLLED IMAGERY" ||
+            disseminationItem === "IMCON"
+          ) {
+            return "IMCON";
+          } else if (
+            disseminationItem === "SOURCES AND METHODS" ||
+            disseminationItem === "SAMI"
+          ) {
+            return "SAMI";
+          } else if (
+            disseminationItem === "NOT RELEASABLE TO FOREIGN NATIONALS" ||
+            disseminationItem === "NOFORN"
+          ) {
+            return "NOFORN";
+          } else if (
+            disseminationItem === "CAUTION-PROPRIETARY INFORMATION INVOLVED" ||
+            disseminationItem === "PROPIN"
+          ) {
+            return "PROPIN";
+          } else if (
+            disseminationItem.startsWith("AUTHORIZED FOR RELEASE TO ")
+          ) {
+            return disseminationItem.replace(
+              "AUTHORIZED FOR REALEASE TO ",
+              "REL TO "
+            );
+          } else if (
+            disseminationItem ===
+              "RELEASABLE BY INFORMATION DISCLOSURE OFFICIAL" ||
+            disseminationItem === "RELIDO"
+          ) {
+            return "RELIDO";
+          } else if (
+            /FORMERLY RESTRICTED DATA-SIGMA \[\d{1,2}\]/.test(disseminationItem)
+          ) {
+            return disseminationItem.replace("FORMERLY RESTRICTED DATA", "FRD");
+          } else if (
+            /RESTRICTED DATA-SIGMA \[\d{1,2}\]/.test(disseminationItem)
+          ) {
+            return disseminationItem.replace("RESTRICTED DATA", "RD");
+          } else if (
+            disseminationItem ===
+            "FORMERLY RESTRICTED DATA-CRITICAL NUCLEAR WEAPON DESIGN INFORMATION"
+          ) {
+            return "FRD-CNWDI";
+          } else if (
+            disseminationItem ===
+            "RESTRICTED DATA-CRITICAL NUCLEAR WEAPON DESIGN INFORMATION"
+          ) {
+            return "RD-CNWDI";
+          } else if (
+            disseminationItem === "RESTRICTED DATA" ||
+            disseminationItem === "RD"
+          ) {
+            return "RD";
+          } else if (
+            disseminationItem === "FORMERLY RESTRICTED DATA" ||
+            disseminationItem === "FRD"
+          ) {
+            return "FRD";
+          } else if (
+            disseminationItem === "DOD CONTROLLED NUCLEAR INFORMATION" ||
+            disseminationItem === " "
+          ) {
+            return " ";
+          } else if (
+            disseminationItem === "DOE CONTROLLED NUCLEAR INFORMATION" ||
+            disseminationItem === " "
+          ) {
+            return " ";
+          } else if (
+            disseminationItem === "DEA SENSITIVE" ||
+            disseminationItem === "DSEN"
+          ) {
+            return "DEA SENSITIVE";
+          } else if (
+            disseminationItem === "FOREIGN INTELLIGENCE SURVEILLANCE ACT" ||
+            disseminationItem === "FISA"
+          ) {
+            return "FISA";
+          }
+          // If the dissemination abbreviation is not recognized, keep it unchanged
+          else {
+            return disseminationItem;
+          }
+        }
+      );
+      // Join the abbreviated disseminations back into a single string
+      abbrevDissemination = abbreviatedDisseminations.join("/");
+    } else {
+      if (
+        dissemination === "FOR OFFICIAL USE ONLY" ||
+        dissemination === "FOUO"
+      ) {
+        abbrevDissemination = "FOUO";
+      } else if (
+        dissemination === "ORIGINATOR CONTROLLED" ||
+        dissemination === "ORCON"
+      ) {
+        abbrevDissemination = "ORCON";
+      } else if (
+        dissemination === "CONTROLLED IMAGERY" ||
+        dissemination === "IMCON"
+      ) {
+        abbrevDissemination = "IMCON";
+      } else if (
+        dissemination === "SOURCES AND METHODS" ||
+        dissemination === "SAMI"
+      ) {
+        abbrevDissemination = "SAMI";
+      } else if (
+        dissemination === "NOT RELEASABLE TO FOREIGN NATIONALS" ||
+        dissemination === "NOFORN"
+      ) {
+        abbrevDissemination = "NOFORN";
+      } else if (
+        dissemination === "CAUTION-PROPRIETARY INFORMATION INVOLVED" ||
+        dissemination === "PROPIN"
+      ) {
+        abbrevDissemination = "PROPIN";
+      } else if (
+        dissemination === "RELEASABLE BY INFORMATION DISCLOSURE OFFICIAL" ||
+        dissemination === "RELIDO"
+      ) {
+        abbrevDissemination = "RELIDO";
+      } else if (
+        /FORMERLY RESTRICTED DATA-SIGMA \[\d{1,2}\]/.test(dissemination)
+      ) {
+        abbrevDissemination = dissemination.replace(
+          "FORMERLY RESTRICTED DATA",
+          "FRD"
+        );
+      } else if (/RESTRICTED DATA-SIGMA \[\d{1,2}\]/.test(dissemination)) {
+        abbrevDissemination = dissemination.replace("RESTRICTED DATA", "RD");
+      } else if (
+        dissemination ===
+        "FORMERLY RESTRICTED DATA-CRITICAL NUCLEAR WEAPON DESIGN INFORMATION"
+      ) {
+        abbrevDissemination = "FRD-CNWDI";
+      } else if (
+        dissemination ===
+        "RESTRICTED DATA-CRITICAL NUCLEAR WEAPON DESIGN INFORMATION"
+      ) {
+        abbrevDissemination = "RD-CNWDI";
+      } else if (
+        dissemination === "RESTRICTED DATA" ||
+        dissemination === "RD"
+      ) {
+        abbrevDissemination = "RD";
+      } else if (
+        dissemination === "FORMERLY RESTRICTED DATA" ||
+        dissemination === "FRD"
+      ) {
+        abbrevDissemination = "FRD";
+      } else if (
+        dissemination === "DOD CONTROLLED NUCLEAR INFORMATION" ||
+        dissemination === "DOD UCNI"
+      ) {
+        abbrevDissemination = "DOD UCNI";
+      } else if (
+        dissemination === "DOE CONTROLLED NUCLEAR INFORMATION" ||
+        dissemination === "DOE UCNI"
+      ) {
+        abbrevDissemination = "DOE UCNI";
+      } else if (
+        dissemination === "DEA SENSITIVE" ||
+        dissemination === "DSEN"
+      ) {
+        abbrevDissemination = "DEA SENSITIVE";
+      } else if (
+        dissemination === "FOREIGN INTELLIGENCE SURVEILLANCE ACT" ||
+        dissemination === "FISA"
+      ) {
+        abbrevDissemination = "FISA";
       }
-      else if (disseminationItem === "ORIGINATOR CONTROLLED" || disseminationItem === "ORCON") {
-          return "ORCON";
-      }
-      else if (disseminationItem === "CONTROLLED IMAGERY" || disseminationItem === "IMCON") {
-          return "IMCON";
-      }
-      else if (disseminationItem === "SOURCES AND METHODS" || disseminationItem === "SAMI") {
-          return "SAMI";
-      }
-      else if (disseminationItem === "NOT RELEASABLE TO FOREIGN NATIONALS" || disseminationItem === "NOFORN") {
-          return "NOFORN";
-      }
-      else if (disseminationItem === "CAUTION-PROPRIETARY INFORMATION INVOLVED" || disseminationItem === "PROPIN") {
-          return "PROPIN";
-      }
-      else if (disseminationItem.startsWith("AUTHORIZED FOR RELEASE TO ")) {
-          return disseminationItem.replace("AUTHORIZED FOR REALEASE TO ", "REL TO ");
-      }
-      else if (disseminationItem === "RELEASABLE BY INFORMATION DISCLOSURE OFFICIAL" || disseminationItem === "RELIDO") {
-          return "RELIDO";
-      }
-      else if (/FORMERLY RESTRICTED DATA-SIGMA \[\d{1,2}\]/.test(disseminationItem)) {
-          return disseminationItem.replace("FORMERLY RESTRICTED DATA", "FRD");
-      }
-      else if (/RESTRICTED DATA-SIGMA \[\d{1,2}\]/.test(disseminationItem)) {
-          return disseminationItem.replace("RESTRICTED DATA", "RD");
-      }
-      else if (disseminationItem === "FORMERLY RESTRICTED DATA-CRITICAL NUCLEAR WEAPON DESIGN INFORMATION") {
-          return "FRD-CNWDI";
-      }
-      else if (disseminationItem === "RESTRICTED DATA-CRITICAL NUCLEAR WEAPON DESIGN INFORMATION") {
-          return "RD-CNWDI";
-      }
-      else if (disseminationItem === "RESTRICTED DATA" || disseminationItem === "RD") {
-          return "RD";
-      }
-      else if (disseminationItem === "FORMERLY RESTRICTED DATA" || disseminationItem === "FRD") {
-          return "FRD";
-      }
-      else if (disseminationItem === "DOD CONTROLLED NUCLEAR INFORMATION" || disseminationItem === " ") {
-          return " ";
-      }
-      else if (disseminationItem === "DOE CONTROLLED NUCLEAR INFORMATION" || disseminationItem === " ") {
-          return " ";
-      }
-      else if (disseminationItem === "DEA SENSITIVE" || disseminationItem === "DSEN") {
-          return "DEA SENSITIVE";
-      }
-      else if (disseminationItem === "FOREIGN INTELLIGENCE SURVEILLANCE ACT" || disseminationItem === "FISA") {
-          return "FISA";
-      }
-      // If the dissemination abbreviation is not recognized, keep it unchanged
-      else {
-          return disseminationItem;
-      }
-  });
-  // Join the abbreviated disseminations back into a single string
-  abbrevDissemination = abbreviatedDisseminations.join("/");
-  } else {
-  if (dissemination === "FOR OFFICIAL USE ONLY" || dissemination === "FOUO") {
-      abbrevDissemination = "FOUO";
+    }
   }
-  else if (dissemination === "ORIGINATOR CONTROLLED" || dissemination === "ORCON") {
-      abbrevDissemination = "ORCON";
-  }
-  else if (dissemination === "CONTROLLED IMAGERY" || dissemination === "IMCON") {
-      abbrevDissemination = "IMCON";
-  }
-  else if (dissemination === "SOURCES AND METHODS" || dissemination === "SAMI") {
-      abbrevDissemination = "SAMI";
-  }
-  else if (dissemination === "NOT RELEASABLE TO FOREIGN NATIONALS" || dissemination === "NOFORN") {
-      abbrevDissemination = "NOFORN";
-  }
-  else if (dissemination === "CAUTION-PROPRIETARY INFORMATION INVOLVED" || dissemination === "PROPIN") {
-      abbrevDissemination = "PROPIN";
-  }
-  else if (dissemination === "RELEASABLE BY INFORMATION DISCLOSURE OFFICIAL" || dissemination === "RELIDO") {
-      abbrevDissemination = "RELIDO";
-  }
-  else if (/FORMERLY RESTRICTED DATA-SIGMA \[\d{1,2}\]/.test(dissemination)) {
-      abbrevDissemination = dissemination.replace("FORMERLY RESTRICTED DATA", "FRD");
-  }
-  else if (/RESTRICTED DATA-SIGMA \[\d{1,2}\]/.test(dissemination)) {
-      abbrevDissemination = dissemination.replace("RESTRICTED DATA", "RD");
-  }
-  else if (dissemination === "FORMERLY RESTRICTED DATA-CRITICAL NUCLEAR WEAPON DESIGN INFORMATION") {
-      abbrevDissemination = "FRD-CNWDI";
-  }
-  else if (dissemination === "RESTRICTED DATA-CRITICAL NUCLEAR WEAPON DESIGN INFORMATION") {
-      abbrevDissemination = "RD-CNWDI";
-  }
-  else if (dissemination === "RESTRICTED DATA" || dissemination === "RD") {
-      abbrevDissemination = "RD";
-  }
-  else if (dissemination === "FORMERLY RESTRICTED DATA" || dissemination === "FRD") {
-      abbrevDissemination = "FRD";
-  }
-  else if (dissemination === "DOD CONTROLLED NUCLEAR INFORMATION" || dissemination === "DOD UCNI") {
-      abbrevDissemination = "DOD UCNI";
-  }
-  else if (dissemination === "DOE CONTROLLED NUCLEAR INFORMATION" || dissemination === "DOE UCNI") {
-      abbrevDissemination = "DOE UCNI";
-  }
-  else if (dissemination === "DEA SENSITIVE" || dissemination === "DSEN") {
-      abbrevDissemination = "DEA SENSITIVE";
-  }
-  else if (dissemination === "FOREIGN INTELLIGENCE SURVEILLANCE ACT" || dissemination === "FISA") {
-      abbrevDissemination = "FISA";
-  }
-}
-}
   return {
-      classification: abbrevClassification,
-      sci: abbrevSCI,
-      dissemination: abbrevDissemination
+    classification: abbrevClassification,
+    sci: abbrevSCI,
+    dissemination: abbrevDissemination,
   };
 }
 
@@ -652,7 +723,10 @@ function checkDisseminations(classification, dissemination) {
       }
 
       //DEA SENSITIVE (DSEN): can only be used with unclassified.
-      if (dissPartsArray[i] === "DEA SENSITIVE" && classification !== "UNCLASSIFIED") {
+      if (
+        dissPartsArray[i] === "DEA SENSITIVE" &&
+        classification !== "UNCLASSIFIED"
+      ) {
         errorMsg = "DEA SENSITIVE can only be used with unclassified.";
       }
 
