@@ -58,7 +58,7 @@ function MessageSendVerificationHandler(event) {
 
     //need to find a way for if cc and bcc are not null then check them
     if (recipientCheck && senderCheck){
-      console.log("recipient and sender cleared");
+      console.log("recipient and sender cleared. recipient check returned " + recipientCheck + " and senderCheck returned "+ senderCheck);
       event.completed({
         allowEvent: true,
       });
