@@ -51,8 +51,8 @@ function MessageSendVerificationHandler(event) {
 
     //CHANGE
     //fix this first!!!
-    checkSenderClassification(sender, bannerMarkings.banner[0], event);
     checkRecipientClassification(toRecipients, bannerMarkings.banner[0], event);
+    checkSenderClassification(sender, bannerMarkings.banner[0], event);
     check_CC_Classification(cc, bannerMarkings.banner[0], event);
     check_BCC_Classification(bcc, bannerMarkings.banner[0], event);
     dissemination = bannerMarkings.banner[2];
