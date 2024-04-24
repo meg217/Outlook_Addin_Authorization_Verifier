@@ -372,6 +372,9 @@ function check_CC_Classification(
   documentClassification,
   event
 ) {
+  if(!CCs){
+    return false;
+  }
   console.log("check_CC_Classification method"); //debugging
   console.log("checkCCClass - CC: " + CCs);
   console.log(
@@ -472,6 +475,9 @@ function check_BCC_Classification(
   documentClassification,
   event
 ) {
+  if(!BCCs){
+    resolve(false);
+  }
   console.log("check_BCC_Classification method"); //debugging
   console.log("checkBCCClass - BCC: " + BCCs);
   console.log(
