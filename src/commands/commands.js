@@ -51,11 +51,22 @@ function MessageSendVerificationHandler(event) {
 
     //CHANGE
     //fix this first!!!
-    checkRecipientClassification(toRecipients, bannerMarkings.banner[0], event);
-    checkSenderClassification(sender, bannerMarkings.banner[0], event);
-    check_CC_Classification(cc, bannerMarkings.banner[0], event);
-    check_BCC_Classification(bcc, bannerMarkings.banner[0], event);
+    const recipientCheck = checkRecipientClassification(toRecipients, bannerMarkings.banner[0], event);
+    const senderCheck = checkSenderClassification(sender, bannerMarkings.banner[0], event);
+    const ccCheck = check_CC_Classification(cc, bannerMarkings.banner[0], event);
+    const bccCheck = check_BCC_Classification(bcc, bannerMarkings.banner[0], event);
+
+    //need to find a way for if cc and bcc are not null then check them
+    if (recipientCheck && senderCheck){
+      console.log("recipient and sender cleared");
+      event.completed({
+        allowEvent: true,
+      });
+    }
+
+
     dissemination = bannerMarkings.banner[2];
+
     if (dissemination != null) {
       let dissParts = dissemination.split("/");
       let dissPartsArray = [];
@@ -151,9 +162,10 @@ function checkSenderClassification(
             });
           } else {
             console.log("Sender is Cleared");
-            event.completed({
-              allowEvent: true,
-            });
+            return true;
+            // event.completed({
+            //   allowEvent: true,
+            // });
           }
         })
         .catch((error) => {
@@ -206,9 +218,10 @@ function checkRecipientClassification(
             });
           } else {
             console.log("Recipient is Cleared");
-            event.completed({
-              allowEvent: true,
-            });
+            return true;
+            // event.completed({
+            //   allowEvent: true,
+            // });
           }
         })
         .catch((error) => {
@@ -305,9 +318,10 @@ function check_CC_Classification(
             });
           } else {
             console.log("CCed user is Cleared");
-            event.completed({
-              allowEvent: true,
-            });
+            return true;
+            // event.completed({
+            //   allowEvent: true,
+            // });
           }
         })
         .catch((error) => {
@@ -404,9 +418,10 @@ function check_BCC_Classification(
             });
           } else {
             console.log("BCCed user is Cleared");
-            event.completed({
-              allowEvent: true,
-            });
+            return true;
+            // event.completed({
+            //   allowEvent: true,
+            // });
           }
         })
         .catch((error) => {
