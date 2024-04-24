@@ -49,13 +49,83 @@ function MessageSendVerificationHandler(event) {
       errorPopupHandler(bannerMarkings.message, event);
     }
 
-    //CHANGE
-    //fix this first!!!
     const recipientCheck = checkRecipientClassification(toRecipients, bannerMarkings.banner[0], event);
     const senderCheck = checkSenderClassification(sender, bannerMarkings.banner[0], event);
     const ccCheck = check_CC_Classification(cc, bannerMarkings.banner[0], event);
     const bccCheck = check_BCC_Classification(bcc, bannerMarkings.banner[0], event);
-
+    
+    // Define a variable to track if all checks passed
+    let allChecksPassed = true;
+    
+    // Check recipient
+    switch (recipientCheck.resolve) {
+      case true:
+        console.log("Recipient cleared.");
+        break;
+      case false:
+        console.log("Recipient not cleared.");
+        allChecksPassed = false;
+        break;
+      default:
+        // Handle other cases if necessary
+        break;
+    }
+    
+    // Check sender
+    switch (senderCheck.resolve) {
+      case true:
+        console.log("Sender cleared.");
+        break;
+      case false:
+        console.log("Sender not cleared.");
+        allChecksPassed = false;
+        break;
+      default:
+        // Handle other cases if necessary
+        break;
+    }
+    
+    // Check cc
+    switch (ccCheck.resolve) {
+      case true:
+        console.log("CC cleared.");
+        break;
+      case false:
+        console.log("CC not cleared.");
+        allChecksPassed = false;
+        break;
+      default:
+        // Handle other cases if necessary
+        break;
+    }
+    
+    // Check bcc
+    switch (bccCheck.resolve) {
+      case true:
+        console.log("BCC cleared.");
+        break;
+      case false:
+        console.log("BCC not cleared.");
+        allChecksPassed = false;
+        break;
+      default:
+        // Handle other cases if necessary
+        break;
+    }
+    
+    // Check if all checks passed
+    if (allChecksPassed) {
+      console.log("All checks passed.");
+      event.completed({
+        allowEvent: true,
+      });
+    } else {
+      console.log("Some checks failed.");
+      event.completed({
+        allowEvent: false,
+      });
+    }
+    
     //need to find a way for if cc and bcc are not null then check them
     if (recipientCheck && senderCheck){
       console.log("recipient and sender cleared. recipient check returned " + recipientCheck.resolve + " and senderCheck returned "+ senderCheck.resolve);
