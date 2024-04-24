@@ -274,7 +274,7 @@ function checkRecipientClassification(
   console.log("checkRecipientClass - Recipient: " + recipients);
   console.log("checkRecipientClass - Classification: " + documentClassification);
 
-    let allowEvent = true;
+    let allowEvent = false;
     //KEVIN - Changed "./assets.users.csv" to "./assets.accounts.csv"
     const csvFile =
       "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
