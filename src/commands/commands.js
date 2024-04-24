@@ -53,6 +53,7 @@ function MessageSendVerificationHandler(event) {
     //fix this first!!!
     checkSenderClassification(sender, bannerMarkings.banner[0], event);
     checkRecipientClassification(toRecipients, bannerMarkings.banner[0], event);
+    check_CC_Classification(cc, bannerMarkings.banner[0], event);
     dissemination = bannerMarkings.banner[2];
     if (dissemination != null) {
       let dissParts = dissemination.split("/");
@@ -64,8 +65,10 @@ function MessageSendVerificationHandler(event) {
       for (let i = 0; i < dissPartsArray.length; i++) {
         if (dissPartsArray[i] === "NOFORN") {
           //NOFORNEncountered = true;
-          const Msgreturn = checkRecipientCountry(toRecipients, event);
-          console.log("Function checkRecipientCountry returned: " + Msgreturn);
+          const RecipientMsgreturn = checkRecipientCountry(toRecipients, event);
+          console.log("Function checkRecipientCountry returned: " + RecipientMsgreturn);
+          const CCMsgreturn = check_CC_Country(cc, event);
+          console.log("Function check_CC_Country returned: " + CCMsgreturn);
         }
       }
     }
@@ -106,7 +109,7 @@ function _setSessionData(key, value) {
 }
 
 /**
- * Checks the classification level of the recipients.
+ * Checks the classification level of the sender
  * @param {array} sender The sender
  * @param {String} documentClassication The classication level of the email dictated by category 1 of banner
  * @returns {Promise<boolean>} Returns true the sender is permitted to view the information they are sending
@@ -258,6 +261,105 @@ function checkRecipientCountry(recipients, event) {
   });
 }
 
+/**
+ * Checks the classification level of the users CCed.
+ * @param {array} CCs An array of people who were CC
+ * @param {String} documentClassication The classication level of the email dictated by category 1 of banner
+ * @returns {Promise<boolean>} Returns true if all users who are CCed are permitted to view the contents of the email
+ */
+function check_CC_Classification(
+  CCs,
+  documentClassification,
+  event
+) {
+  console.log("check_CC_Classification method"); //debugging
+  console.log("checkCCClass - CC: " + CCs);
+  console.log(
+    "checkCCClass - Classification: " + documentClassification
+  );
+
+  return new Promise((resolve, reject) => {
+    let allowEvent = true;
+    //KEVIN - Changed "./assets.users.csv" to "./assets.accounts.csv"
+    const csvFile =
+      "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
+
+    // If a cced user is not permitted, the send fails
+    for (const cc of CCs) {
+      const emailAddress = cc.emailAddress;
+      console.log("CC Email Address: " + emailAddress);
+      userMeetsSecurityClearance(csvFile, documentClassification, emailAddress)
+        .then((isClearance) => {
+          console.log("is clearence returned: " + isClearance);
+          if (!isClearance) {
+            console.log(emailAddress + " is not authorized to view this email");
+            event.completed({
+              allowEvent: false,
+              cancelLabel: "Ok",
+              commandId: "msgComposeOpenPaneButton",
+              contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
+              errorMessage: "CCed user is NOT AUTHORIZED to see this email.",
+              sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser,
+            });
+          } else {
+            console.log("CCed user is Cleared");
+            event.completed({
+              allowEvent: true,
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error while checking isClearance: ", error);
+        });
+    }
+    resolve(allowEvent);
+  });
+}
+
+function check_CC_Country(CCs, event) {
+  console.log("checkRecipientCountry Function");
+
+  return new Promise((resolve, reject) => {
+    let allowEvent = true;
+    //KEVIN - Changed "./assets.users.csv" to "./assets.accounts.csv"
+    const csvFile =
+      "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
+
+    // If a cced user is not permitted, the entire send fails
+    for (const cc of CCs) {
+      const emailAddress = cc.emailAddress;
+      console.log("CC Email Address: " + emailAddress);
+      check_NOFORN_Access(csvFile, emailAddress)
+        .then((isNOFORN) => {
+          console.log("isNOFORN returned: " + isNOFORN);
+          if (!isNOFORN) {
+            console.log(
+              emailAddress +
+                " is a Foreign National and not authorized to view this email"
+            );
+            event.completed({
+              allowEvent: false,
+              cancelLabel: "Ok",
+              commandId: "msgComposeOpenPaneButton",
+              contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
+              errorMessage:
+                "CCed user is NOT AUTHORIZED to see this email: NOT RELEASABLE TO FOREIGN NATIONALS",
+              sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser,
+            });
+          } else {
+            console.log("CCed user is Cleared as USA");
+            event.completed({
+              allowEvent: true,
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error while checking isNOFORN: ", error);
+        });
+    }
+    resolve(allowEvent);
+  });
+}
 // Old Method
 /**
    * return new Promise((resolve, reject) => {
