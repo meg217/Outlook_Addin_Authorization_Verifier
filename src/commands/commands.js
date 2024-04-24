@@ -49,90 +49,103 @@ function MessageSendVerificationHandler(event) {
       errorPopupHandler(bannerMarkings.message, event);
     }
 
-    const recipientCheck = checkRecipientClassification(toRecipients, bannerMarkings.banner[0], event);
-    const senderCheck = checkSenderClassification(sender, bannerMarkings.banner[0], event);
-    const ccCheck = check_CC_Classification(cc, bannerMarkings.banner[0], event);
-    const bccCheck = check_BCC_Classification(bcc, bannerMarkings.banner[0], event);
+    Promise.all([
+      checkRecipientClassification(toRecipients,bannerMarkings.banner[0],event),
+      checkSenderClassification(sender, bannerMarkings.banner[0], event),
+      check_CC_Classification(cc, bannerMarkings.banner[0], event),
+      check_BCC_Classification(bcc, bannerMarkings.banner[0], event),
+    ]). then (([recipientCheck, senderCheck, ccCheck, bccCheck]) => {
+      console.log("\nPROMISE ALL FOR CHECKS");
+      console.log("\ncheck recipient returned: " + recipientCheck);
+      console.log("\ncheck sender returned: " + senderCheck);
+      console.log("\ncc check returned: " + ccCheck);
+      console.log("\nbcc check returned: " + bccCheck);
+    });
+
+    // const recipientCheck = checkRecipientClassification(toRecipients, bannerMarkings.banner[0], event)
+    // const senderCheck = checkSenderClassification(sender, bannerMarkings.banner[0], event);
+    // const ccCheck = check_CC_Classification(cc, bannerMarkings.banner[0], event);
+    // const bccCheck = check_BCC_Classification(bcc, bannerMarkings.banner[0], event);
     
-    // Define a variable to track if all checks passed
-    let allChecksPassed = true;
+    // // Define a variable to track if all checks passed
+    // let allChecksPassed = true;
     
     // Check recipient
-    switch (recipientCheck.resolve) {
-      case true:
-        console.log("Recipient cleared.");
-        break;
-      case false:
-        console.log("Recipient not cleared.");
-        allChecksPassed = false;
-        break;
-      default:
-        // Handle other cases if necessary
-        break;
-    }
+    // switch (recipientCheck.resolve) {
+    //   case true:
+    //     console.log("Recipient cleared.");
+    //     break;
+    //   case false:
+    //     console.log("Recipient not cleared.");
+    //     allChecksPassed = false;
+    //     break;
+    //   default:
+    //     // Handle other cases if necessary
+    //     break;
+    // }
     
-    // Check sender
-    switch (senderCheck.resolve) {
-      case true:
-        console.log("Sender cleared.");
-        break;
-      case false:
-        console.log("Sender not cleared.");
-        allChecksPassed = false;
-        break;
-      default:
-        // Handle other cases if necessary
-        break;
-    }
+    // // Check sender
+    // switch (senderCheck.resolve) {
+    //   case true:
+    //     console.log("Sender cleared.");
+    //     break;
+    //   case false:
+    //     console.log("Sender not cleared.");
+    //     allChecksPassed = false;
+    //     break;
+    //   default:
+    //     // Handle other cases if necessary
+    //     break;
+    // }
     
-    // Check cc
-    switch (ccCheck.resolve) {
-      case true:
-        console.log("CC cleared.");
-        break;
-      case false:
-        console.log("CC not cleared.");
-        allChecksPassed = false;
-        break;
-      default:
-        // Handle other cases if necessary
-        break;
-    }
+    // // Check cc
+    // switch (ccCheck.resolve) {
+    //   case true:
+    //     console.log("CC cleared.");
+    //     break;
+    //   case false:
+    //     console.log("CC not cleared.");
+    //     allChecksPassed = false;
+    //     break;
+    //   default:
+    //     // Handle other cases if necessary
+    //     break;
+    // }
     
-    // Check bcc
-    switch (bccCheck.resolve) {
-      case true:
-        console.log("BCC cleared.");
-        break;
-      case false:
-        console.log("BCC not cleared.");
-        allChecksPassed = false;
-        break;
-      default:
-        // Handle other cases if necessary
-        break;
-    }
+    // // Check bcc
+    // switch (bccCheck.resolve) {
+    //   case true:
+    //     console.log("BCC cleared.");
+    //     break;
+    //   case false:
+    //     console.log("BCC not cleared.");
+    //     allChecksPassed = false;
+    //     break;
+    //   default:
+    //     // Handle other cases if necessary
+    //     break;
+    // }
     
-    // Check if all checks passed
-    if (allChecksPassed) {
-      console.log("All checks passed.");
-      event.completed({
-        allowEvent: true,
-      });
-    } else {
-      console.log("Some checks failed.");
-      event.completed({
-        allowEvent: false,
-      });
-    }
+    // // Check if all checks passed
+    // if (allChecksPassed) {
+    //   console.log("All checks passed.");
+    //   event.completed({
+    //     allowEvent: true,
+    //   });
+    // } else {
+    //   console.log("Some checks failed.");
+    //   event.completed({
+    //     allowEvent: false,
+    //   });
+    // }
     
-    //need to find a way for if cc and bcc are not null then check them
-    if (recipientCheck && senderCheck){
-      console.log("recipient and sender cleared. recipient check returned " + recipientCheck.resolve + recipientCheck.allowEvent + " and senderCheck returned "+ senderCheck.resolve + senderCheck.allowEvent );
-      event.completed({
-        allowEvent: true,
-      });
-    }
+    // //need to find a way for if cc and bcc are not null then check them
+    // if (recipientCheck && senderCheck){
+    //   console.log("recipient and sender cleared. recipient check returned " + recipientCheck.resolve + recipientCheck.allowEvent + " and senderCheck returned "+ senderCheck.resolve + senderCheck.allowEvent );
+    //   event.completed({
+    //     allowEvent: true,
+    //   });
+    // }
 
 
     dissemination = bannerMarkings.banner[2];
