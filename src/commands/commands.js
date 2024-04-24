@@ -66,6 +66,7 @@ function MessageSendVerificationHandler(event) {
         }
       }
     }
+    console.log("VERSION 1.0");
   });
 }
 
