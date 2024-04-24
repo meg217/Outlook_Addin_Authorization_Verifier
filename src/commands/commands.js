@@ -372,7 +372,16 @@ function check_CC_Classification(
   documentClassification,
   event
 ) {
+  if(typeof CCs == "undefined"){
+    console.log("RETURNED UNDEFINED FOR CC");
+    return false;
+  }
+  if(CCs == 'undefined'){
+    console.log("RETURNED UNDEFINED PT 2 FOR CC");
+    return false;
+  }
   if(!CCs){
+    console.log("RETURNED  FOR CC");
     return false;
   }
   console.log("check_CC_Classification method"); //debugging
