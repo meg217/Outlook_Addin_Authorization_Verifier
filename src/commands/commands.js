@@ -25,15 +25,21 @@ function MessageSendVerificationHandler(event) {
     getCCAsync(),
     getBCCAsync(),
   ]).then(([toRecipients, sender, body, fetchAndParseCSV, cc, bcc]) => {
-    console.log(
-      "To recipients: " +
-        toRecipients.forEach((recipient) => console.log(recipient.emailAddress))
-    );
+    console.log("Ricipient: " +
+      to.map((recipient) => recipient.emailAddress + " (" + recipient.displayName + ")").join(", ") +
+      "\nCC recipients: " +
+      (cc ? cc.map((recipient) => recipient.emailAddress + " (" + recipient.displayName + ")").join(", ") : "None") +
+      "\nBCC recipients: " +
+      (bcc
+        ? bcc.map((recipient) => recipient.emailAddress + " (" + recipient.displayName + ")").join(", ")
+        : "None") +
+      "\nSender: " +
+      sender.displayName +
+      "\nBody: " +
+      body);
 
-    console.log("Sender:" + sender.emailAddress);
-    console.log("CC: " + cc.emailAddress);
-    console.log("BCC: " + bcc.emailAddress);
-    console.log("Body:" + body);
+
+
     const banner = getBannerFromBody(body);
 
     // Check if the banner is null error
