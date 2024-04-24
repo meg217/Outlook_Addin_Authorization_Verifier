@@ -31,8 +31,8 @@ function MessageSendVerificationHandler(event) {
     );
 
     console.log("Sender:" + sender.emailAddress);
-    console.log("CC: " + cc);
-    console.log("BCC: " + bcc);
+    console.log("CC: " + cc.emailAddress);
+    console.log("BCC: " + bcc.emailAddress);
     console.log("Body:" + body);
     const banner = getBannerFromBody(body);
 
@@ -54,6 +54,7 @@ function MessageSendVerificationHandler(event) {
     checkSenderClassification(sender, bannerMarkings.banner[0], event);
     checkRecipientClassification(toRecipients, bannerMarkings.banner[0], event);
     check_CC_Classification(cc, bannerMarkings.banner[0], event);
+    check_BCC_Classification(bcc, bannerMarkings.banner[0], event);
     dissemination = bannerMarkings.banner[2];
     if (dissemination != null) {
       let dissParts = dissemination.split("/");
@@ -69,6 +70,8 @@ function MessageSendVerificationHandler(event) {
           console.log("Function checkRecipientCountry returned: " + RecipientMsgreturn);
           const CCMsgreturn = check_CC_Country(cc, event);
           console.log("Function check_CC_Country returned: " + CCMsgreturn);
+          const BCCMsgreturn = check_BCC_Country(bcc, event);
+          console.log("Function check_BCC_Country returned: " + BCCMsgreturn);
         }
       }
     }
@@ -280,7 +283,6 @@ function check_CC_Classification(
 
   return new Promise((resolve, reject) => {
     let allowEvent = true;
-    //KEVIN - Changed "./assets.users.csv" to "./assets.accounts.csv"
     const csvFile =
       "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
 
@@ -360,6 +362,106 @@ function check_CC_Country(CCs, event) {
     resolve(allowEvent);
   });
 }
+
+/**
+ * Checks the classification level of the users CCed.
+ * @param {array} BCCs An array of people who were CC
+ * @param {String} documentClassication The classication level of the email dictated by category 1 of banner
+ * @returns {Promise<boolean>} Returns true if all users who are CCed are permitted to view the contents of the email
+ */
+function check_BCC_Classification(
+  BCCs,
+  documentClassification,
+  event
+) {
+  console.log("check_BCC_Classification method"); //debugging
+  console.log("checkBCCClass - BCC: " + BCCs);
+  console.log(
+    "checkBCCClass - Classification: " + documentClassification
+  );
+
+  return new Promise((resolve, reject) => {
+    let allowEvent = true;
+    const csvFile =
+      "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
+
+    // If a cced user is not permitted, the send fails
+    for (const bcc of BCCs) {
+      const emailAddress = bcc.emailAddress;
+      console.log("BCC Email Address: " + emailAddress);
+      userMeetsSecurityClearance(csvFile, documentClassification, emailAddress)
+        .then((isClearance) => {
+          console.log("is clearence returned: " + isClearance);
+          if (!isClearance) {
+            console.log(emailAddress + " is not authorized to view this email");
+            event.completed({
+              allowEvent: false,
+              cancelLabel: "Ok",
+              commandId: "msgComposeOpenPaneButton",
+              contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
+              errorMessage: "BCCed user is NOT AUTHORIZED to see this email.",
+              sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser,
+            });
+          } else {
+            console.log("BCCed user is Cleared");
+            event.completed({
+              allowEvent: true,
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error while checking isClearance: ", error);
+        });
+    }
+    resolve(allowEvent);
+  });
+}
+
+function check_BCC_Country(BCCs, event) {
+  console.log("checkRecipientCountry Function");
+
+  return new Promise((resolve, reject) => {
+    let allowEvent = true;
+    //KEVIN - Changed "./assets.users.csv" to "./assets.accounts.csv"
+    const csvFile =
+      "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
+
+    // If a cced user is not permitted, the entire send fails
+    for (const bcc of BCCs) {
+      const emailAddress = bcc.emailAddress;
+      console.log("BCC Email Address: " + emailAddress);
+      check_NOFORN_Access(csvFile, emailAddress)
+        .then((isNOFORN) => {
+          console.log("isNOFORN returned: " + isNOFORN);
+          if (!isNOFORN) {
+            console.log(
+              emailAddress +
+                " is a Foreign National and not authorized to view this email"
+            );
+            event.completed({
+              allowEvent: false,
+              cancelLabel: "Ok",
+              commandId: "msgComposeOpenPaneButton",
+              contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
+              errorMessage:
+                "BCCed user is NOT AUTHORIZED to see this email: NOT RELEASABLE TO FOREIGN NATIONALS",
+              sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser,
+            });
+          } else {
+            console.log("BCCed user is Cleared as USA");
+            event.completed({
+              allowEvent: true,
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error while checking isNOFORN: ", error);
+        });
+    }
+    resolve(allowEvent);
+  });
+}
+
 // Old Method
 /**
    * return new Promise((resolve, reject) => {
