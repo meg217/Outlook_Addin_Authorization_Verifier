@@ -200,7 +200,7 @@ function checkRecipientClassification(
               sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser,
             });
           } else {
-            console.log("Recipient is Cleared");
+            console.log("Recipient is Cleared aaaaaa");
             // Jonathan: This block of code would ignore a previous fail case when it comes to multiple recepients
             event.completed({
               //allowEvent: true,
