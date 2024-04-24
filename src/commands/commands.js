@@ -145,6 +145,7 @@ function checkSenderClassification(
             });
           } else {
             console.log("Sender is Cleared");
+            // Jonathan: This block of code would ignore a previous fail case, but this should never happen as there can only be one sender for an email
             event.completed({
               allowEvent: true,
             });
@@ -199,9 +200,10 @@ function checkRecipientClassification(
               sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser,
             });
           } else {
-            console.log("Recipient is Cleared");
+            console.log("Recipient is Cleared aaaaaa");
+            // Jonathan: This block of code would ignore a previous fail case when it comes to multiple recepients
             event.completed({
-              allowEvent: true,
+              //allowEvent: true,
             });
           }
         })
@@ -209,6 +211,8 @@ function checkRecipientClassification(
           console.error("Error while checking isClearance: ", error);
         });
     }
+    
+    console.log("VERSION 1.0");
     resolve(allowEvent);
   });
 }
@@ -245,8 +249,9 @@ function checkRecipientCountry(recipients, event) {
             });
           } else {
             console.log("Recipient is Cleared as USA");
+            // Jonathan: This block of code would ignore a previous fail case when it comes to multiple recepients
             event.completed({
-              allowEvent: true,
+              //allowEvent: true,
             });
           }
         })
