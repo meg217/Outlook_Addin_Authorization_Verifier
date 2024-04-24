@@ -269,14 +269,11 @@ function checkRecipientClassification(
   documentClassification,
   event
 ) {
-  console.log("checkRecipientClassification method"); //debugging
+  console.log("checkRecipientClassification method");
   //userMeetsSecurityClearance(filePath, documentClassification, email) {
   console.log("checkRecipientClass - Recipient: " + recipients);
-  console.log(
-    "checkRecipientClass - Classification: " + documentClassification
-  );
+  console.log("checkRecipientClass - Classification: " + documentClassification);
 
-  return new Promise((resolve, reject) => {
     let allowEvent = true;
     //KEVIN - Changed "./assets.users.csv" to "./assets.accounts.csv"
     const csvFile =
@@ -291,6 +288,7 @@ function checkRecipientClassification(
           console.log("is clearence returned: " + isClearance);
           if (!isClearance) {
             console.log(emailAddress + " is not authorized to view this email");
+            allowEvent = false;
             // event.completed({
             //   allowEvent: false,
             //   cancelLabel: "Ok",
@@ -299,10 +297,9 @@ function checkRecipientClassification(
             //   errorMessage: "Recipient is NOT AUTHORIZED to see this email.",
             //   sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser,
             // });
-            return false;
           } else {
             console.log("Recipient is Cleared");
-            return true;
+            allowEvent = true;
             // event.completed({
             //   allowEvent: true,
             // });
@@ -312,8 +309,8 @@ function checkRecipientClassification(
           console.error("Error while checking isClearance: ", error);
         });
     }
-    resolve(allowEvent);
-  });
+    return allowEvent;
+
 }
 
 function checkRecipientCountry(recipients, event) {
@@ -374,14 +371,6 @@ function check_CC_Classification(
 ) {
   if(typeof CCs.emailAddress == "undefined"){
     console.log("RETURNED UNDEFINED FOR CC");
-    return false;
-  }
-  if(CCs.emailAddress == 'undefined'){
-    console.log("RETURNED UNDEFINED PT 2 FOR CC");
-    return false;
-  }
-  if(!CCs.emailAddress){
-    console.log("RETURNED  FOR CC");
     return false;
   }
   console.log("check_CC_Classification method"); //debugging
@@ -484,8 +473,9 @@ function check_BCC_Classification(
   documentClassification,
   event
 ) {
-  if(!BCCs){
-    resolve(false);
+  if(typeof BCCs.emailAddress == "undefined"){
+    console.log("RETURNED UNDEFINED FOR BCC");
+    return false;
   }
   console.log("check_BCC_Classification method"); //debugging
   console.log("checkBCCClass - BCC: " + BCCs);
