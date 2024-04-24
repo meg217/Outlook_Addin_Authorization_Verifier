@@ -370,33 +370,27 @@ function checkRecipientCountry(recipients, event) {
  * @param {String} documentClassication The classication level of the email dictated by category 1 of banner
  * @returns {Promise<boolean>} Returns true if all users who are CCed are permitted to view the contents of the email
  */
-function check_CC_Classification(
-  CCs,
-  documentClassification,
-  event
-) {
-  if(typeof CCs.emailAddress == "undefined"){
-    console.log("RETURNED UNDEFINED FOR CC");
-    return false;
+function check_CC_Classification(cc, documentClassification, event) {
+  // Check if cc is undefined or null
+  if (!cc) {
+    console.error("CC array is undefined or null.");
+    return; // Exit the function early
   }
-  console.log("check_CC_Classification method"); //debugging
-  console.log("checkCCClass - CC: " + CCs);
-  console.log(
-    "checkCCClass - Classification: " + documentClassification
-  );
+
+  console.log("check_CC_Classification method");
 
   return new Promise((resolve, reject) => {
     let allowEvent = true;
     const csvFile =
       "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
 
-    // If a cced user is not permitted, the send fails
-    for (const cc of CCs) {
-      const emailAddress = cc.emailAddress;
+    // If a cc user is not permitted, the send fails
+    cc.forEach((recipient) => {
+      const emailAddress = recipient.emailAddress;
       console.log("CC Email Address: " + emailAddress);
       userMeetsSecurityClearance(csvFile, documentClassification, emailAddress)
         .then((isClearance) => {
-          console.log("is clearence returned: " + isClearance);
+          console.log("is clearance returned: " + isClearance);
           if (!isClearance) {
             console.log(emailAddress + " is not authorized to view this email");
             event.completed({
@@ -409,17 +403,14 @@ function check_CC_Classification(
             });
           } else {
             console.log("CCed user is Cleared");
-            return true;
-            // event.completed({
-            //   allowEvent: true,
-            // });
+            resolve(true); // Resolve the promise with true
           }
         })
         .catch((error) => {
-          console.error("Error while checking isClearance: ", error);
+          console.error("Error while checking clearance: ", error);
+          reject(error); // Reject the promise with the error
         });
-    }
-    resolve(allowEvent);
+    });
   });
 }
 
