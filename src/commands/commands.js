@@ -127,15 +127,14 @@ function checkSenderClassification(
     const csvFile =
       "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
 
-    // If a single recipient is not permitted, the entire send fails
-    for (const sender of sender) {
+    // If a sender is not permitted, the send fails
       const emailAddress = sender.emailAddress;
       console.log("Sender Email Address: " + emailAddress);
       userMeetsSecurityClearance(csvFile, documentClassification, emailAddress)
         .then((isClearance) => {
           console.log("is clearence returned: " + isClearance);
           if (!isClearance) {
-            console.log(emailAddress + " is not authorized to view this email");
+            console.log(emailAddress + " to send information contained in this email.");
             event.completed({
               allowEvent: false,
               cancelLabel: "Ok",
@@ -154,7 +153,6 @@ function checkSenderClassification(
         .catch((error) => {
           console.error("Error while checking isClearance: ", error);
         });
-    }
     resolve(allowEvent);
   });
 }
