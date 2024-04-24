@@ -19,12 +19,12 @@ function MessageSendVerificationHandler(event) {
   //promise is to encapsulate all the async functions
   Promise.all([
     getToRecipientsAsync(),
-    // getSenderAsync(),
-    // getBodyAsync(),
-    // fetchAndParseCSV(),
-    // getCCAsync(),
-    // getBCCAsync(),
-  ]).then(([to]) => {
+    getSenderAsync(),
+    getBodyAsync(),
+    fetchAndParseCSV(),
+    getCCAsync(),
+    getBCCAsync(),
+  ]).then(([to, sender, body, fetchAndParseCSV, cc, bcc]) => {
     console.log("Ricipient: " +
       to.map((recipient) => recipient.emailAddress + " (" + recipient.displayName + ")").join(", ") +
       "\nCC recipients: " +
