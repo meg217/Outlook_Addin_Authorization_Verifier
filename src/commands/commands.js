@@ -66,7 +66,6 @@ function MessageSendVerificationHandler(event) {
         }
       }
     }
-    console.log("VERSION 1.0");
   });
 }
 
@@ -212,6 +211,8 @@ function checkRecipientClassification(
           console.error("Error while checking isClearance: ", error);
         });
     }
+    
+    console.log("VERSION 1.0");
     resolve(allowEvent);
   });
 }
