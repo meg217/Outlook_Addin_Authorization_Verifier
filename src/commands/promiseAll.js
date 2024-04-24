@@ -79,39 +79,34 @@ function fetchAndParseCSV() {
     });
   }
 
-  /**
-   * Gets the 'CC' from email.
-   */
-  function getCCAsync() {
-    return new Promise((resolve, reject) => {
-      Office.context.mailbox.item.cc.getAsync((result) => {
-          if (result.status !== Office.AsyncResultStatus.Succeeded) {
-            console.log("Unable to get CC");
-            //reject("Failed to get CC. " + JSON.stringify(result.error));
-            cc = null;
-            resolve(cc);
-          } else {
-            resolve(result.value);
-          }
-        });
+/**
+ * Gets the 'CC' from email.
+ */
+function getCCAsync() {
+  return new Promise((resolve, reject) => {
+    Office.context.mailbox.item.cc.getAsync((result) => {
+      if (result.status !== Office.AsyncResultStatus.Succeeded) {
+        console.error("Failed to get 'CC' recipients. Error: " + JSON.stringify(result.error));
+        reject("Failed to get 'CC' recipients.");
+      } else {
+        resolve(result.value);
+      }
     });
-  }
+  });
+}
 
-  /**
-   * Gets the 'BCC' from email.
-   */
-  function getBCCAsync() {
-    return new Promise((resolve, reject) => {
-      Office.context.mailbox.item.bcc.getAsync((result) => {
-          if (result.status !== Office.AsyncResultStatus.Succeeded) {
-            console.log("Unable to get BCC");
-            //reject("Failed to get BCC. " + JSON.stringify(result.error));
-            bcc = null;
-            resolve(bcc);
-          } else {
-            resolve(result.value);
-          }
-        }
-      );
+/**
+ * Gets the 'BCC' from email.
+ */
+function getBCCAsync() {
+  return new Promise((resolve, reject) => {
+    Office.context.mailbox.item.bcc.getAsync((result) => {
+      if (result.status !== Office.AsyncResultStatus.Succeeded) {
+        console.error("Failed to get 'BCC' recipients. Error: " + JSON.stringify(result.error));
+        reject("Failed to get 'BCC' recipients.");
+      } else {
+        resolve(result.value);
+      }
     });
-  }
+  });
+}
