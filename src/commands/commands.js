@@ -29,6 +29,7 @@ function MessageSendVerificationHandler(event) {
       "To recipients: " +
         toRecipients.forEach((recipient) => console.log(recipient.emailAddress))
     );
+
     console.log("Sender:" + sender.emailAddress);
     console.log("CC: " + cc);
     console.log("BCC: " + bcc);
@@ -49,6 +50,8 @@ function MessageSendVerificationHandler(event) {
     }
 
     //CHANGE
+    //fix this first!!!
+    checkSenderClassification(sender, bannerMarkings.banner[0], event);
     checkRecipientClassification(toRecipients, bannerMarkings.banner[0], event);
     dissemination = bannerMarkings.banner[2];
     if (dissemination != null) {
@@ -114,7 +117,6 @@ function checkSenderClassification(
   event
 ) {
   console.log("checkSenderClassification method"); //debugging
-  //userMeetsSecurityClearance(filePath, documentClassification, email) {
   console.log("checkSenderClass - Sender: " + sender);
   console.log(
     "checkSenderClass - Sender: " + documentClassification
