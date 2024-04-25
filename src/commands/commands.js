@@ -43,11 +43,9 @@ function MessageSendVerificationHandler(event) {
     bannerNullHandler(banner, event);
     const bannerMarkings = parseBannerMarkings(banner);
     console.log(bannerMarkings.banner);
-    console.log("SEPARATE");
     console.log("dis the error message: [" + bannerMarkings.message + "]");
     if (bannerMarkings.message !== " " || bannerMarkings.message !== "") {
-      console.log("IS THIS WORKING")
-      //errorPopupHandler(bannerMarkings.message, event);
+      errorPopupHandler(bannerMarkings.message, event);
     }
 
 

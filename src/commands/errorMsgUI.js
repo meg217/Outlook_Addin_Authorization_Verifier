@@ -43,7 +43,6 @@ function bannerNullHandler(banner, event){
 //CHANGE:
 function errorPopupHandler(errorMsg, event) {
     console.log("error detected, handeling popup and setting allow event to false");
-    console.log("this is the err msg : '" + errorMsg + "'");
     event.completed(
     {
         allowEvent: false,
