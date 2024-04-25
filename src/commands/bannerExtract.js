@@ -549,7 +549,7 @@ function validateSCI(classification, sci, dissemination) {
      *
      */
     if (marking.match(/TK/gi)) {
-      if (classification.match(/C|CONFIDENTIAL|U|UNCLASSIFIED/gi)) {
+      if (classification.match(/^C|CONFIDENTIAL|^U|UNCLASSIFIED/gi)) {
         valid = 1;
         msg += "CANNOT USE TK with UNCLASSIFIED, CONFIDENTIAL. ";
       }
