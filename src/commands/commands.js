@@ -154,7 +154,7 @@ function MessageSendVerificationHandler(event) {
   });
   //./Promise 2
 
-  
+  //deleted otherwise will skip everything lol
   // console.log("reached here");
   //event.completed({ allowEvent: true });
 
