@@ -418,7 +418,7 @@ function convertCatToAbrev(sci, dissemination) {
     }
   }
   return {
-    classification: abbrevClassification,
+    //classification: abbrevClassification,
     sci: abbrevSCI,
     dissemination: abbrevDissemination,
   };
