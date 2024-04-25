@@ -13,7 +13,7 @@ function fetchAndParseCSV() {
         download: true,
         header: false,
         complete: (result) => {
-          console.log("Accounts CSV: " + result.data);
+          //console.log("Accounts CSV: " + result.data);
           //console.log("or maybe : " + result.data[0]);
           resolve(result.data);
         },
