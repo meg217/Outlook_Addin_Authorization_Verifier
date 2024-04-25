@@ -59,7 +59,7 @@ function MessageSendVerificationHandler(event) {
       console.log("CC check: " + ccCheck);
       console.log("BCC check: " + bccCheck);
     });
-    const message = "";
+    let message = "";
     if(!recipientCheck){
       message = "Recipient is NOT AUTHORIZED to view this email";
       errorPopupHandler(message, event);
