@@ -1,14 +1,19 @@
 
 // This function checks if the user's clearance meets requirements
 async function userMeetsSecurityClearance(filePath, documentClassification, email1) {
-    return new Promise(async (resolve, reject) => {
-        let accessGranted = false;
-        let email = email1.toLowerCase();
-        console.log("userMeetsSecurityClearance Function, checking for email: ", email);
+    return new Promise((resolve, reject) => {
+    let accessGranted = false;
+    let email = email1.toLowerCase();
+    console.log("userMeetsSecurityClearance Function, checking for email: ", email);
 
-        try {
-            const response = await fetch(filePath);
-            const csvData = await response.text();
+    // const timeout = setTimeout(() => {
+    //     reject(new Error('Timeout: Failed to fetch CSV within the specified time'));
+    // }, 2000);
+
+    fetch(filePath)
+        .then(response => response.text())
+        .then(csvData => {
+            // clearTimeout(timeout);
             const results = Papa.parse(csvData, { header: true }).data;
 
             let foundEmail = false;
@@ -31,13 +36,13 @@ async function userMeetsSecurityClearance(filePath, documentClassification, emai
             }
 
             resolve(accessGranted); 
-        } catch (error) {
+        })
+        .catch(error => {
             console.error("Error:", error);
             reject(error); 
-        }
+        });
     });
 }
-
 
 function canUserAccess(documentClassification, userClearance) {
     console.log("canUserAccess Function")
