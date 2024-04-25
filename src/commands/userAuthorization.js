@@ -1,6 +1,6 @@
 
 // This function checks if the user's clearance meets requirements
-async function userMeetsSecurityClearance(filePath, documentClassification, email1) {
+function userMeetsSecurityClearance(filePath, documentClassification, email1) {
     return new Promise((resolve, reject) => {
     let accessGranted = false;
     let email = email1.toLowerCase();
