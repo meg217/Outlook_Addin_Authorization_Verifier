@@ -70,12 +70,12 @@ function MessageSendVerificationHandler(event) {
 
 
     Promise.all([
-      checkRecipientClassification(sender, 'sender', bannerMarkings.banner[0]),
+      //checkRecipientClassification(sender, 'sender', bannerMarkings.banner[0]),
       checkRecipientClassification(to, 'to', bannerMarkings.banner[0]),
       checkRecipientClassification(cc, 'CC', bannerMarkings.banner[0]),
       checkRecipientClassification(bcc, 'BCC', bannerMarkings.banner[0])
-    ]).then(([senderCheck, recipientCheck, ccCheck, bccCheck]) => {
-      console.log("Sender check: " + senderCheck);
+    ]).then(([recipientCheck, ccCheck, bccCheck]) => {
+      //console.log("Sender check: " + senderCheck);
       console.log("Recipient check: " + recipientCheck);
       console.log("CC check: " + ccCheck);
       console.log("BCC check: " + bccCheck);
