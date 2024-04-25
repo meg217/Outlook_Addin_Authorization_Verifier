@@ -155,6 +155,8 @@ function MessageSendVerificationHandler(event) {
       }
     }
 
+    event.completed({ allowEvent: true });
+
 
 
   });
