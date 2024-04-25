@@ -74,9 +74,9 @@ function parseBannerMarkings(banner) {
   }
 
 
-  console.log("After regex class: " + Category_1);
-  console.log("After regex sci: " + Category_4);
-  console.log("After regex dissem: " + Category_7);
+  console.log("After reg class: " + Category_1);
+  console.log("After reg sci: " + Category_4);
+  console.log("After reg dissem: " + Category_7);
 
   const Together = [Category_1, Category_4, Category_7];
   console.log("AFTER Banner: " + banner);
