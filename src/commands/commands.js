@@ -61,6 +61,7 @@ function MessageSendVerificationHandler(event) {
     });
     let message = "";
     if(!recipientCheck){
+      console.log("recipient is false so should send message");
       message = "Recipient is NOT AUTHORIZED to view this email";
       errorPopupHandler(message, event);
     }
