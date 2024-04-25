@@ -73,6 +73,10 @@ function parseBannerMarkings(banner) {
     //console.log("second category returned null");
   }
 
+  console.log("After regex class: " + Category_1);
+  console.log("After regex sci: " + Category_4);
+  console.log("After regex dissem: " + Category_7);
+
   const Together = [Category_1, Category_4, Category_7];
   console.log("AFTER Banner: " + banner);
   console.log("TOGETHER: " + Together);
