@@ -1,6 +1,5 @@
 /*
- * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
- * See LICENSE in the project root for license information.
+ * OUTLOOK ADDIN TO VERIFY AUTHORIZATION OF USERS AGAINST BANNERS
  */
 
 var mailboxItem;
@@ -10,320 +9,265 @@ Office.initialize = function (reason) {
 };
 
 /**
- * Handles the OnMessageSend event.
- /**
- * Initializes all of the code.\
- * @param {*} event The Office event object
+ * Handles the OnMessageSend event. Heart of the code. 
+ * Takes in the onSend event.
  */
 function MessageSendVerificationHandler(event) {
-  //promise is to encapsulate all the async functions
+
+
+  //PROMISE HANDELERS FOR OUTLOOK ITEMS ////////////////////////////////////////
   Promise.all([
     getToRecipientsAsync(),
     getSenderAsync(),
     getBodyAsync(),
-    fetchAndParseCSV(),
     getCCAsync(),
     getBCCAsync(),
-  ]).then(([toRecipients, sender, body, fetchAndParseCSV, cc, bcc]) => {
-    console.log(
-      "To recipients: " +
-        toRecipients.forEach((recipient) => console.log(recipient.emailAddress))
-    );
-    console.log("Sender:" + sender.emailAddress);
-    console.log("CC: " + cc);
-    console.log("BCC: " + bcc);
-    console.log("Body:" + body);
+    fetchAndParseCSV(),
+  ]).then(([to, sender, body, cc, bcc]) => {
+    console.log("\nPROMISE HANDELERS FOR OUTLOOK ITEMS:\nRicipient: " +
+      to.map((recipient) => recipient.emailAddress + " (" + recipient.displayName + ")").join(", ") +
+      "\nCC recipients: " +
+      (cc ? cc.map((recipient) => recipient.emailAddress + " (" + recipient.displayName + ")").join(", ") : "None") +
+      "\nBCC recipients: " +
+      (bcc
+        ? bcc.map((recipient) => recipient.emailAddress + " (" + recipient.displayName + ")").join(", ")
+        : "None") +
+      "\nSender: " +
+      sender.displayName +
+      "\nBody: " +
+      body);
+
+
+    //BANNER HANDELERS ////////////////////////////////////////////////////////
+    console.log("BANNER HANDELERS\n");
     const banner = getBannerFromBody(body);
-
-    // Check if the banner is null error
     bannerNullHandler(banner, event);
-
-    //const messageBodyTest = "TOP SECRET//COMINT-GAMMA/TALENT KEYHOLE//ORIGINATOR CONTROLLED";
     const bannerMarkings = parseBannerMarkings(banner);
-    //CHANGE
     console.log(bannerMarkings.banner);
-
-    //CHANGE
-    if (bannerMarkings.message !== "") {
+    console.log("dis the error message: [" + bannerMarkings.message + "]");
+    if (bannerMarkings.message !== " " || bannerMarkings.message !== "") {
+      console.log("TESTING");
       errorPopupHandler(bannerMarkings.message, event);
     }
 
-    //CHANGE
-    checkRecipientClassification(toRecipients, bannerMarkings.banner[0], event);
+
+    //CHECK IF AUTHORIZED HANDELERS ////////////////////////////////////////////
+    console.log("\nIF AUTHORIZED HANDELERS\n");
+    Promise.all([
+      //checkRecipientClassification(sender, 'sender', bannerMarkings.banner[0]),
+      checkRecipientClassification(to, 'to', bannerMarkings.banner[0]),
+      checkRecipientClassification(cc, 'CC', bannerMarkings.banner[0]),
+      checkRecipientClassification(bcc, 'BCC', bannerMarkings.banner[0])
+    ]).then(([recipientCheck, ccCheck, bccCheck]) => {
+      let authChecksPassed = false;
+      let countryChecksPassed = false;
+
+      console.log("LOGGING AUTHORIZATION:");
+      console.log("Recipient check: " + recipientCheck);
+      console.log("CC check: " + ccCheck);
+      console.log("BCC check: " + bccCheck);
+      let message = "";
+      if (!recipientCheck) {
+        message = "Recipient is NOT AUTHORIZED to view this email";
+        errorPopupHandler(message, event);
+      } else if (!ccCheck) {
+        message = "CC'd user(s) is NOT AUTHORIZED to view this email";
+        errorPopupHandler(message, event);
+      } else if (!bccCheck) {
+        message = "BCC'd user(s) is NOT AUTHORIZED to view this email";
+        errorPopupHandler(message, event);
+      }else {
+        authChecksPassed = true;
+      }
+
+    
+
+    //CHECK FOR NOFORN DISSEMINATION HANDELERS ////////////////////////////////////////////
     dissemination = bannerMarkings.banner[2];
     if (dissemination != null) {
       let dissParts = dissemination.split("/");
       let dissPartsArray = [];
-
       for (let i = 0; i < dissParts.length; i++) {
         dissPartsArray.push(dissParts[i]);
       }
       for (let i = 0; i < dissPartsArray.length; i++) {
         if (dissPartsArray[i] === "NOFORN") {
+          console.log("\nCHECK FOR NOFORN DISSEMINATION HANDELERS\n");
           //NOFORNEncountered = true;
-          const Msgreturn = checkRecipientCountry(toRecipients, event);
-          console.log("Function checkRecipientCountry returned: " + Msgreturn);
+          Promise.all([
+            checkCountryForRecipients('to', to),
+            checkCountryForRecipients('CC', cc),
+            checkCountryForRecipients('BCC', bcc)
+          ]).then(([recipientCheck, ccCheck, bccCheck]) => {
+            console.log("LOGGING NOFORN AUTHORIZATION:");
+            console.log("To check: " + recipientCheck);
+            console.log("CC check: " + ccCheck);
+            console.log("BCC check: " + bccCheck);
+            let message = "";
+            if (!recipientCheck) {
+              message = "Recipient is a Foreign National and NOT AUTHORIZED to view this email";
+              errorPopupHandler(message, event);
+            } else if (!ccCheck) {
+              message = "CC'd user(s) is a Foreign National and NOT AUTHORIZED to view this email";
+              errorPopupHandler(message, event);
+            } else if (!bccCheck) {
+              message = "BCC'd user(s) is a Foreign National and NOT AUTHORIZED to view this email";
+              errorPopupHandler(message, event);
+            } else{
+              countryChecksPassed = true;
+            }
+
+            console.log("Authorization checks passed is: " + authChecksPassed);
+            console.log("Country checks passed is: " + countryChecksPassed);
+            if(countryChecksPassed && authChecksPassed){
+              console.log("allow event");
+              // event.completed({ allowEvent: true });
+            }
+          });
         }
+          //NOFORN not encountered so can proceed
+          //else if there is no noforn found can check for auth only ///////////////////////
+          //AUTH CHECKS PASSED THEN ALLOW EVENT ////////////////////////////////////////////
+          console.log("Authorization checks passed is : " + authChecksPassed);
+          if(authChecksPassed){
+            console.log("allow event");
+            // event.completed({ allowEvent: true });
+          }
+        }
+
+      } else{
+      //else if there is no noforn found can check for auth only ///////////////////////
+      //AUTH CHECKS PASSED THEN ALLOW EVENT ////////////////////////////////////////////
+      console.log("Authorization checks passed is : " + authChecksPassed);
+      if(authChecksPassed){
+        console.log("allow event");
+        // event.completed({ allowEvent: true });
       }
     }
+
+    // event.completed({ allowEvent: true });
+
+
+
   });
+  //./Promise 1
+  });
+  //./Promise 2
+
+  //deleted otherwise will skip everything lol
+  // console.log("reached here");
+  //event.completed({ allowEvent: true });
+
 }
 
-function fetchCSVData(url) {
-  return fetch(url).then((csvData) => parseCSV(csvData));
-}
 
 /**
- * sets session data
- * key and value parameters
+ * CHECKS THE CLASSIFICATION LEVEL OF A TO, CCs, OR BBCs.
+ * @param {array} recipients An array of recipients, CCs, or BCCs
+ * @param {String} recipientType The type of recipient ('to', 'cc', or 'bcc')
+ * @param {String} documentClassification The classification level of the email
+ * @returns {Promise<boolean>} Returns a promise resolving to true if all recipients are permitted to view the email
  */
-function _setSessionData(key, value) {
-  Office.context.mailbox.item.sessionData.setAsync(
-    key,
-    value.toString(),
-    function (asyncResult) {
-      // Handle success or error.
-      if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-        console.log(`sessionData.setAsync(${key}) to ${value} succeeded`);
-        if (value) {
-          _tagExternal(value);
+function checkRecipientClassification(recipients, recipientType, documentClassification) {
+  // console.log(`Checking ${recipientType} recipients classification`);
+  const csvFile ="https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
+  
+  return Promise.all(recipients.map((recipient) => {
+    const emailAddress = recipient.emailAddress;
+    // console.log(`${recipientType} Email Address: ${emailAddress}`);
+    if(!emailAddress){
+      // console.log("No recipients for: " + recipientType + " type returned " + recipients.emailAddress);
+      return true;
+    }
+    return userMeetsSecurityClearance(csvFile, documentClassification, emailAddress)
+      .then((isClearance) => {
+        if (!isClearance) {
+          console.log(`${emailAddress} is NOT AUTHORIZED to view this email`);
+          return false;
         } else {
-          _checkForExternal();
+          console.log(`${recipientType} is cleared`);
+          return true;
         }
-      } else {
-        console.error(
-          `Failed to set ${key} sessionData to ${value}. Error: ${JSON.stringify(
-            asyncResult.error
-          )}`
-        );
-        return;
-      }
-    }
-  );
-}
-
-/**
- * Checks the classification level of the recipients.
- * @param {array} sender The sender
- * @param {String} documentClassication The classication level of the email dictated by category 1 of banner
- * @returns {Promise<boolean>} Returns true the sender is permitted to view the information they are sending
- */
-function checkSenderClassification(
-  sender,
-  documentClassification,
-  event
-) {
-  console.log("checkSenderClassification method"); //debugging
-  //userMeetsSecurityClearance(filePath, documentClassification, email) {
-  console.log("checkSenderClass - Sender: " + sender);
-  console.log(
-    "checkSenderClass - Sender: " + documentClassification
-  );
-
-  return new Promise((resolve, reject) => {
-    let allowEvent = true;
-    const csvFile =
-      "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
-
-    // If a single recipient is not permitted, the entire send fails
-    for (const sender of sender) {
-      const emailAddress = sender.emailAddress;
-      console.log("Sender Email Address: " + emailAddress);
-      userMeetsSecurityClearance(csvFile, documentClassification, emailAddress)
-        .then((isClearance) => {
-          console.log("is clearence returned: " + isClearance);
-          if (!isClearance) {
-            console.log(emailAddress + " is not authorized to view this email");
-            event.completed({
-              allowEvent: false,
-              cancelLabel: "Ok",
-              commandId: "msgComposeOpenPaneButton",
-              contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
-              errorMessage: "Sender is NOT AUTHORIZED to send information contained in this email.",
-              sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser,
-            });
-          } else {
-            console.log("Sender is Cleared");
-            event.completed({
-              allowEvent: true,
-            });
-          }
-        })
-        .catch((error) => {
-          console.error("Error while checking isClearance: ", error);
-        });
-    }
-    resolve(allowEvent);
+      })
+      .catch((error) => {
+        console.error(`Error while checking ${recipientType} clearance: `, error);
+        return false;
+      });
+  })).then((results) => {
+    return results.every((result) => result); // Return true if all recipients are cleared
   });
 }
 
+
 /**
- * Checks the classification level of the recipients.
- * @param {array} recipients An array of recipients
- * @param {String} documentClassication The classication level of the email dictated by category 1 of banner
- * @returns {Promise<boolean>} Returns true if all recipients are permitted to view the contents of the email
+ * CHECKS THE NOFORN STATUS OF A TO, CCs, OR BBCs.
+ * @param {array} recipients An array of recipients, CCs, or BCCs
+ * @param {String} recipientType The type of recipient ('to', 'cc', or 'bcc')
+ * @returns {Promise<boolean>} Returns a promise resolving to true if all recipients are permitted to view the email
  */
-function checkRecipientClassification(
-  recipients,
-  documentClassification,
-  event
-) {
-  console.log("checkRecipientClassification method"); //debugging
-  //userMeetsSecurityClearance(filePath, documentClassification, email) {
-  console.log("checkRecipientClass - Recipient: " + recipients);
-  console.log(
-    "checkRecipientClass - Classification: " + documentClassification
-  );
+function checkCountryForRecipients(recipientType, recipients) {
+  // console.log(`Checking ${recipientType} country`);
 
-  return new Promise((resolve, reject) => {
-    let allowEvent = true;
-    //KEVIN - Changed "./assets.users.csv" to "./assets.accounts.csv"
-    const csvFile =
-      "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
+  const csvFile =
+    "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
 
-    // If a single recipient is not permitted, the entire send fails
-    for (const recipient of recipients) {
-      const emailAddress = recipient.emailAddress;
-      console.log("Recipient Email Address: " + emailAddress);
-      userMeetsSecurityClearance(csvFile, documentClassification, emailAddress)
-        .then((isClearance) => {
-          console.log("is clearence returned: " + isClearance);
-          if (!isClearance) {
-            console.log(emailAddress + " is not authorized to view this email");
-            event.completed({
-              allowEvent: false,
-              cancelLabel: "Ok",
-              commandId: "msgComposeOpenPaneButton",
-              contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
-              errorMessage: "Recipient is NOT AUTHORIZED to see this email.",
-              sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser,
-            });
-          } else {
-            console.log("Recipient is Cleared");
-            event.completed({
-              allowEvent: true,
-            });
-          }
-        })
-        .catch((error) => {
-          console.error("Error while checking isClearance: ", error);
-        });
-    }
-    resolve(allowEvent);
+  return Promise.all(recipients.map((recipient) => {
+    const emailAddress = recipient.emailAddress;
+    // console.log(`${recipientType} Email Address: ${emailAddress}`);
+    return check_NOFORN_Access(csvFile, emailAddress)
+      .then((isNOFORN) => {
+        // console.log(`isNOFORN for ${recipientType} ${emailAddress} returned: ${isNOFORN}`);
+        if (!isNOFORN) {
+          console.log(`${emailAddress} is a Foreign National and NOT AUTHORIZED to view this email`);
+          return false;
+        } else {
+          console.log(`${recipientType} user is Cleared as USA`);
+          return true;
+        }
+      })
+      .catch((error) => {
+        console.error(`Error while checking isNOFORN for ${recipientType} ${emailAddress}: `, error);
+        return false;
+      });
+  })).then((results) => {
+    return results.every((result) => result); // Return true if all recipients are cleared
   });
 }
 
-function checkRecipientCountry(recipients, event) {
-  console.log("checkRecipientCountry Function");
 
-  return new Promise((resolve, reject) => {
-    let allowEvent = true;
-    //KEVIN - Changed "./assets.users.csv" to "./assets.accounts.csv"
-    const csvFile =
-      "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
 
-    // If a single recipient is not permitted, the entire send fails
-    for (const recipient of recipients) {
-      const emailAddress = recipient.emailAddress;
-      console.log("Recipient Email Address: " + emailAddress);
-      check_NOFORN_Access(csvFile, emailAddress)
-        .then((isNOFORN) => {
-          console.log("isNOFORN returned: " + isNOFORN);
-          if (!isNOFORN) {
-            console.log(
-              emailAddress +
-                " is a Foreign National and not authorized to view this email"
-            );
-            event.completed({
-              allowEvent: false,
-              cancelLabel: "Ok",
-              commandId: "msgComposeOpenPaneButton",
-              contextData: JSON.stringify({ a: "aValue", b: "bValue" }),
-              errorMessage:
-                "Recipient is NOT AUTHORIZED to see this email: NOT RELEASABLE TO FOREIGN NATIONALS",
-              sendModeOverride: Office.MailboxEnums.SendModeOverride.PromptUser,
-            });
-          } else {
-            console.log("Recipient is Cleared as USA");
-            event.completed({
-              allowEvent: true,
-            });
-          }
-        })
-        .catch((error) => {
-          console.error("Error while checking isNOFORN: ", error);
-        });
-    }
-    resolve(allowEvent);
-  });
-}
-
-// Old Method
-/**
-   * return new Promise((resolve, reject) => {
-    let allowEvent = true;
-
-    recipients.forEach(function (recipient) {
-      const emailAddress = recipient.emailAddress;
-      console.log(emailAddress);
-
-      // Check if recipient is unauthorized
-      if (isUnauthorized(emailAddress)) {
-        console.log("isUnauthorized returned: " + isUnauthorized(emailAddress));
-        allowEvent = false;
-      }
-    });
-
-    console.log("event should proceed since isUnauthorized returned false");
-
-    // Allow event to proceed if no unauthorized recipient found
-    resolve(allowEvent);
-  });*/
-
-/**
- * Determines if the recipient is unauthorized.
- * @param {string} emailAddress The recipient's email address
- * @returns {boolean} True if unauthorized, false otherwise
- */
-function isUnauthorized(emailAddress) {
-  // Check if the recipient's email address matches the unauthorized email address
-  return emailAddress === "meaganbmueller@gmail.com";
-}
-
-/**
- * Retrieves the clearance level based on the recipient's email address.
- * @param {string} emailAddress The recipient's email address
- * @returns {string|null} The clearance level required or null if no clearance is needed
- */
-function getClearanceLevel(emailAddress) {
-  // Perform your logic to determine the clearance level based on the recipient's email address
-  // For demonstration, let's assume 'meaganbmueller@gmail.com' requires a 'Classified' clearance
-  if (emailAddress === "meaganbmueller@gmail.com") {
-    return "Classified";
+  function fetchCSVData(url) {
+    return fetch(url).then((csvData) => parseCSV(csvData));
   }
-  // If the recipient doesn't require any special clearance, return null
-  return null;
-}
-
-//  function _setSessionData(key, value) {
-//   Office.context.mailbox.item.sessionData.setAsync(
-//     key,
-//     value.toString(),
-//     function(asyncResult) {
-//       // Handle success or error.
-//       if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-//       console.log(`sessionData.setAsync(${key}) to ${value} succeeded`);
-//       if (value) {
-//         _tagExternal(value);
-//       } else {
-//         _checkForExternal();
-//       }
-//     } else {
-//       console.error(`Failed to set ${key} sessionData to ${value}. Error: ${JSON.stringify(asyncResult.error)}`);
-//       return;
-//     }
-//   });
-// }
+  
+  /**
+   * sets session data
+   * key and value parameters
+   */
+  function _setSessionData(key, value) {
+    Office.context.mailbox.item.sessionData.setAsync(
+      key,
+      value.toString(),
+      function (asyncResult) {
+        // Handle success or error.
+        if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+          console.log(`sessionData.setAsync(${key}) to ${value} succeeded`);
+          if (value) {
+            _tagExternal(value);
+          } else {
+            _checkForExternal();
+          }
+        } else {
+          console.error(
+            `Failed to set ${key} sessionData to ${value}. Error: ${JSON.stringify(
+              asyncResult.error
+            )}`
+          );
+          return;
+        }
+      }
+    );
+  }
 
 // 1st parameter: FunctionName of LaunchEvent in the manifest; 2nd parameter: Its implementation in this .js file.
 Office.actions.associate(
