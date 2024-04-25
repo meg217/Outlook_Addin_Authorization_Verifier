@@ -6,14 +6,14 @@ async function userMeetsSecurityClearance(filePath, documentClassification, emai
     let email = email1.toLowerCase();
     console.log("userMeetsSecurityClearance Function, checking for email: ", email);
 
-    const timeout = setTimeout(() => {
-        reject(new Error('Timeout: Failed to fetch CSV within the specified time'));
-    }, 2000);
+    // const timeout = setTimeout(() => {
+    //     reject(new Error('Timeout: Failed to fetch CSV within the specified time'));
+    // }, 2000);
 
     fetch(filePath)
         .then(response => response.text())
         .then(csvData => {
-            clearTimeout(timeout);
+            // clearTimeout(timeout);
             const results = Papa.parse(csvData, { header: true }).data;
 
             let foundEmail = false;
