@@ -82,7 +82,6 @@ function MessageSendVerificationHandler(event) {
     //CHECK FOR NOFORN DISSEMINATION HANDELERS ////////////////////////////////////////////
     dissemination = bannerMarkings.banner[2];
     if (dissemination != null) {
-      console.log("\nCHECK FOR NOFORN DISSEMINATION HANDELERS\n");
       let dissParts = dissemination.split("/");
       let dissPartsArray = [];
       for (let i = 0; i < dissParts.length; i++) {
@@ -90,6 +89,7 @@ function MessageSendVerificationHandler(event) {
       }
       for (let i = 0; i < dissPartsArray.length; i++) {
         if (dissPartsArray[i] === "NOFORN") {
+          console.log("\nCHECK FOR NOFORN DISSEMINATION HANDELERS\n");
           //NOFORNEncountered = true;
           Promise.all([
             checkCountryForRecipients('to', to),
@@ -125,8 +125,8 @@ function MessageSendVerificationHandler(event) {
             }
           });
         }
-        //NOFORN not encountered so can proceed
-        else{
+        }
+                //NOFORN not encountered so can proceed
           //else if there is no noforn found can check for auth only ///////////////////////
           //AUTH CHECKS PASSED THEN ALLOW EVENT ////////////////////////////////////////////
           console.log("Authorization checks passed is: " + authChecksPassed);
@@ -137,10 +137,18 @@ function MessageSendVerificationHandler(event) {
               }
               );
           }
-        }
 
       }
-    }
+      //else if there is no noforn found can check for auth only ///////////////////////
+      //AUTH CHECKS PASSED THEN ALLOW EVENT ////////////////////////////////////////////
+      console.log("Authorization checks passed is: " + authChecksPassed);
+      if(authChecksPassed){
+        event.completed(
+          {
+              allowEvent: true
+          }
+          );
+      }
 
 
 
