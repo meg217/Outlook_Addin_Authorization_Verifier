@@ -154,7 +154,7 @@ function MessageSendVerificationHandler(event) {
   });
   //./Promise 2
   console.log("reached here");
-  event.completed({ allowEvent: true });
+  //event.completed({ allowEvent: true });
 
 }
 
