@@ -43,7 +43,7 @@ function MessageSendVerificationHandler(event) {
     bannerNullHandler(banner, event);
     const bannerMarkings = parseBannerMarkings(banner);
     console.log(bannerMarkings.banner);
-    if (bannerMarkings.message !== "") {
+    if (bannerMarkings.message != null) {
       errorPopupHandler(bannerMarkings.message, event);
     }
 
