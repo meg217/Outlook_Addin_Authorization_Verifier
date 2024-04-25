@@ -212,8 +212,6 @@ function convertCatToAbrev(sci, dissemination) {
       } else if (sci.startsWith("COMINT-GAMMA")) {
         abbrevSCI = sci.replace("COMINT", "SI");
         abbrevSCI = sci.replace("GAMMA", "G");
-      } else if (sci === "COMINT-GAMMA" || sci === "SI-G"){
-        abbrevSCI = "SI-G"
       } else if (/^COMINT-ECI [A-Z]+$/.test(sci)) {
         abbrevSCI = sci.replace("COMINT", "SI");
       } else if (/^COMINT-GAMMA-ECI [A-Z]+$/.test(sci)) {
