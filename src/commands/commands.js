@@ -74,6 +74,7 @@ function MessageSendVerificationHandler(event) {
     
 
     //CHECK FOR NOFORN DISSEMINATION ////////////////////////////////////////////
+    console.log("CHECK FOR NOFORN DISSEMINATION\n");
     dissemination = bannerMarkings.banner[2];
     if (dissemination != null) {
       let dissParts = dissemination.split("/");
@@ -85,9 +86,9 @@ function MessageSendVerificationHandler(event) {
         if (dissPartsArray[i] === "NOFORN") {
           //NOFORNEncountered = true;
           Promise.all([
-            checkCountryForRecipients('to', to, event),
-            checkCountryForRecipients('CC', cc, event),
-            checkCountryForRecipients('BCC', bcc, event)
+            checkCountryForRecipients('to', to),
+            checkCountryForRecipients('CC', cc),
+            checkCountryForRecipients('BCC', bcc)
           ]).then(([recipientCheck, ccCheck, bccCheck]) => {
             console.log("To check: " + recipientCheck);
             console.log("CC check: " + ccCheck);
@@ -147,10 +148,9 @@ function checkRecipientClassification(recipients, recipientType, documentClassif
  * CHECKS THE NOFORN STATUS OF A TO, CCs, OR BBCs.
  * @param {array} recipients An array of recipients, CCs, or BCCs
  * @param {String} recipientType The type of recipient ('to', 'cc', or 'bcc')
- * @param {String} documentClassification The classification level of the email
  * @returns {Promise<boolean>} Returns a promise resolving to true if all recipients are permitted to view the email
  */
-function checkCountryForRecipients(recipientType, recipients, event) {
+function checkCountryForRecipients(recipientType, recipients) {
   console.log(`Checking ${recipientType} country`);
 
   const csvFile =
