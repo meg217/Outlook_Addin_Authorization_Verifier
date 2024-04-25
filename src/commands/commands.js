@@ -139,6 +139,7 @@ function MessageSendVerificationHandler(event) {
           }
 
       }
+      else{
       //else if there is no noforn found can check for auth only ///////////////////////
       //AUTH CHECKS PASSED THEN ALLOW EVENT ////////////////////////////////////////////
       console.log("Authorization checks passed is: " + authChecksPassed);
@@ -149,6 +150,7 @@ function MessageSendVerificationHandler(event) {
           }
           );
       }
+    }
 
 
 
