@@ -120,11 +120,8 @@ function MessageSendVerificationHandler(event) {
             console.log("Authorization checks passed is: " + authChecksPassed);
             console.log("Country checks passed is: " + countryChecksPassed);
             if(countryChecksPassed && authChecksPassed){
-              event.completed(
-                {
-                  allowEvent: true,
-                }
-                );
+              console.log("allow event");
+              event.completed({ allowEvent: true });
             }
           });
         }
@@ -133,25 +130,18 @@ function MessageSendVerificationHandler(event) {
           //AUTH CHECKS PASSED THEN ALLOW EVENT ////////////////////////////////////////////
           console.log("Authorization checks passed is: " + authChecksPassed);
           if(authChecksPassed){
-            event.completed(
-              {
-                allowEvent: true,
-              }
-              );
+            console.log("allow event");
+            event.completed({ allowEvent: true });
           }
         }
 
-      }
-      else{
+      } else{
       //else if there is no noforn found can check for auth only ///////////////////////
       //AUTH CHECKS PASSED THEN ALLOW EVENT ////////////////////////////////////////////
       console.log("Authorization checks passed is: " + authChecksPassed);
       if(authChecksPassed){
-        event.completed(
-          {
-          allowEvent: true,
-          }
-          );
+        console.log("allow event");
+        event.completed({ allowEvent: true });
       }
     }
 
