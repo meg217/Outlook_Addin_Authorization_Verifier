@@ -58,6 +58,7 @@ function MessageSendVerificationHandler(event) {
     ]).then(([recipientCheck, ccCheck, bccCheck]) => {
       let authChecksPassed = false;
       let countryChecksPassed = false;
+      let countryCheckNeeded = false;
 
       console.log("LOGGING AUTHORIZATION:");
       console.log("Recipient check: " + recipientCheck);
@@ -77,82 +78,53 @@ function MessageSendVerificationHandler(event) {
         authChecksPassed = true;
       }
 
-    
+    // CHECK IF NOFORN FOUND IN BANNER
+      const dissemination = bannerMarkings.banner[2];
+      if (dissemination != null && dissemination.includes("NOFORN")) {
+        console.log("will need to check country because dissemination is NOFORN");
+        countryCheckNeeded = true;
+      }
 
     //CHECK FOR NOFORN DISSEMINATION HANDELERS ////////////////////////////////////////////
-    dissemination = bannerMarkings.banner[2];
-    if (dissemination != null) {
-      let dissParts = dissemination.split("/");
-      let dissPartsArray = [];
-      for (let i = 0; i < dissParts.length; i++) {
-        dissPartsArray.push(dissParts[i]);
-      }
-      for (let i = 0; i < dissPartsArray.length; i++) {
-        if (dissPartsArray[i] === "NOFORN") {
-          console.log("\nCHECK FOR NOFORN DISSEMINATION HANDELERS\n");
-          //NOFORNEncountered = true;
-          Promise.all([
-            checkCountryForRecipients('to', to),
-            checkCountryForRecipients('CC', cc),
-            checkCountryForRecipients('BCC', bcc)
-          ]).then(([recipientCheck, ccCheck, bccCheck]) => {
-            console.log("LOGGING NOFORN AUTHORIZATION:");
-            console.log("To check: " + recipientCheck);
-            console.log("CC check: " + ccCheck);
-            console.log("BCC check: " + bccCheck);
-            let message = "";
-            if (!recipientCheck) {
-              message = "Recipient is a Foreign National and NOT AUTHORIZED to view this email";
-              errorPopupHandler(message, event);
-            } else if (!ccCheck) {
-              message = "CC'd user(s) is a Foreign National and NOT AUTHORIZED to view this email";
-              errorPopupHandler(message, event);
-            } else if (!bccCheck) {
-              message = "BCC'd user(s) is a Foreign National and NOT AUTHORIZED to view this email";
-              errorPopupHandler(message, event);
-            } else{
-              countryChecksPassed = true;
-            }
-
-            console.log("Authorization checks passed is: " + authChecksPassed);
-            console.log("Country checks passed is: " + countryChecksPassed);
-            if(countryChecksPassed && authChecksPassed){
-              event.completed(
-                {
-                    allowEvent: true
-                }
-                );
-            }
-          });
+    if (countryCheckNeeded){
+        console.log("\nCHECK FOR NOFORN DISSEMINATION HANDELERS\n");
+        Promise.all([
+          checkCountryForRecipients('to', to),
+          checkCountryForRecipients('CC', cc),
+          checkCountryForRecipients('BCC', bcc)
+        ]).then(([recipientCheck, ccCheck, bccCheck]) => {
+          console.log("LOGGING NOFORN AUTHORIZATION:");
+          console.log("To check: " + recipientCheck);
+          console.log("CC check: " + ccCheck);
+          console.log("BCC check: " + bccCheck);
+          let message = "";
+          if (!recipientCheck) {
+            message = "Recipient is a Foreign National and NOT AUTHORIZED to view this email";
+            errorPopupHandler(message, event);
+          } else if (!ccCheck) {
+            message = "CC'd user(s) is a Foreign National and NOT AUTHORIZED to view this email";
+            errorPopupHandler(message, event);
+          } else if (!bccCheck) {
+            message = "BCC'd user(s) is a Foreign National and NOT AUTHORIZED to view this email";
+            errorPopupHandler(message, event);
+          } else{
+            countryChecksPassed = true;
+          }
+          checkAndComplete();
+        });
+        //ELSE COUNTRY CHECK NOT NEEDED
+        } else{
+          checkAndComplete();
         }
-        }
-                //NOFORN not encountered so can proceed
-          //else if there is no noforn found can check for auth only ///////////////////////
-          //AUTH CHECKS PASSED THEN ALLOW EVENT ////////////////////////////////////////////
+        function checkAndComplete() {
           console.log("Authorization checks passed is: " + authChecksPassed);
-          if(authChecksPassed){
-            event.completed(
-              {
-                  allowEvent: true
-              }
-              );
-          }
-
-      }
-      else{
-      //else if there is no noforn found can check for auth only ///////////////////////
-      //AUTH CHECKS PASSED THEN ALLOW EVENT ////////////////////////////////////////////
-      console.log("Authorization checks passed is: " + authChecksPassed);
-      if(authChecksPassed){
-        event.completed(
-          {
+          console.log("Country checks passed is: " + countryChecksPassed);
+          if (authChecksPassed && (!countryCheckNeeded || countryChecksPassed)) {
+            event.completed({
               allowEvent: true
+            });
           }
-          );
-      }
-    }
-
-
+        }
 
   });
   //./Promise 1
