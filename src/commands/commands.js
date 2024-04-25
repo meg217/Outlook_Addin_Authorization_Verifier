@@ -207,6 +207,7 @@ function checkRecipientClassification(recipients, recipientType, documentClassif
   if(!recipients || typeof recipients.emailAddress == "undefined"){
     console.log("RETURNED UNDEFINED FOR: " + recipientType);
     return false;
+    // return Promise.resolve(true);
   }
   
   return Promise.all(recipients.map((recipient) => {
