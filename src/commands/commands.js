@@ -44,7 +44,6 @@ function MessageSendVerificationHandler(event) {
     const bannerMarkings = parseBannerMarkings(banner);
     console.log(bannerMarkings.banner);
     if (bannerMarkings.message != " " || bannerMarkings.message != "") {
-      console.log("This is the err msg:" + bannerMarkings.message)
       errorPopupHandler(bannerMarkings.message, event);
     }
 
