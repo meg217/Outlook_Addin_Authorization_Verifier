@@ -73,12 +73,20 @@ function parseBannerMarkings(banner) {
     //console.log("second category returned null");
   }
 
+  console.log("After regex class: " + Category_1);
+  console.log("After regex sci: " + Category_4);
+  console.log("After regex dissem: " + Category_7);
+
   const Together = [Category_1, Category_4, Category_7];
   console.log("AFTER Banner: " + banner);
   console.log("TOGETHER: " + Together);
 
   // if you want to use whats returned from the function you have to do catAbbreviations.classification, etc.
   let catAbbreviations = convertCatToAbrev(Category_1, Category_4, Category_7);
+  console.log("Abbreviated classification: " + catAbbreviations.classification);
+  console.log("Abbreviated sci: " + catAbbreviations.sci);
+  console.log("Abbreviated dissemination: " + catAbbreviations.dissemination);
+
   //CHANGE
   //KEVIN - If dissem is null then returns "" err msg from checkdissem func. If there is an error with this later on, then maybe err handle before function is called if there is no dissem
   let errMsg = checkDisseminations(
