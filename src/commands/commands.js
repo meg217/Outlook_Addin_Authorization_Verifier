@@ -13,9 +13,6 @@ Office.initialize = function (reason) {
  * Takes in the onSend event.
  */
 function MessageSendVerificationHandler(event) {
-  //will determine at end if all checks were passed
-  let authChecksPassed = false;
-  let countryChecksPassed = false;
 
 
   //PROMISE HANDELERS FOR OUTLOOK ITEMS ////////////////////////////////////////
@@ -59,6 +56,9 @@ function MessageSendVerificationHandler(event) {
       checkRecipientClassification(cc, 'CC', bannerMarkings.banner[0]),
       checkRecipientClassification(bcc, 'BCC', bannerMarkings.banner[0])
     ]).then(([recipientCheck, ccCheck, bccCheck]) => {
+      let authChecksPassed = false;
+      let countryChecksPassed = false;
+
       console.log("LOGGING AUTHORIZATION:");
       console.log("Recipient check: " + recipientCheck);
       console.log("CC check: " + ccCheck);
@@ -77,7 +77,6 @@ function MessageSendVerificationHandler(event) {
         authChecksPassed = true;
       }
 
-    });
     
 
     //CHECK FOR NOFORN DISSEMINATION HANDELERS ////////////////////////////////////////////
@@ -114,19 +113,38 @@ function MessageSendVerificationHandler(event) {
             } else{
               countryChecksPassed = true;
             }
+
+            console.log("Authorization checks passed is: " + authChecksPassed);
+            console.log("Country checks passed is: " + countryChecksPassed);
+            if(countryChecksPassed && authChecksPassed){
+              event.completed(
+                {
+                    allowEvent: true
+                }
+                );
+            }
           });
         }
       }
     }
 
-    //ALL CHECKS PASSED THEN ALLOW EVENT ////////////////////////////////////////////
+    //AUTH CHECKS PASSED THEN ALLOW EVENT ////////////////////////////////////////////
     console.log("Authorization checks passed is: " + authChecksPassed);
-    console.log("Country checks passed is: " + countryChecksPassed);
-
+    if(authChecksPassed){
+      event.completed(
+        {
+            allowEvent: true
+        }
+        );
+    }
 
 
 
   });
+  //./Promise 1
+  });
+  //./Promise 2
+
 }
 
 
