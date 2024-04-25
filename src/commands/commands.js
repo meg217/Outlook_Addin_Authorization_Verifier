@@ -122,7 +122,7 @@ function MessageSendVerificationHandler(event) {
             if(countryChecksPassed && authChecksPassed){
               event.completed(
                 {
-                    allowEvent: true
+                  allowEvent: true,
                 }
                 );
             }
@@ -135,7 +135,7 @@ function MessageSendVerificationHandler(event) {
           if(authChecksPassed){
             event.completed(
               {
-                  allowEvent: true
+                allowEvent: true,
               }
               );
           }
@@ -149,7 +149,7 @@ function MessageSendVerificationHandler(event) {
       if(authChecksPassed){
         event.completed(
           {
-              allowEvent: true
+          allowEvent: true,
           }
           );
       }
