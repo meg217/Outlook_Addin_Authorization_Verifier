@@ -115,6 +115,7 @@ function MessageSendVerificationHandler(event) {
         });
         //ELSE COUNTRY CHECK NOT NEEDED
         } else{
+          countryCheckNeeded = false;
           checkAndComplete();
         }
         function checkAndComplete() {
