@@ -120,7 +120,7 @@ function MessageSendVerificationHandler(event) {
             console.log("Authorization checks passed is: " + authChecksPassed);
             console.log("Country checks passed is: " + countryChecksPassed);
             if(countryChecksPassed && authChecksPassed){
-              console.log("allow event");
+              console.log("allow event, test1");
               event.completed({ allowEvent: true });
             }
           });
