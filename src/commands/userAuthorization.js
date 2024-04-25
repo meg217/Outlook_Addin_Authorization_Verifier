@@ -1,17 +1,19 @@
-//import * as fs from 'node:fs/promises';
-//const csv = require('csv-parser');
-//async and promise both dont seem to work, need to maybe make promise in
-//with the rest of the promises, function times out with both promise and async
+
 // This function checks if the user's clearance meets requirements
-function userMeetsSecurityClearance(filePath, documentClassification, email1) {
+async function userMeetsSecurityClearance(filePath, documentClassification, email1) {
     return new Promise((resolve, reject) => {
     let accessGranted = false;
     let email = email1.toLowerCase();
     console.log("userMeetsSecurityClearance Function, checking for email: ", email);
 
+    const timeout = setTimeout(() => {
+        reject(new Error('Timeout: Failed to fetch CSV within the specified time'));
+    }, 2000);
+
     fetch(filePath)
         .then(response => response.text())
         .then(csvData => {
+            clearTimeout(timeout);
             const results = Papa.parse(csvData, { header: true }).data;
 
             let foundEmail = false;
