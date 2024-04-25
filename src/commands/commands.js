@@ -125,20 +125,22 @@ function MessageSendVerificationHandler(event) {
             }
           });
         }
+        //NOFORN not encountered so can proceed
+        else{
+          //else if there is no noforn found can check for auth only ///////////////////////
+          //AUTH CHECKS PASSED THEN ALLOW EVENT ////////////////////////////////////////////
+          console.log("Authorization checks passed is: " + authChecksPassed);
+          if(authChecksPassed){
+            event.completed(
+              {
+                  allowEvent: true
+              }
+              );
+          }
+        }
+
       }
     }
-    else{
-    //else if there is no noforn found can check for auth only ///////////////////////
-    //AUTH CHECKS PASSED THEN ALLOW EVENT ////////////////////////////////////////////
-    console.log("Authorization checks passed is: " + authChecksPassed);
-    if(authChecksPassed){
-      event.completed(
-        {
-            allowEvent: true
-        }
-        );
-    }
-  }
 
 
 
