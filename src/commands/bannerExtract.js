@@ -87,22 +87,21 @@ function parseBannerMarkings(banner) {
   console.log("TOGETHER: " + Together);
 
   // if you want to use whats returned from the function you have to do catAbbreviations.classification, etc.
-  let catAbbreviations = convertCatToAbrev(Category_1, Category_4, Category_7);
-  console.log("Abbreviated classification: " + catAbbreviations.classification);
+  let catAbbreviations = convertCatToAbrev(Category_4, Category_7);
   console.log("Abbreviated sci: " + catAbbreviations.sci);
   console.log("Abbreviated dissemination: " + catAbbreviations.dissemination);
 
   //CHANGE
   //KEVIN - If dissem is null then returns "" err msg from checkdissem func. If there is an error with this later on, then maybe err handle before function is called if there is no dissem
   let errMsg = checkDisseminations(
-    catAbbreviations.classification,
+    Category_1,
     catAbbreviations.dissemination
   );
   //add Zach's stuff after testing
   let val;
   if (Category_4 !== null) {
     val = validateSCI(
-      catAbbreviations.classification,
+      Category_1,
       catAbbreviations.sci,
       catAbbreviations.dissemination
     );
@@ -160,23 +159,23 @@ function Category(category, regex, categoryNum) {
  * returns a true or false value depending on if its valid or not
  * @param {string} banner
  */
-function convertCatToAbrev(classification, sci, dissemination) {
-  let abbrevClassification = "";
+function convertCatToAbrev(sci, dissemination) {
+  //let abbrevClassification = "";
   let abbrevSCI = "";
   let abbrevDissemination = "";
 
   // Abbreviate classification
-  if (classification != null) {
-    if (classification === "TOP SECRET" || classification === "TS") {
-      abbrevClassification = "TOP SECRET";
-    } else if (classification === "SECRET" || classification === "S") {
-      abbrevClassification = "SECRET";
-    } else if (classification === "CONFIDENTIAL" || classification === "C") {
-      abbrevClassification = "CONFIDENTIAL";
-    } else if (classification === "UNCLASSIFIED" || classification === "U") {
-      abbrevClassification = "UNCLASSIFIED";
-    }
-  }
+  // if (classification != null) {
+  //   if (classification === "TOP SECRET" || classification === "TS") {
+  //     abbrevClassification = "TOP SECRET";
+  //   } else if (classification === "SECRET" || classification === "S") {
+  //     abbrevClassification = "SECRET";
+  //   } else if (classification === "CONFIDENTIAL" || classification === "C") {
+  //     abbrevClassification = "CONFIDENTIAL";
+  //   } else if (classification === "UNCLASSIFIED" || classification === "U") {
+  //     abbrevClassification = "UNCLASSIFIED";
+  //   }
+  // }
 
   // Abbreviate SCI
   if (sci != null) {
