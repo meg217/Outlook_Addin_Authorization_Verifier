@@ -153,6 +153,7 @@ function MessageSendVerificationHandler(event) {
   //./Promise 1
   });
   //./Promise 2
+  console.log("reached here");
   event.completed({ allowEvent: true });
 
 }
