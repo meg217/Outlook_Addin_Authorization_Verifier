@@ -22,6 +22,7 @@ function MessageSendVerificationHandler(event) {
     getBodyAsync(),
     getCCAsync(),
     getBCCAsync(),
+    fetchAndParseCSV(),
   ]).then(([to, sender, body, cc, bcc]) => {
     console.log("\nPROMISE HANDELERS FOR OUTLOOK ITEMS:\nRicipient: " +
       to.map((recipient) => recipient.emailAddress + " (" + recipient.displayName + ")").join(", ") +
