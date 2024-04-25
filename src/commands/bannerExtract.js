@@ -618,7 +618,7 @@ function checkDisseminations(classification, dissemination) {
       //EYES ONLY: can only be used with TOP SECRET, SECRET, or CONFIDENTIAL.
       //Cannot be used with NOFORN or REL TO. Can be used wth RELIDO.
       else if (dissPartsArray[i].includes("EYES ONLY")) {
-        if (dissPartsArray[i].match(/[A-Z]{3}\sEYES ONLY/g)) {
+        if (dissPartsArray[i].match(/(?:[A-Z]{3}(?:\/)?)+ EYES ONLY/g)) {
           EYESONLYEncountered = true;
         } else {
           errorMsg = "Wrong formatting of EYES ONLY.";
@@ -635,7 +635,7 @@ function checkDisseminations(classification, dissemination) {
       //AUTHORIZED FOR RELEASE TO (REL TO): can only be used with TOP SECRET, SECRET, or CONFIDENTIAL.
       //May be used with RELIDO. Cannot be used with NOFORN or EYES ONLY.
       else if (dissPartsArray[i].includes("REL TO")) {
-        if (dissPartsArray[i].match(/REL TO\s[A-Z]{3}/g)) {
+        if (dissPartsArray[i].match(/REL TO (?:[A-Z]{3}(?:, )?)+/g)) {
           RELTOEncountered = true;
         } else {
           errorMsg = "Wrong formatting of REL TO.";
