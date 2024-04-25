@@ -79,6 +79,10 @@ function parseBannerMarkings(banner) {
 
   // if you want to use whats returned from the function you have to do catAbbreviations.classification, etc.
   let catAbbreviations = convertCatToAbrev(Category_1, Category_4, Category_7);
+  console.log("Abbreviated classification: " + catAbbreviations.classification);
+  console.log("Abbreviated sci: " + catAbbreviations.sci);
+  console.log("Abbreviated dissemination: " + catAbbreviations.dissemination);
+
   //CHANGE
   //KEVIN - If dissem is null then returns "" err msg from checkdissem func. If there is an error with this later on, then maybe err handle before function is called if there is no dissem
   let errMsg = checkDisseminations(
