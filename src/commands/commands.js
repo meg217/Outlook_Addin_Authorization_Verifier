@@ -58,21 +58,19 @@ function MessageSendVerificationHandler(event) {
       console.log("Recipient check: " + recipientCheck);
       console.log("CC check: " + ccCheck);
       console.log("BCC check: " + bccCheck);
+      let message = "";
+      if (!recipientCheck) {
+        console.log("recipient is false so should send message");
+        message = "Recipient is NOT AUTHORIZED to view this email";
+        errorPopupHandler(message, event);
+      } else if (!ccCheck) {
+        message = "CC'd user(s) is NOT AUTHORIZED to view this email";
+        errorPopupHandler(message, event);
+      } else if (!bccCheck) {
+        message = "BCC'd user(s) is NOT AUTHORIZED to view this email";
+        errorPopupHandler(message, event);
+      }
     });
-    let message = "";
-    if(!recipientCheck){
-      console.log("recipient is false so should send message");
-      message = "Recipient is NOT AUTHORIZED to view this email";
-      errorPopupHandler(message, event);
-    }
-    else if(!ccCheck){
-      message = "CC'd user(s) is NOT AUTHORIZED to view this email";
-      errorPopupHandler(message, event);
-    }
-    else if(!bccCheck){
-      message = "BCC'd user(s) is NOT AUTHORIZED to view this email";
-      errorPopupHandler(message, event);
-    }
     
 
     //CHECK FOR NOFORN DISSEMINATION ////////////////////////////////////////////
