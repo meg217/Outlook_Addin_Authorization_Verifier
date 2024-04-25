@@ -203,15 +203,14 @@ function MessageSendVerificationHandler(event) {
 function checkRecipientClassification(recipients, recipientType, documentClassification) {
   console.log(`Checking ${recipientType} recipients classification`);
   const csvFile ="https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
-
-  if(!recipients.emailAddress){
-    console.log("No recipients for: " + recipientType + " type returned " + recipients.emailAddress);
-    return Promise.resolve(true);
-  }
   
   return Promise.all(recipients.map((recipient) => {
     const emailAddress = recipient.emailAddress;
     console.log(`${recipientType} Email Address: ${emailAddress}`);
+    if(!emailAddress){
+      console.log("No recipients for: " + recipientType + " type returned " + recipients.emailAddress);
+      return true;
+    }
     return userMeetsSecurityClearance(csvFile, documentClassification, emailAddress)
       .then((isClearance) => {
         if (!isClearance) {
