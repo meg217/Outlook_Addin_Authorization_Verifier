@@ -107,7 +107,7 @@ function parseBannerMarkings(banner) {
       catAbbreviations.dissemination
     );
     if ((val[0] = 1)) {
-      errMsg += val[1];
+      errMsg += " " + val[1];
     }
   }
 
