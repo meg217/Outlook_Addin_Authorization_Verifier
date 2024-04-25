@@ -145,7 +145,7 @@ function MessageSendVerificationHandler(event) {
       }
     }
 
-    event.completed({ allowEvent: true });
+    // event.completed({ allowEvent: true });
 
 
 
@@ -153,6 +153,7 @@ function MessageSendVerificationHandler(event) {
   //./Promise 1
   });
   //./Promise 2
+  event.completed({ allowEvent: true });
 
 }
 
