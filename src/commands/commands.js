@@ -204,10 +204,9 @@ function checkRecipientClassification(recipients, recipientType, documentClassif
   console.log(`Checking ${recipientType} recipients classification`);
   const csvFile ="https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
 
-  if(!recipients || typeof recipients.emailAddress == "undefined"){
-    console.log("RETURNED UNDEFINED FOR: " + recipientType);
-    return false;
-    // return Promise.resolve(true);
+  if(!recipients.emailAddress){
+    console.log("No recipients for: " + recipientType + " type returned " + recipients.emailAddress);
+    return Promise.resolve(true);
   }
   
   return Promise.all(recipients.map((recipient) => {
