@@ -45,6 +45,7 @@ function MessageSendVerificationHandler(event) {
     console.log(bannerMarkings.banner);
     console.log("dis the error message: [" + bannerMarkings.message + "]");
     if (bannerMarkings.message !== " " || bannerMarkings.message !== "") {
+      console.log("TESTING");
       errorPopupHandler(bannerMarkings.message, event);
     }
 
