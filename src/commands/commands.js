@@ -60,15 +60,15 @@ function MessageSendVerificationHandler(event) {
       console.log("BCC check: " + bccCheck);
     });
     const message = "";
-    if(recipientCheck == false){
+    if(!recipientCheck){
       message = "Recipient is NOT AUTHORIZED to view this email";
       errorPopupHandler(message, event);
     }
-    else if(ccCheck == false){
+    else if(!ccCheck){
       message = "CC'd user(s) is NOT AUTHORIZED to view this email";
       errorPopupHandler(message, event);
     }
-    else if(bccCheck == false){
+    else if(!bccCheck){
       message = "BCC'd user(s) is NOT AUTHORIZED to view this email";
       errorPopupHandler(message, event);
     }
