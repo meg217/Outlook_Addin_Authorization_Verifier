@@ -121,27 +121,27 @@ function MessageSendVerificationHandler(event) {
             console.log("Country checks passed is: " + countryChecksPassed);
             if(countryChecksPassed && authChecksPassed){
               console.log("allow event");
-              event.completed({ allowEvent: true });
+              // event.completed({ allowEvent: true });
             }
           });
         }
           //NOFORN not encountered so can proceed
           //else if there is no noforn found can check for auth only ///////////////////////
           //AUTH CHECKS PASSED THEN ALLOW EVENT ////////////////////////////////////////////
-          console.log("Authorization checks passed is: " + authChecksPassed);
+          console.log("Authorization checks passed is : " + authChecksPassed);
           if(authChecksPassed){
             console.log("allow event");
-            event.completed({ allowEvent: true });
+            // event.completed({ allowEvent: true });
           }
         }
 
       } else{
       //else if there is no noforn found can check for auth only ///////////////////////
       //AUTH CHECKS PASSED THEN ALLOW EVENT ////////////////////////////////////////////
-      console.log("Authorization checks passed is: " + authChecksPassed);
+      console.log("Authorization checks passed is : " + authChecksPassed);
       if(authChecksPassed){
         console.log("allow event");
-        event.completed({ allowEvent: true });
+        // event.completed({ allowEvent: true });
       }
     }
 
