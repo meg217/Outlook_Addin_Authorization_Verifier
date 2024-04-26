@@ -269,6 +269,7 @@ function convertCatToAbrev(sci, dissemination) {
           } else if (
             disseminationItem.startsWith("REL TO") 
           ) {
+              console.log("STARTS WITH REL TO");
               return disseminationItem;
           } else if (
             disseminationItem ===
