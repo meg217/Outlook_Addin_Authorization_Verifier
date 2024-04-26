@@ -267,14 +267,11 @@ function convertCatToAbrev(sci, dissemination) {
             disseminationItem.startsWith("REL TO ")
           ) {
             return disseminationItem;
-          } else if (
-            disseminationItem.startsWith("AUTHORIZED FOR RELEASE TO ")
-          ) {
-            return disseminationItem.replace(
-              "AUTHORIZED FOR REALEASE TO ",
-              "REL TO "
-            );
-          } else if (
+          } else if (disseminationItem.startsWith("AUTHORIZED FOR RELEASE TO ")) {
+            // Extract the additional text after "AUTHORIZED FOR RELEASE TO "
+            const additionalText = disseminationItem.substring("AUTHORIZED FOR RELEASE TO ".length);
+            return "REL TO " + additionalText;
+        } else if (
             disseminationItem.startsWith("REL TO") 
           ) {
               console.log("STARTS WITH REL TO");
@@ -377,14 +374,11 @@ function convertCatToAbrev(sci, dissemination) {
         dissemination.startsWith("REL TO ")
       ) {
         abbrevDissemination = dissemination;
-      } else if (
-        dissemination.startsWith("AUTHORIZED FOR RELEASE TO ")
-      ) {
-        abbrevDissemination = dissemination.replace(
-          "AUTHORIZED FOR REALEASE TO ",
-          "REL TO "
-        );
-      } else if (
+      } else if (dissemination.startsWith("AUTHORIZED FOR RELEASE TO ")) {
+        // Extract the additional text after "AUTHORIZED FOR RELEASE TO "
+        const additionalText = dissemination.substring("AUTHORIZED FOR RELEASE TO ".length);
+        abbrevDissemination = "REL TO " + additionalText;
+    } else if (
         dissemination === "RELEASABLE BY INFORMATION DISCLOSURE OFFICIAL" ||
         dissemination === "RELIDO"
       ) {
