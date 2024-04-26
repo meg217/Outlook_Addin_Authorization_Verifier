@@ -58,6 +58,7 @@ function MessageSendVerificationHandler(event) {
     ]).then(([recipientCheck, ccCheck, bccCheck]) => {
       let authChecksPassed = false;
       let countryChecksPassed = false;
+      let hasCheckedCountry = false;
 
       console.log("LOGGING AUTHORIZATION:");
       console.log("Recipient check: " + recipientCheck);
@@ -88,6 +89,7 @@ function MessageSendVerificationHandler(event) {
       for (let i = 0; i < dissParts.length; i++) {
         dissPartsArray.push(dissParts[i]);
       }
+      //if dissPartsArray does not contain noforn at all then has checked is true
       for (let i = 0; i < dissPartsArray.length; i++) {
         if (dissPartsArray[i] === "NOFORN") {
           //NOFORNEncountered = true;
@@ -126,11 +128,18 @@ function MessageSendVerificationHandler(event) {
           });
         }
       }
+      //should maybe add something here after gone through loop and didnt find noforn
+    }
+    else{
+      console.log(" no disseminations found so dont need to check country");
+      hasCheckedCountry = true;
     }
 
     //AUTH CHECKS PASSED THEN ALLOW EVENT ////////////////////////////////////////////
     console.log("Authorization checks passed is: " + authChecksPassed);
-    if(authChecksPassed){
+    console.log("hasCheckedCountry is: " + hasCheckedCountry);
+
+    if(authChecksPassed && hasCheckedCountry){
       event.completed(
         {
             allowEvent: true
