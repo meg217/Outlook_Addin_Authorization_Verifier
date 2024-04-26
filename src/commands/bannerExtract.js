@@ -51,10 +51,8 @@ function parseBannerMarkings(banner) {
   console.log("BEFORE Banner: " + banner);
   const Categories = banner.split("//");
 
-  if (Categories[0] !== null) {
-    Categories[0] = Categories[0].trim();
-  }
-
+  Categories[0] = Categories[0].trim();
+  
   //console.log(Categories);
   let Category_1 = Category(Categories[0], cat1_regex, 1);
   let Category_4 = null;
