@@ -22,7 +22,6 @@ function MessageSendVerificationHandler(event) {
     getBodyAsync(),
     getCCAsync(),
     getBCCAsync(),
-    fetchAndParseCSV(),
   ]).then(([to, sender, body, cc, bcc]) => {
     console.log("\nPROMISE HANDELERS FOR OUTLOOK ITEMS:\nRicipient: " +
       to.map((recipient) => recipient.emailAddress + " (" + recipient.displayName + ")").join(", ") +
@@ -44,9 +43,7 @@ function MessageSendVerificationHandler(event) {
     bannerNullHandler(banner, event);
     const bannerMarkings = parseBannerMarkings(banner);
     console.log(bannerMarkings.banner);
-    console.log("dis the error message: [" + bannerMarkings.message + "]");
-    if (bannerMarkings.message !== " " || bannerMarkings.message !== "") {
-      console.log("TESTING");
+    if (bannerMarkings.message !== "") {
       errorPopupHandler(bannerMarkings.message, event);
     }
 
@@ -83,6 +80,7 @@ function MessageSendVerificationHandler(event) {
     
 
     //CHECK FOR NOFORN DISSEMINATION HANDELERS ////////////////////////////////////////////
+    console.log("\nCHECK FOR NOFORN DISSEMINATION HANDELERS\n");
     dissemination = bannerMarkings.banner[2];
     if (dissemination != null) {
       let dissParts = dissemination.split("/");
@@ -92,7 +90,6 @@ function MessageSendVerificationHandler(event) {
       }
       for (let i = 0; i < dissPartsArray.length; i++) {
         if (dissPartsArray[i] === "NOFORN") {
-          console.log("\nCHECK FOR NOFORN DISSEMINATION HANDELERS\n");
           //NOFORNEncountered = true;
           Promise.all([
             checkCountryForRecipients('to', to),
@@ -120,33 +117,26 @@ function MessageSendVerificationHandler(event) {
             console.log("Authorization checks passed is: " + authChecksPassed);
             console.log("Country checks passed is: " + countryChecksPassed);
             if(countryChecksPassed && authChecksPassed){
-              console.log("allow event, test1");
-              event.completed({ allowEvent: true });
-              event.completed({ allowEvent: true });
+              event.completed(
+                {
+                    allowEvent: true
+                }
+                );
             }
           });
         }
-          //NOFORN not encountered so can proceed
-          //else if there is no noforn found can check for auth only ///////////////////////
-          //AUTH CHECKS PASSED THEN ALLOW EVENT ////////////////////////////////////////////
-          console.log("Authorization checks passed is : " + authChecksPassed);
-          if(authChecksPassed){
-            console.log("allow event");
-            // event.completed({ allowEvent: true });
-          }
-        }
-
-      } else{
-      //else if there is no noforn found can check for auth only ///////////////////////
-      //AUTH CHECKS PASSED THEN ALLOW EVENT ////////////////////////////////////////////
-      console.log("Authorization checks passed is : " + authChecksPassed);
-      if(authChecksPassed){
-        console.log("allow event");
-        // event.completed({ allowEvent: true });
       }
     }
 
-    // event.completed({ allowEvent: true });
+    //AUTH CHECKS PASSED THEN ALLOW EVENT ////////////////////////////////////////////
+    console.log("Authorization checks passed is: " + authChecksPassed);
+    if(authChecksPassed){
+      event.completed(
+        {
+            allowEvent: true
+        }
+        );
+    }
 
 
 
@@ -154,10 +144,6 @@ function MessageSendVerificationHandler(event) {
   //./Promise 1
   });
   //./Promise 2
-
-  //deleted otherwise will skip everything lol
-  // console.log("reached here");
-  //event.completed({ allowEvent: true });
 
 }
 
