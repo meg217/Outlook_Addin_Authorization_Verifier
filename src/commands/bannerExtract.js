@@ -260,6 +260,10 @@ function convertCatToAbrev(sci, dissemination) {
           ) {
             return "PROPIN";
           } else if (
+            disseminationItem.startsWith("REL TO ")
+          ) {
+            return disseminationItem;
+          } else if (
             disseminationItem.startsWith("AUTHORIZED FOR RELEASE TO ")
           ) {
             return disseminationItem.replace(
@@ -360,6 +364,17 @@ function convertCatToAbrev(sci, dissemination) {
         dissemination === "PROPIN"
       ) {
         abbrevDissemination = "PROPIN";
+      } else if (
+        dissemination.startsWith("REL TO ")
+      ) {
+        return dissemination;
+      } else if (
+        dissemination.startsWith("AUTHORIZED FOR RELEASE TO ")
+      ) {
+        return dissemination.replace(
+          "AUTHORIZED FOR REALEASE TO ",
+          "REL TO "
+        );
       } else if (
         dissemination === "RELEASABLE BY INFORMATION DISCLOSURE OFFICIAL" ||
         dissemination === "RELIDO"
