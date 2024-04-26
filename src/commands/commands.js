@@ -146,8 +146,6 @@ function MessageSendVerificationHandler(event) {
           }
         }
         //should maybe add something here after gone through loop and didnt find noforn
-        hasCheckedCountry = true;
-        console.log("added true after loop finishes");
       } else {
         console.log(" no disseminations found so dont need to check country");
         hasCheckedCountry = true;
