@@ -95,7 +95,7 @@ function parseBannerMarkings(banner) {
     Category_1,
     catAbbreviations.dissemination
   );
-  //add Zach's stuff after testing
+
   let val;
   if (Category_4 !== null) {
     val = validateSCI(
@@ -104,14 +104,12 @@ function parseBannerMarkings(banner) {
       catAbbreviations.dissemination
     );
     if ((val[0] = 1)) {
-      // errMsg += " " + val[1];
       errMsg += val[1];
     }
   }
 
   console.log(errMsg);
-  //return Together;
-  //CHANGE
+
   return {
     banner: Together,
     message: errMsg,
@@ -158,22 +156,8 @@ function Category(category, regex, categoryNum) {
  * @param {string} banner
  */
 function convertCatToAbrev(sci, dissemination) {
-  //let abbrevClassification = "";
   let abbrevSCI = "";
   let abbrevDissemination = "";
-
-  // Abbreviate classification
-  // if (classification != null) {
-  //   if (classification === "TOP SECRET" || classification === "TS") {
-  //     abbrevClassification = "TOP SECRET";
-  //   } else if (classification === "SECRET" || classification === "S") {
-  //     abbrevClassification = "SECRET";
-  //   } else if (classification === "CONFIDENTIAL" || classification === "C") {
-  //     abbrevClassification = "CONFIDENTIAL";
-  //   } else if (classification === "UNCLASSIFIED" || classification === "U") {
-  //     abbrevClassification = "UNCLASSIFIED";
-  //   }
-  // }
 
   // Abbreviate SCI
   if (sci != null) {
@@ -439,7 +423,6 @@ function convertCatToAbrev(sci, dissemination) {
     }
   }
   return {
-    //classification: abbrevClassification,
     sci: abbrevSCI,
     dissemination: abbrevDissemination,
   };
