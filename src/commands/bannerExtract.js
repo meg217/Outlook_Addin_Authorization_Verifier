@@ -653,7 +653,7 @@ function checkDisseminations(classification, dissemination) {
       //AUTHORIZED FOR RELEASE TO (REL TO): can only be used with TOP SECRET, SECRET, or CONFIDENTIAL.
       //May be used with RELIDO. Cannot be used with NOFORN or EYES ONLY.
       else if (dissPartsArray[i].includes("REL TO")) {
-        if (dissPartsArray[i].match(/REL TO (?:[A-Z]{3,4}(?:, )?)+/g)) {
+        if (dissPartsArray[i].match(/REL TO USA(?:, [A-Z]{3,4})*$/g)) {
           RELTOEncountered = true;
         } else {
           errorMsg = "Wrong formatting of REL TO.";
