@@ -191,6 +191,8 @@ function convertCatToAbrev(sci, dissemination) {
           return sciItem.replace("COMINT", "SI");
         } else if (/^COMINT-GAMMA-ECI [A-Z]+$/.test(sciItem)) {
           return sciItem.replace("COMINT-GAMMA", "SI-G");
+        } else if (/^SI-G-ECI [A-Z]+$/.test(sciItem)) {
+          return sciItem;
         } else if (sciItem === "TALENT KEYHOLE" || sciItem === "TK") {
           return "TK";
         }
@@ -217,6 +219,8 @@ function convertCatToAbrev(sci, dissemination) {
       } else if (/^COMINT-GAMMA-ECI [A-Z]+$/.test(sci)) {
         abbrevSCI = sci.replace("COMINT", "SI");
         abbrevSCI = sci.replace("GAMMA", "G");
+      } else if (/^SI-G-ECI [A-Z]+$/.test(sci)) {
+        abbrevSCI = sci;
       } else if (sci === "TALENT KEYHOLE" || sci === "TK") {
         abbrevSCI = "TK";
       }
