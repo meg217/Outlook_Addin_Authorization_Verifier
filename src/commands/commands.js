@@ -104,7 +104,7 @@ function MessageSendVerificationHandler(event) {
         for (let i = 0; i < dissParts.length; i++) {
           dissPartsArray.push(dissParts[i]);
           if (dissPartsArray[i] === "NOFORN") {
-            hasNOFORN === true;
+            hasNOFORN = true;
           }
         }
 
