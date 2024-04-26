@@ -285,11 +285,11 @@ function convertCatToAbrev(sci, dissemination) {
           } else if (
             /FORMERLY RESTRICTED DATA-SIGMA\s\d{1,2}/.test(disseminationItem)
           ) {
-            return disseminationItem.replace("FORMERLY RESTRICTED DATA", "FRD");
+            return disseminationItem.replace("FORMERLY RESTRICTED DATA-SIGMA", "FRD-SG");
           } else if (
             /RESTRICTED DATA-SIGMA\s\d{1,2}/.test(disseminationItem)
           ) {
-            return disseminationItem.replace("RESTRICTED DATA", "RD");
+            return disseminationItem.replace("RESTRICTED DATA-SIGMA", "RD");
           } else if (
             disseminationItem ===
             "FORMERLY RESTRICTED DATA-CRITICAL NUCLEAR WEAPON DESIGN INFORMATION"
@@ -387,11 +387,14 @@ function convertCatToAbrev(sci, dissemination) {
         /FORMERLY RESTRICTED DATA-SIGMA\s\d{1,2}/.test(dissemination)
       ) {
         abbrevDissemination = dissemination.replace(
-          "FORMERLY RESTRICTED DATA",
-          "FRD"
+          "FORMERLY RESTRICTED DATA-SIGMA",
+          "FRD-SG"
         );
       } else if (/RESTRICTED DATA-SIGMA\s\d{1,2}/.test(dissemination)) {
-        abbrevDissemination = dissemination.replace("RESTRICTED DATA", "RD");
+        abbrevDissemination = dissemination.replace(
+          "RESTRICTED DATA-SIGMA", 
+          "RD-SG"
+          );
       } else if (
         dissemination ===
         "FORMERLY RESTRICTED DATA-CRITICAL NUCLEAR WEAPON DESIGN INFORMATION"
