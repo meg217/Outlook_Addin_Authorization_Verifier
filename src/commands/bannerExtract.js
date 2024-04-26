@@ -54,12 +54,6 @@ function parseBannerMarkings(banner) {
   if (Categories[0] !== null) {
     Categories[0] = Categories[0].trim();
   }
-  if (Categories[1] !== null) {
-    Categories[1] = Categories[1].trim();
-  }
-  if (Categories[2] !== null) {
-    Categories[2] = Categories[2].trim();
-  }
 
   //console.log(Categories);
   let Category_1 = Category(Categories[0], cat1_regex, 1);
