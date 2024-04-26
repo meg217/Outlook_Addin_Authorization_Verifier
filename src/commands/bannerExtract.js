@@ -271,7 +271,7 @@ function convertCatToAbrev(sci, dissemination) {
             // Extract the additional text after "AUTHORIZED FOR RELEASE TO "
             const additionalText = disseminationItem.substring("AUTHORIZED FOR RELEASE TO ".length);
             return "REL TO " + additionalText;
-        } else if (
+          } else if (
             disseminationItem.startsWith("REL TO") 
           ) {
               console.log("STARTS WITH REL TO");
@@ -283,11 +283,11 @@ function convertCatToAbrev(sci, dissemination) {
           ) {
             return "RELIDO";
           } else if (
-            /FORMERLY RESTRICTED DATA-SIGMA \[\d{1,2}\]/.test(disseminationItem)
+            /FORMERLY RESTRICTED DATA-SIGMA\s\d{1,2}/.test(disseminationItem)
           ) {
             return disseminationItem.replace("FORMERLY RESTRICTED DATA", "FRD");
           } else if (
-            /RESTRICTED DATA-SIGMA \[\d{1,2}\]/.test(disseminationItem)
+            /RESTRICTED DATA-SIGMA\s\d{1,2}/.test(disseminationItem)
           ) {
             return disseminationItem.replace("RESTRICTED DATA", "RD");
           } else if (
@@ -378,19 +378,19 @@ function convertCatToAbrev(sci, dissemination) {
         // Extract the additional text after "AUTHORIZED FOR RELEASE TO "
         const additionalText = dissemination.substring("AUTHORIZED FOR RELEASE TO ".length);
         abbrevDissemination = "REL TO " + additionalText;
-    } else if (
+      } else if (
         dissemination === "RELEASABLE BY INFORMATION DISCLOSURE OFFICIAL" ||
         dissemination === "RELIDO"
       ) {
         abbrevDissemination = "RELIDO";
       } else if (
-        /FORMERLY RESTRICTED DATA-SIGMA \[\d{1,2}\]/.test(dissemination)
+        /FORMERLY RESTRICTED DATA-SIGMA\s\d{1,2}/.test(dissemination)
       ) {
         abbrevDissemination = dissemination.replace(
           "FORMERLY RESTRICTED DATA",
           "FRD"
         );
-      } else if (/RESTRICTED DATA-SIGMA \[\d{1,2}\]/.test(dissemination)) {
+      } else if (/RESTRICTED DATA-SIGMA\s\d{1,2}/.test(dissemination)) {
         abbrevDissemination = dissemination.replace("RESTRICTED DATA", "RD");
       } else if (
         dissemination ===
@@ -710,7 +710,7 @@ function checkDisseminations(classification, dissemination) {
           //-SIGMA[#] (-SG[#]): may be used with TOP SECRET, SECRET, or CONDFIDENTIAL.
           //Requires RD or FRD. [#] represents the SIGMA number, ranges from 1-99.
         } else if (
-          dissPartsArray[i].match(/(RD|FRD)-SG\[(?:[1-9]|[1-9][0-9]|99)\]/g)
+          dissPartsArray[i].match(/(RD|FRD)-SG\s\d{1,2}/g)
         ) {
           if (classification === "UNCLASSIFIED") {
             errorMsg = "-SG cannot be used with UNCLASSIFIED information.";
@@ -732,7 +732,7 @@ function checkDisseminations(classification, dissemination) {
         }
       } else if (dissPartsArray[i].includes("-SG")) {
         if (
-          dissPartsArray[i].match(/(RD|FRD)-SG\[(?:[1-9]|[1-9][0-9]|99)\]/g)
+          dissPartsArray[i].match(/(RD|FRD)-SG\s\d{1,2}/g)
         ) {
           if (classification === "UNCLASSIFIED") {
             errorMsg = "-SG cannot be used with UNCLASSIFIED information.";
