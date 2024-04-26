@@ -104,11 +104,11 @@ function MessageSendVerificationHandler(event) {
         for (let i = 0; i < dissParts.length; i++) {
           dissPartsArray.push(dissParts[i]);
           if (dissPartsArray[i] === "NOFORN") {
-            hasNOFORN = true;
+            hasNOFORN === true;
           }
         }
 
-        if ((hasNOFORN = true)) {
+        if (hasNOFORN === true) {
           //if dissPartsArray does not contain noforn at all then has checked is true
           for (let i = 0; i < dissPartsArray.length; i++) {
             //what other banenrs do we need to check
