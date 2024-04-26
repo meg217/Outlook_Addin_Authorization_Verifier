@@ -122,6 +122,7 @@ function MessageSendVerificationHandler(event) {
             if(countryChecksPassed && authChecksPassed){
               console.log("allow event, test1");
               event.completed({ allowEvent: true });
+              event.completed({ allowEvent: true });
             }
           });
         }
