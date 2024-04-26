@@ -88,10 +88,8 @@ function MessageSendVerificationHandler(event) {
       let dissPartsArray = [];
       for (let i = 0; i < dissParts.length; i++) {
         dissPartsArray.push(dissParts[i]);
-        if (dissPartsArray[i] === "NOFORN") {
-          hasCheckedCountry = true;
-        }
       }
+      //if dissPartsArray does not contain noforn at all then has checked is true
       for (let i = 0; i < dissPartsArray.length; i++) {
         if (dissPartsArray[i] === "NOFORN") {
           //NOFORNEncountered = true;
