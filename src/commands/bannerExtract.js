@@ -267,6 +267,10 @@ function convertCatToAbrev(sci, dissemination) {
               "REL TO "
             );
           } else if (
+            disseminationItem.startsWith("REL TO") 
+          ) {
+              return disseminationItem;
+          } else if (
             disseminationItem ===
               "RELEASABLE BY INFORMATION DISCLOSURE OFFICIAL" ||
             disseminationItem === "RELIDO"
