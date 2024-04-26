@@ -73,13 +73,13 @@ function parseBannerMarkings(banner) {
     //console.log("second category returned null");
   }
 
-  console.log("cat1" + Categories[0]);
-  console.log("cat1" + Categories[1]);
-  console.log("cat1" + Categories[2]);
+  Category_1 = Category_1.trim();
+  Category_4 = Category_4.trim();
+  Category_7 = Category_7.trim();
 
-  console.log("After reg class: " + Category_1);
-  console.log("After reg sci: " + Category_4);
-  console.log("After reg dissem: " + Category_7);
+  console.log("CAT 1: " + Category_1);
+  console.log("CAT 4: " + Category_4);
+  console.log("CAT 7: " + Category_7);
 
   const Together = [Category_1, Category_4, Category_7];
   console.log("AFTER Banner: " + banner);
