@@ -144,12 +144,10 @@ function MessageSendVerificationHandler(event) {
               }
             });
           }
-          if (i === dissPartsArray.length - 1) {
-            console.log("didnt find noforn in loop");
-            hasCheckedCountry = true;
-          }
         }
         //should maybe add something here after gone through loop and didnt find noforn
+        hasCheckedCountry = true;
+        console.log("added true after loop finishes");
       } else {
         console.log(" no disseminations found so dont need to check country");
         hasCheckedCountry = true;
