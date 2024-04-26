@@ -50,6 +50,17 @@ function parseBannerMarkings(banner) {
   //const cat4_and_cat7 = /COMINT|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G|TK|HCS|GCS|ORIGINATOR\s*CONTROLLED|ORCON|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*((USA|AUS|NZL)(,)?( *))*|REL\s*TO\s*((USA|AUS|NZL)(,)?( *))*|CAUTION-PROPERIETARY\s*INFORMATION\s*INVOLVED|PROPIN/gi;
   console.log("BEFORE Banner: " + banner);
   const Categories = banner.split("//");
+
+  if (Categories[0] !== null) {
+    Categories[0] = Categories[0].trim();
+  }
+  if (Categories[1] !== null) {
+    Categories[1] = Categories[1].trim();
+  }
+  if (Categories[2] !== null) {
+    Categories[2] = Categories[2].trim();
+  }
+
   //console.log(Categories);
   let Category_1 = Category(Categories[0], cat1_regex, 1);
   let Category_4 = null;
@@ -72,10 +83,6 @@ function parseBannerMarkings(banner) {
     console.log("SCI: " + Category_4);
     //console.log("second category returned null");
   }
-
-  Category_1 = Category_1.trim();
-  Category_4 = Category_4.trim();
-  Category_7 = Category_7.trim();
 
   console.log("CAT 1: " + Category_1);
   console.log("CAT 4: " + Category_4);
