@@ -372,11 +372,11 @@ function convertCatToAbrev(sci, dissemination) {
       } else if (
         dissemination.startsWith("REL TO ")
       ) {
-        return dissemination;
+        abbrevDissemination = dissemination;
       } else if (
         dissemination.startsWith("AUTHORIZED FOR RELEASE TO ")
       ) {
-        return dissemination.replace(
+        abbrevDissemination = dissemination.replace(
           "AUTHORIZED FOR REALEASE TO ",
           "REL TO "
         );
