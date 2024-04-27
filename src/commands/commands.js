@@ -262,7 +262,7 @@ function checkRecipientClassification(
         });
     })
   ).then((results) => {
-    return results.every((result) => result[0]); // Return true if all recipients are cleared
+    return results; // Return authorization status and email address for each recipient
   });
 }
 
