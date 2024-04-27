@@ -81,13 +81,8 @@ function MessageSendVerificationHandler(event) {
       console.log("BCC check: " + bccCheck);
       let message = "";
       if (!recipientCheck) {
-        if (!isClearance) {
-          to.map((recipient) => {
-            const emailAddress = recipient.emailAddress;
-            const message =  `${emailAddress} is NOT AUTHORIZED to view this email`;
-            errorPopupHandler(message, event);
-          })
-        }
+        message = "Recipient is NOT AUTHORIZED to view this email";
+        errorPopupHandler(message, event);
       } else if (!ccCheck) {
         message = "CC'd user(s) is NOT AUTHORIZED to view this email";
         errorPopupHandler(message, event);
@@ -191,7 +186,11 @@ function MessageSendVerificationHandler(event) {
  * @param {String} documentClassification The classification level of the email
  * @returns {Promise<boolean>} Returns a promise resolving to true if all recipients are permitted to view the email
  */
-function checkRecipientClassification(recipients,recipientType,documentClassification) {
+function checkRecipientClassification(
+  recipients,
+  recipientType,
+  documentClassification
+) {
   // console.log(`Checking ${recipientType} recipients classification`);
   const csvFile =
     "https://meg217.github.io/Outlook_Addin_Authorization_Verifier/assets/accounts.csv";
