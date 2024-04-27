@@ -237,7 +237,7 @@ function checkRecipientClassification(
       // console.log(`${recipientType} Email Address: ${emailAddress}`);
       if (!emailAddress) {
         // console.log("No recipients for: " + recipientType + " type returned " + recipients.emailAddress);
-        return true;
+        return [true, null];
       }
       return userMeetsSecurityClearance(
         csvFile,
@@ -247,12 +247,10 @@ function checkRecipientClassification(
         .then((isClearance) => {
           if (!isClearance) {
             console.log(`${emailAddress} is NOT AUTHORIZED to view this email`);
-            let unauthorized = [false,emailAddress];
-            return unauthorized;
+            return [false, emailAddress];
           } else {
             console.log(`${recipientType} is cleared`);
-            let authorized = [true,emailAddress];
-            return authorized;
+            return [true, emailAddress];
           }
         })
         .catch((error) => {
@@ -260,12 +258,11 @@ function checkRecipientClassification(
             `Error while checking ${recipientType} clearance: `,
             error
           );
-          let authorization_error = [false,emailAddress];
-          return authorization_error;
+           return [false, emailAddress];
         });
     })
   ).then((results) => {
-    return results.every((result) => result); // Return true if all recipients are cleared
+    return results.every((result) => result[0]); // Return true if all recipients are cleared
   });
 }
 
