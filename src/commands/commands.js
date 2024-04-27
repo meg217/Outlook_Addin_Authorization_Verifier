@@ -81,7 +81,7 @@ function MessageSendVerificationHandler(event) {
       console.log("BCC check: " + bccCheck);
       let message = "";
       if (!recipientCheck) {
-        message = recipient.displayName + " is NOT AUTHORIZED to view this email";
+        message = to.map((recipient) => recipient.emailAddress).join(", ") + " is NOT AUTHORIZED to view this email";
         errorPopupHandler(message, event);
       } else if (!ccCheck) {
         message = "CC'd user(s) is NOT AUTHORIZED to view this email";
