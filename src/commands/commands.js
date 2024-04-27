@@ -81,11 +81,13 @@ function MessageSendVerificationHandler(event) {
       console.log("BCC check: " + bccCheck);
       let message = "";
       if (!recipientCheck) {
-        to.map((recipient) => {
-          const emailAddress = recipient.emailAddress;
-          const message =  `${emailAddress} is NOT AUTHORIZED to view this email`;
-          errorPopupHandler(message, event);
-        })
+        if (!isClearance) {
+          to.map((recipient) => {
+            const emailAddress = recipient.emailAddress;
+            const message =  `${emailAddress} is NOT AUTHORIZED to view this email`;
+            errorPopupHandler(message, event);
+          })
+        }
       } else if (!ccCheck) {
         message = "CC'd user(s) is NOT AUTHORIZED to view this email";
         errorPopupHandler(message, event);
