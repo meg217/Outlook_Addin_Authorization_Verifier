@@ -92,10 +92,12 @@ function MessageSendVerificationHandler(event) {
 
         if (!recipient_authorized) {
           errorPopupHandler(`Recipient ${recipient_email} is NOT AUTHORIZED to view this email`, event);
+          console.log("Recipient check: not authorized");
         }
 
         else if (!cc_authorized) {
           errorPopupHandler(`CC'd user ${cc_email} is NOT AUTHORIZED to view this email`, event);
+          console.log("CC check: not authorized");
         }
         else if (!bcc_authorized) {
           errorPopupHandler(`BCC'd user ${bcc_email} is NOT AUTHORIZED to view this email`, event);
