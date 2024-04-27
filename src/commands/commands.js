@@ -22,7 +22,7 @@ function MessageSendVerificationHandler(event) {
     getBCCAsync(),
   ]).then(([to, sender, body, cc, bcc]) => {
     console.log(
-      "\nPROMISE HANDELERS FOR OUTLOOK ITEMS:\nRicipient: " +
+      "\nPROMISE HANDELERS FOR OUTLOOK ITEMS:\nRecipient: " +
         to
           .map(
             (recipient) =>
@@ -71,27 +71,50 @@ function MessageSendVerificationHandler(event) {
       checkRecipientClassification(cc, "CC", bannerMarkings.banner[0]),
       checkRecipientClassification(bcc, "BCC", bannerMarkings.banner[0]),
     ]).then(([recipientCheck, ccCheck, bccCheck]) => {
-      let authChecksPassed = false;
-      let countryChecksPassed = false;
+      let authChecksPassed = true;
+      let countryChecksPassed = true;
       let hasCheckedCountry = false;
 
       console.log("LOGGING AUTHORIZATION:");
       console.log("Recipient check: " + recipientCheck);
       console.log("CC check: " + ccCheck);
       console.log("BCC check: " + bccCheck);
-      let message = "";
-      if (!recipientCheck) {
-        message = "Recipient is NOT AUTHORIZED to view this email";
-        errorPopupHandler(message, event);
-      } else if (!ccCheck) {
-        message = "CC'd user(s) is NOT AUTHORIZED to view this email";
-        errorPopupHandler(message, event);
-      } else if (!bccCheck) {
-        message = "BCC'd user(s) is NOT AUTHORIZED to view this email";
-        errorPopupHandler(message, event);
-      } else {
-        authChecksPassed = true;
+   // let message = "";
+
+
+      for (const [authorized, emailAddress] of recipientCheck) {
+        if (!authorized) {
+          errorPopupHandler(`Recipient ${emailAddress} is NOT AUTHORIZED to view this email`, event);
+          authChecksPassed = false;
+        }
       }
+
+      for (const [authorized, emailAddress] of ccCheck) {
+        if (!authorized) {
+          errorPopupHandler(`CC'd user ${emailAddress} is NOT AUTHORIZED to view this email`, event);
+          authChecksPassed = false;
+        }
+      }
+
+      for (const [authorized, emailAddress] of bccCheck) {
+        if (!authorized) {
+          errorPopupHandler(`BCC'd user ${emailAddress} is NOT AUTHORIZED to view this email`, event);
+          authChecksPassed = false;
+        }
+      }
+
+    //  if (!recipientCheck) {
+    //    message = "Recipient is NOT AUTHORIZED to view this email";
+    //    errorPopupHandler(message, event);
+    //  } else if (!ccCheck) {
+    //    message = "CC'd user(s) is NOT AUTHORIZED to view this email";
+    //    errorPopupHandler(message, event);
+    //  } else if (!bccCheck) {
+    //    message = "BCC'd user(s) is NOT AUTHORIZED to view this email";
+    //    errorPopupHandler(message, event);
+    //  } else {
+    //    authChecksPassed = true;
+    //  }
 
       //CHECK FOR NOFORN DISSEMINATION HANDELERS ////////////////////////////////////////////
       console.log("\nCHECK FOR NOFORN DISSEMINATION HANDELERS\n");
@@ -126,21 +149,43 @@ function MessageSendVerificationHandler(event) {
                 console.log("CC check: " + ccCheck);
                 console.log("BCC check: " + bccCheck);
                 let message = "";
-                if (!recipientCheck) {
-                  message =
-                    "Recipient is a Foreign National and NOT AUTHORIZED to view this email";
-                  errorPopupHandler(message, event);
-                } else if (!ccCheck) {
-                  message =
-                    "CC'd user(s) is a Foreign National and NOT AUTHORIZED to view this email";
-                  errorPopupHandler(message, event);
-                } else if (!bccCheck) {
-                  message =
-                    "BCC'd user(s) is a Foreign National and NOT AUTHORIZED to view this email";
-                  errorPopupHandler(message, event);
-                } else {
-                  countryChecksPassed = true;
+
+                for (const [authorized, emailAddress] of recipientCheck) {
+                  if (!authorized) {
+                    errorPopupHandler(`Recipient ${emailAddress} is a Foreign National and NOT AUTHORIZED to view this email`, event);
+                    countryChecksPassed = false;
+                  }
                 }
+          
+                for (const [authorized, emailAddress] of ccCheck) {
+                  if (!authorized) {
+                    errorPopupHandler(`CC'd user ${emailAddress} is a Foreign National and NOT AUTHORIZED to view this email`, event);
+                    countryChecksPassed = false;
+                  }
+                }
+          
+                for (const [authorized, emailAddress] of bccCheck) {
+                  if (!authorized) {
+                    errorPopupHandler(`BCC'd user ${emailAddress} is a Foreign National and NOT AUTHORIZED to view this email`, event);
+                    countryChecksPassed = false;
+                  }
+                }
+                
+      //          if (!recipientCheck) {
+      //            message =
+      //              "Recipient is a Foreign National and NOT AUTHORIZED to view this email";
+      //            errorPopupHandler(message, event);
+      //          } else if (!ccCheck) {
+      //            message =
+      //              "CC'd user(s) is a Foreign National and NOT AUTHORIZED to view this email";
+      //           errorPopupHandler(message, event);
+      //          } else if (!bccCheck) {
+      //            message =
+      //              "BCC'd user(s) is a Foreign National and NOT AUTHORIZED to view this email";
+      //            errorPopupHandler(message, event);
+      //          } else {
+      //            countryChecksPassed = true;
+      //          }
 
                 console.log(
                   "Authorization checks passed is: " + authChecksPassed
@@ -211,10 +256,12 @@ function checkRecipientClassification(
         .then((isClearance) => {
           if (!isClearance) {
             console.log(`${emailAddress} is NOT AUTHORIZED to view this email`);
-            return false;
+            let unauthorized = [false,emailAddress];
+            return unauthorized;
           } else {
             console.log(`${recipientType} is cleared`);
-            return true;
+            let authorized = [true,emailAddress];
+            return authorized;
           }
         })
         .catch((error) => {
@@ -222,7 +269,8 @@ function checkRecipientClassification(
             `Error while checking ${recipientType} clearance: `,
             error
           );
-          return false;
+          let authorization_error = [false,emailAddress];
+          return authorization_error;
         });
     })
   ).then((results) => {
@@ -253,10 +301,12 @@ function checkCountryForRecipients(recipientType, recipients) {
             console.log(
               `${emailAddress} is a Foreign National and NOT AUTHORIZED to view this email`
             );
-            return false;
+            let unauthorized = [false,emailAddress];
+            return unauthorized;
           } else {
             console.log(`${recipientType} user is Cleared as USA`);
-            return true;
+            let authorized = [true,emailAddress];
+            return authorized;
           }
         })
         .catch((error) => {
@@ -264,7 +314,8 @@ function checkCountryForRecipients(recipientType, recipients) {
             `Error while checking isNOFORN for ${recipientType} ${emailAddress}: `,
             error
           );
-          return false;
+          let authorization_error = [false,emailAddress];
+          return authorization_error;
         });
     })
   ).then((results) => {
