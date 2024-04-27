@@ -287,14 +287,11 @@ function checkCountryForRecipients(recipientType, recipients) {
           // console.log(`isNOFORN for ${recipientType} ${emailAddress} returned: ${isNOFORN}`);
           if (!isNOFORN) {
             console.log(
-              `${emailAddress} is a Foreign National and NOT AUTHORIZED to view this email`
-            );
-            let unauthorized = [false,emailAddress];
-            return unauthorized;
+              `${emailAddress} is a Foreign National and NOT AUTHORIZED to view this email`);
+            return [false, emailAddress];
           } else {
             console.log(`${recipientType} user is Cleared as USA`);
-            let authorized = [true,emailAddress];
-            return authorized;
+            return [true, emailAddress];
           }
         })
         .catch((error) => {
@@ -302,12 +299,11 @@ function checkCountryForRecipients(recipientType, recipients) {
             `Error while checking isNOFORN for ${recipientType} ${emailAddress}: `,
             error
           );
-          let authorization_error = [false,emailAddress];
-          return authorization_error;
+          return [false, emailAddress];
         });
     })
   ).then((results) => {
-    return results.every((result) => result); // Return true if all recipients are cleared
+    return results.every((result) => result[0]); // Return true if all recipients are cleared
   });
 }
 
