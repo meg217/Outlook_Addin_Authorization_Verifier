@@ -221,6 +221,7 @@ function MessageSendVerificationHandler(event) {
  * @param {String} recipientType The type of recipient ('to', 'cc', or 'bcc')
  * @param {String} documentClassification The classification level of the email
  * @returns {Promise<boolean>} Returns a promise resolving to true if all recipients are permitted to view the email
+ * above needs to return not only a boolean but email adress too
  */
 function checkRecipientClassification(
   recipients,
