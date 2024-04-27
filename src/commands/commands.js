@@ -85,7 +85,7 @@ function MessageSendVerificationHandler(event) {
         [cc_authorized, cc_email] = ccCheck;
         [bcc_authorized, bcc_email] = bccCheck;
 
-        if (!recpient_authorized) {
+        if (!recipient_authorized) {
           errorPopupHandler(`Recipient ${recipient_email} is NOT AUTHORIZED to view this email`, event);
         }
 
