@@ -81,15 +81,17 @@ function MessageSendVerificationHandler(event) {
       console.log("BCC check: " + bccCheck);
       let message = "";
 
-        let recipient_outputs = recipientCheck;
-        let repient_parts = recipient_outputs.split(",");
-        let recipient_authorized = repient_parts[0];
-        let recipient_email = repient_parts[1];
-        console.log("CC authorized = " + recipient_authorized);
-        console.log("CC email = " + recipient_email);
-
-        console.log("Recipient authorized = " + recipient_authorized);
-        console.log("Recipient email = " + recipient_email);
+      let recipient_output = recipientCheck[0].trim(); // Trim any leading or trailing whitespace
+      let recipient_parts = recipient_output.split(",");
+      
+      if (recipient_parts.length === 2) {
+          let recipient_authorized = recipient_parts[0].trim();
+          let recipient_email = recipient_parts[1].trim();
+          console.log("Recipient authorized = " + recipient_authorized);
+          console.log("Recipient email = " + recipient_email);
+      } else {
+          console.error("Invalid recipient format:", recipient_output);
+      }
 
           
         let cc_authorized = ccCheck[0];
