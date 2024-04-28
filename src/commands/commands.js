@@ -90,8 +90,9 @@ function MessageSendVerificationHandler(event) {
         let bcc_authorized = bccCheck[0];
         let bcc_email = bccCheck[1];
 
-        if (!recipient_authorized) {
+        if (recipient_authorized == false) {
           message = `Recipient ${recipient_email} is NOT AUTHORIZED to view this email`;
+          console.log("The recipient is is not authorized " + recipient_authorized + " and the email is " + recipient_email);
           errorPopupHandler(message, event);
         }
 
@@ -153,9 +154,8 @@ function MessageSendVerificationHandler(event) {
                 console.log("BCC check: " + bccCheck);
                 let message = "";
 
-                let recipient_authorized = false;
-                let recipient_email = "testingemail@gmail.com";
-                console.log("The recipient is " + recipient_authorized + " and the email is " + recipient_email);
+                let recipient_authorized = recipientCheck[0];
+                let recipient_email = recipientCheck[1];
                 
                 let cc_authorized = ccCheck[0];
                 let cc_email = ccCheck[1];
@@ -166,7 +166,6 @@ function MessageSendVerificationHandler(event) {
             
                     if (!recipient_authorized) {
                       message = `Recipient ${recipient_email} is a Foreign National and NOT AUTHORIZED to view this email`;
-                      console.log("The recipient is is not authorized" + recipient_authorized + " and the email is " + recipient_email);
                       errorPopupHandler(message, event);
                     }
             
