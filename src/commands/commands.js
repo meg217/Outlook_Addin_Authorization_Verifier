@@ -79,9 +79,9 @@ function MessageSendVerificationHandler(event) {
       console.log("Recipient check: " + recipientCheck);
       console.log("CC check: " + ccCheck);
       console.log("BCC check: " + bccCheck);
-   // let message = "";
+      let message = "";
 
-        let recipient_authorized = false;
+        let recipient_authorized = recipientCheck[0];
         let recipient_email = recipientCheck[1];
         
         let cc_authorized = ccCheck[0];
@@ -91,16 +91,17 @@ function MessageSendVerificationHandler(event) {
         let bcc_email = bccCheck[1];
 
         if (!recipient_authorized) {
-          errorPopupHandler(`Recipient ${recipient_email} is NOT AUTHORIZED to view this email`, event);
-          console.log("Recipient check: not authorized");
+          message = `Recipient ${recipient_email} is NOT AUTHORIZED to view this email`;
+          errorPopupHandler(message, event);
         }
 
         else if (!cc_authorized) {
-          errorPopupHandler(`CC'd user ${cc_email} is NOT AUTHORIZED to view this email`, event);
-          console.log("CC check: not authorized");
+          message = `CC'd user ${cc_email} is NOT AUTHORIZED to view this email`;
+          errorPopupHandler(message, event);
         }
         else if (!bcc_authorized) {
-          errorPopupHandler(`BCC'd user ${bcc_email} is NOT AUTHORIZED to view this email`, event);
+          message = `BCC'd user ${bcc_email} is NOT AUTHORIZED to view this email`;
+          errorPopupHandler(message, event);
         } else {
           authChecksPassed = true;
         }
@@ -163,14 +164,17 @@ function MessageSendVerificationHandler(event) {
                 
             
                     if (!recipient_authorized) {
-                      errorPopupHandler(`Recipient ${recipient_email} is a Foreign National and NOT AUTHORIZED to view this email`, event);
+                      message = `Recipient ${recipient_email} is a Foreign National and NOT AUTHORIZED to view this email`;
+                      errorPopupHandler(message, event);
                     }
             
                     else if (!cc_authorized) {
-                      errorPopupHandler(`CC'd user ${cc_email} is a Foreign National and NOT AUTHORIZED to view this email`, event);
+                      message = `CC'd user ${cc_email} is a Foreign National and NOT AUTHORIZED to view this email`;
+                      errorPopupHandler(message, event);
                     }
                     else if (!bcc_authorized) {
-                      errorPopupHandler(`BCC'd user ${bcc_email} is a Foreign National and NOT AUTHORIZED to view this email`, event);
+                      message = `BCC'd user ${bcc_email} is a Foreign National and NOT AUTHORIZED to view this email`;
+                      errorPopupHandler(message, event);
                     } else {
                       authChecksPassed = true;
                     }
