@@ -81,9 +81,8 @@ function MessageSendVerificationHandler(event) {
       console.log("BCC check: " + bccCheck);
       let message = "";
 
-        let recipient_authorized = recipientCheck[0];
+        let [recipient_authorized, recipient_email] = recipientCheck.split(',');
         console.log("Recipient authorized = " + recipient_authorized);
-        let recipient_email = recipientCheck[1];
         console.log("Recipient email = " + recipient_email);
 
           
@@ -96,7 +95,7 @@ function MessageSendVerificationHandler(event) {
         let bcc_authorized = bccCheck[0];
         let bcc_email = bccCheck[1];
 
-        if (!recipient_authorized) {
+        if (recipient_authorized == 'false') {
           message = `Recipient ${recipient_email} is NOT AUTHORIZED to view this email`;
           console.log("The recipient is is not authorized " + recipient_authorized + " and the email is " + recipient_email);
           errorPopupHandler(message, event);
