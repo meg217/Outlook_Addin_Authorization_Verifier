@@ -152,31 +152,29 @@ function MessageSendVerificationHandler(event) {
                 console.log("BCC check: " + bccCheck);
                 let message = "";
 
-                let recipient_authorized = recipientCheck[0];
-                let recipient_email = recipientCheck[1];
-                
-                let cc_authorized = ccCheck[0];
-                let cc_email = ccCheck[1];
-                
-                let bcc_authorized = bccCheck[0];
-                let bcc_email = bccCheck[1];
-                
-            
-                    if (!recipient_authorized) {
-                      message = `Recipient ${recipient_email} is a Foreign National and NOT AUTHORIZED to view this email`;
+                for (const [authorized, email] of recipientCheck) {
+                  if (!authorized) {
+                      message = (`Recipient(s) ${email} is a Foreign National and NOT AUTHORIZED to view this email`);
+                      authChecksPassed = false;
                       errorPopupHandler(message, event);
-                    }
-            
-                    else if (!cc_authorized) {
-                      message = `CC'd user ${cc_email} is a Foreign National and NOT AUTHORIZED to view this email`;
+            }
+              }
+          
+              for (const [authorized, email] of ccCheck) {
+                  if (!authorized) {
+                      message = (`CC'd user(s) ${email} is a Foreign National and NOT AUTHORIZED to view this email`);
+                      authChecksPassed = false;
                       errorPopupHandler(message, event);
-                    }
-                    else if (!bcc_authorized) {
-                      message = `BCC'd user ${bcc_email} is a Foreign National and NOT AUTHORIZED to view this email`;
+                  }
+              }
+          
+              for (const [authorized, email] of bccCheck) {
+                  if (!authorized) {
+                      console.log(`BCC'd use(s)r ${email} is a Foreign National and NOT AUTHORIZED to view this email`);
+                      authChecksPassed = false;
                       errorPopupHandler(message, event);
-                    } else {
-                      authChecksPassed = true;
-                    }
+                  }
+              }
                 
       //          if (!recipientCheck) {
       //            message =
