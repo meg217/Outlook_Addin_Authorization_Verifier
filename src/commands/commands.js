@@ -81,11 +81,17 @@ function MessageSendVerificationHandler(event) {
       console.log("BCC check: " + bccCheck);
       let message = "";
 
-        let [recipient_authorized, recipient_email] = recipientCheck;
-        console.log("recipient_authorized is " + recipient_authorized)
-        
+        let recipient_authorized = recipientCheck[0];
+        console.log("Recipient authorized = " + recipient_authorized);
+        let recipient_email = recipientCheck[1];
+        console.log("Recipient email = " + recipient_email);
+
+          
         let cc_authorized = ccCheck[0];
+        console.log("CC authorized = " + cc_authorized);
         let cc_email = ccCheck[1];
+        console.log("CC email = " + cc_email);
+
         
         let bcc_authorized = bccCheck[0];
         let bcc_email = bccCheck[1];
