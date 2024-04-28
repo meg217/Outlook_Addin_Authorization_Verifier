@@ -81,8 +81,10 @@ function MessageSendVerificationHandler(event) {
       console.log("BCC check: " + bccCheck);
       let message = "";
 
-        let recipient_output = recipientCheck[0];
-        let [recipient_authorized, recipient_email] = recipient_output.split(",");
+        let recipient_outputs = recipientCheck;
+        let repient_parts = recipient_outputs.split(",");
+        let recipient_authorized = repient_parts[0];
+        let recipient_email = repient_parts[1];
         console.log("CC authorized = " + recipient_authorized);
         console.log("CC email = " + recipient_email);
 
