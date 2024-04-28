@@ -71,7 +71,7 @@ function MessageSendVerificationHandler(event) {
       checkRecipientClassification(cc, "CC", bannerMarkings.banner[0]),
       checkRecipientClassification(bcc, "BCC", bannerMarkings.banner[0]),
     ]).then(([recipientCheck, ccCheck, bccCheck]) => {
-      let authChecksPassed = false;
+      let authChecksPassed = true;
       let countryChecksPassed = false;
       let hasCheckedCountry = false;
 
@@ -81,43 +81,29 @@ function MessageSendVerificationHandler(event) {
       console.log("BCC check: " + bccCheck);
       let message = "";
 
-      let recipient_output = recipientCheck[0].trim(); // Trim any leading or trailing whitespace
-      let recipient_parts = recipient_output.split(",");
-      
-      if (recipient_parts.length === 2) {
-          let recipient_authorized = recipient_parts[0].trim();
-          let recipient_email = recipient_parts[1].trim();
-          console.log("Recipient authorized = " + recipient_authorized);
-          console.log("Recipient email = " + recipient_email);
-      } else {
-          console.error("Invalid recipient format:", recipient_output);
-      }
+      for (const [authorized, email] of recipientCheck) {
+        if (!authorized) {
+            message = (`Recipient ${email} is NOT AUTHORIZED to view this email`);
+            authChecksPassed = false;
+            errorPopupHandler(message, event);
+  }
+    }
 
-          
-        let cc_authorized = ccCheck[0];
-        console.log("CC authorized = " + cc_authorized);
-        let cc_email = ccCheck[1];
-        console.log("CC email = " + cc_email);
-
-        let bcc_authorized = bccCheck[0];
-        let bcc_email = bccCheck[1];
-
-        if (recipient_authorized == 'false') {
-          message = `Recipient ${recipient_email} is NOT AUTHORIZED to view this email`;
-          console.log("The recipient is is not authorized " + recipient_authorized + " and the email is " + recipient_email);
-          errorPopupHandler(message, event);
+    for (const [authorized, email] of ccCheck) {
+        if (!authorized) {
+            message = (`CC'd user ${email} is NOT AUTHORIZED to view this email`);
+            authChecksPassed = false;
+            errorPopupHandler(message, event);
         }
+    }
 
-        else if (!cc_authorized) {
-          message = `CC'd user ${cc_email} is NOT AUTHORIZED to view this email`;
-          errorPopupHandler(message, event);
+    for (const [authorized, email] of bccCheck) {
+        if (!authorized) {
+            console.log(`BCC'd user ${email} is NOT AUTHORIZED to view this email`);
+            authChecksPassed = false;
+            errorPopupHandler(message, event);
         }
-        else if (!bcc_authorized) {
-          message = `BCC'd user ${bcc_email} is NOT AUTHORIZED to view this email`;
-          errorPopupHandler(message, event);
-        } else {
-          authChecksPassed = true;
-        }
+    }
 
     //  if (!recipientCheck) {
     //    message = "Recipient is NOT AUTHORIZED to view this email";
