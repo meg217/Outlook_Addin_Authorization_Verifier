@@ -82,7 +82,7 @@ function MessageSendVerificationHandler(event) {
       let message = "";
 
         let recipient_authorized = recipientCheck[0];
-        console.log("recipient_authorized is " + recipient_authorized);
+        console.log("recipient_authorized is !!!!!!!! " + recipient_authorized);
         let recipient_email = recipientCheck[1];
         
         let cc_authorized = ccCheck[0];
