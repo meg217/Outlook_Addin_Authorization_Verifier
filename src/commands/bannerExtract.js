@@ -15,28 +15,33 @@ function getBannerFromBody(body) {
   const firstOccurrenceIndex = body.search(classification_regex);
 
   // Remove the classification line from the banner
-  const bannerWithoutClassification1 = body.slice(firstOccurrenceIndex + 15); // Adding 15 to skip the "CLASSIFICATION:" part
-  const bannerWithoutClassification2 = bannerWithoutClassification1.replace(
+  const banner1WithoutClassification1 = body.slice(firstOccurrenceIndex + 15); // Adding 15 to skip the "CLASSIFICATION:" part
+  const banner1WithoutClassification2 = banner1WithoutClassification1.replace(
     classification_regex,
     ""
   );
 
   // Search for the second occurrence from the modified body
-  const secondOccurrenceIndex =
-    bannerWithoutClassification2.search(classification_regex);
+  const secondOccurrenceIndex = body.search(classification_regex);
+  // Remove the classification line from the banner
+  const banner2WithoutClassification1 = body.slice(secondOccurrenceIndex + 15); // Adding 15 to skip the "CLASSIFICATION:" part
+  const banner2WithoutClassification2 = banner2WithoutClassification1.replace(
+    classification_regex,
+    ""
+  );
 
   const banner_regex =
     /^\s*(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/im;
   console.log("Searching for Banner...");
-  const banner1 = bannerWithoutClassification2.match(banner_regex);
+  const banner1 = banner1WithoutClassification2.match(banner_regex);
 
   console.log("Searching for Banner 2...");
-  const banner2Match = bannerWithoutClassification2.match(banner_regex); // Changed variable name to avoid conflict
-
+  const banner2 = banner2WithoutClassification2.match(banner_regex); // Changed variable name to avoid conflict
+  console.log("--------- " + banner2 + " --------");
   // Check if both banners are found
-  if (banner1 && banner2Match) {
+  if (banner1) {
     console.log("Banners Found!");
-    return [banner1[0], banner2Match[0]]; // Returning an array containing both banners
+    return banner1[0]; // Returning an array containing both banners
   } else {
     console.log("Banner Null :(");
     return null;
