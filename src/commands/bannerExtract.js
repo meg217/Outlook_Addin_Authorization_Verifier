@@ -14,16 +14,20 @@ function getBannerFromBody(body) {
   // Find the index of the first occurrence of classification banner
   const firstOccurrenceIndex = body.search(classification_regex);
 
-  // Remove the classification line from the banner
+  // Remove the classification line from the first banner
   const banner1WithoutClassification1 = body.slice(firstOccurrenceIndex + 15); // Adding 15 to skip the "CLASSIFICATION:" part
   const banner1WithoutClassification2 = banner1WithoutClassification1.replace(
     classification_regex,
     ""
   );
 
-  // Search for the second occurrence from the modified body
-  const secondOccurrenceIndex = body.search(classification_regex);
-  // Remove the classification line from the banner
+  // Find the index of the second occurrence, starting the search immediately after the first occurrence
+  const secondOccurrenceIndex = body.indexOf(
+    "CLASSIFICATION:",
+    firstOccurrenceIndex + 1
+  );
+
+  // Remove the classification line from the second banner
   const banner2WithoutClassification1 = body.slice(secondOccurrenceIndex + 15); // Adding 15 to skip the "CLASSIFICATION:" part
   const banner2WithoutClassification2 = banner2WithoutClassification1.replace(
     classification_regex,
@@ -36,12 +40,13 @@ function getBannerFromBody(body) {
   const banner1 = banner1WithoutClassification2.match(banner_regex);
 
   console.log("Searching for Banner 2...");
-  const banner2 = banner2WithoutClassification2.match(banner_regex); // Changed variable name to avoid conflict
-  console.log("--------- " + banner2 + " --------");
+  const banner2 = banner2WithoutClassification2.match(banner_regex);
+
   // Check if both banners are found
-  if (banner1) {
+  if (banner1 && banner2) {
     console.log("Banners Found!");
-    return banner1[0]; // Returning an array containing both banners
+    console.log(banner1[0] + " " + banner2[0]);
+    return banner1[0];
   } else {
     console.log("Banner Null :(");
     return null;
