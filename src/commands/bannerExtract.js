@@ -45,8 +45,13 @@ function getBannerFromBody(body) {
   // Check if both banners are found
   if (banner1 && banner2) {
     console.log("Banners Found!");
-    console.log(banner1[0] + " " + banner2[0]);
-    return banner1[0];
+    console.log([banner1[0], banner2[0]]);
+    if (banner2 == banner1) {
+      return banner1[0];
+    } else if (banner2 != banner1) {
+      console.log("Banners Don't match.....");
+      return null;
+    }
   } else {
     console.log("Banner Null :(");
     return null;
