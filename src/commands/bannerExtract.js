@@ -49,8 +49,8 @@ function getBannerFromBody(body) {
     if (banner2 == banner1) {
       return banner1[0];
     } else if (banner2 != banner1) {
-      console.log("Banners Don't match.....");
-      return null;
+      console.log("BANNER EXTRACT: Banners Don't match.....");
+      return "DONT MATCH";
     }
   } else {
     console.log("Banner Null :(");
