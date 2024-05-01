@@ -7,29 +7,65 @@
  * returns the banner from the body
  * @param { String } body
  */
+
 function getBannerFromBody(body) {
   const classification_regex = /^(CLASSIFICATION:)/im;
+
+  // Find the index of the first occurrence of classification banner
+  const firstOccurrenceIndex = body.search(classification_regex);
+
   // Remove the classification line from the banner
-  const bannerWithoutClassification1 = body.replace(classification_regex, "");
+  const bannerWithoutClassification1 = body.slice(firstOccurrenceIndex + 15); // Adding 15 to skip the "CLASSIFICATION:" part
   const bannerWithoutClassification2 = bannerWithoutClassification1.replace(
     classification_regex,
     ""
   );
-  console.log(bannerWithoutClassification2);
+
+  // Search for the second occurrence from the modified body
+  const secondOccurrenceIndex =
+    bannerWithoutClassification2.search(classification_regex);
 
   const banner_regex =
     /^\s*(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/im;
   console.log("Searching for Banner...");
-  const banner = bannerWithoutClassification2.match(banner_regex);
-  //console.log(banner);
-  if (banner) {
-    console.log("Banner Found!");
-    return banner[0];
+  const banner1 = bannerWithoutClassification2.match(banner_regex);
+
+  console.log("Searching for Banner 2...");
+  const banner2Match = bannerWithoutClassification2.match(banner_regex); // Changed variable name to avoid conflict
+
+  // Check if both banners are found
+  if (banner1 && banner2Match) {
+    console.log("Banners Found!");
+    return [banner1[0], banner2Match[0]]; // Returning an array containing both banners
   } else {
     console.log("Banner Null :(");
     return null;
   }
 }
+
+// function getBannerFromBody(body) {
+//   const classification_regex = /^(CLASSIFICATION:)/im;
+//   // Remove the classification line from the banner
+//   const bannerWithoutClassification1 = body.replace(classification_regex, "");
+//   const bannerWithoutClassification2 = bannerWithoutClassification1.replace(
+//     classification_regex,
+//     ""
+//   );
+//   console.log(bannerWithoutClassification2);
+
+//   const banner_regex =
+//     /^\s*(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/im;
+//   console.log("Searching for Banner...");
+//   const banner = bannerWithoutClassification2.match(banner_regex);
+//   //console.log(banner);
+//   if (banner) {
+//     console.log("Banner Found!");
+//     return banner[0];
+//   } else {
+//     console.log("Banner Null :(");
+//     return null;
+//   }
+// }
 
 /**
  * function to parse banner markings
@@ -43,7 +79,8 @@ function parseBannerMarkings(banner) {
   // const cat7_regex = "ORIGINATOR[\s]*CONTROLLED|ORCON|NOT[\s]*RELEASABLE[\s]*TO[\s]*FOREIGN[\s]*NATIONALS|NOFORN|AUTHORIZED[\s]*FOR[\s]*RELEASE[\s]*TO[\s]*USA,[\s]*AUZ,[\s]*NZL|REL[\s]*TO[\s]*USA,[\s]*AUS,[\s]*NZL|CAUTION-PROPERIETARY INFORMATION INVOLVED|PROPIN";
   // const cat4_and_cat7 = "COMINT|-GAMMA|\/|TALENT[\s]*KEYHOLE|SI-G\/TK|HCS|GCS|ORIGINATOR[\s]*CONTROLLED|ORCON|NOT[\s]*RELEASABLE[\s]*TO[\s]*FOREIGN[\s]*NATIONALS|NOFORN|AUTHORIZED[\s]*FOR[\s]*RELEASE[\s]*TO[\s]*USA,[\s]*AUZ,[\s]*NZL|REL[\s]*TO[\s]*USA,[\s]*AUS,[\s]*NZL|CAUTION-PROPERIETARY INFORMATION INVOLVED|PROPIN";
   const cat1_regex = /TOP\s*SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U/gi;
-  const cat4_regex = /COMINT|SI|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G|SI-G-[A-Z]{3}|TK|HCS|GCS/gi;
+  const cat4_regex =
+    /COMINT|SI|-GAMMA|\/|TALENT\s*KEYHOLE|SI-G|SI-G-[A-Z]{3}|TK|HCS|GCS/gi;
   const cat7_regex =
     /FOR\s*OFFICIAL\s*USE\s*ONLY|FOUO|ORIGINATOR\s*CONTROLLED|ORCON|CONTROLLED\s*IMAGERY|IMCON|SOURCES\s*AND\s*METHODS|SAMI|INFORMATION|NOT\s*RELEASABLE\s*TO\s*FOREIGN\s*NATIONALS|NOFORN|CAUTION\s*-\s*PROPRIETARY\s*INFORMATION\s*INVOLVED|PROPIN|AUTHORIZED\s*FOR\s*RELEASE\s*TO\s*((USA|AUS|NZL)(,)?( *))*|REL\s*TO\s*((USA|AUS|NZL)(,)?( *))*|RELEASABLE\s*BY\s*INFORMATION\s*DISCLOSURE\s*OFFICIAL|RELIDO|RESTRICTED\s*DATA|RD|-\s*CRITICAL\s*NUCLEAR\s*WEAPON\s*DESIGN\s*INFORMATION|-CNWDI|-SIGMA\s*[0-9]+|FORMERLY\s*RESTRICTED\s*DATA|FRD|DOD\s*CONTROLLED\s*NUCLEAR\s*INFORMATION|DOD\s*UCNI|DOE\s*CONTROLLED\s*NUCLEAR\s*INFORMATION|DOE\s*UCNI|DEA\s*SENSITIVE|FOREIGN\s*INTELLIGENCE\s*SURVEILLANCE\s*ACT/gi;
 
@@ -52,7 +89,7 @@ function parseBannerMarkings(banner) {
   const Categories = banner.split("//");
 
   Categories[0] = Categories[0].trim();
-  
+
   //console.log(Categories);
   let Category_1 = Category(Categories[0], cat1_regex, 1);
   let Category_4 = null;
@@ -91,10 +128,7 @@ function parseBannerMarkings(banner) {
 
   //CHANGE
   //KEVIN - If dissem is null then returns "" err msg from checkdissem func. If there is an error with this later on, then maybe err handle before function is called if there is no dissem
-  let errMsg = checkDisseminations(
-    Category_1,
-    catAbbreviations.dissemination
-  );
+  let errMsg = checkDisseminations(Category_1, catAbbreviations.dissemination);
 
   let val;
   if (Category_4 !== null) {
@@ -247,19 +281,19 @@ function convertCatToAbrev(sci, dissemination) {
             disseminationItem === "PROPIN"
           ) {
             return "PROPIN";
-          } else if (
-            disseminationItem.startsWith("REL TO ")
-          ) {
+          } else if (disseminationItem.startsWith("REL TO ")) {
             return disseminationItem;
-          } else if (disseminationItem.startsWith("AUTHORIZED FOR RELEASE TO ")) {
-            // Extract the additional text after "AUTHORIZED FOR RELEASE TO "
-            const additionalText = disseminationItem.substring("AUTHORIZED FOR RELEASE TO ".length);
-            return "REL TO " + additionalText;
           } else if (
-            disseminationItem.startsWith("REL TO") 
+            disseminationItem.startsWith("AUTHORIZED FOR RELEASE TO ")
           ) {
-              console.log("STARTS WITH REL TO");
-              return disseminationItem;
+            // Extract the additional text after "AUTHORIZED FOR RELEASE TO "
+            const additionalText = disseminationItem.substring(
+              "AUTHORIZED FOR RELEASE TO ".length
+            );
+            return "REL TO " + additionalText;
+          } else if (disseminationItem.startsWith("REL TO")) {
+            console.log("STARTS WITH REL TO");
+            return disseminationItem;
           } else if (
             disseminationItem ===
               "RELEASABLE BY INFORMATION DISCLOSURE OFFICIAL" ||
@@ -269,10 +303,11 @@ function convertCatToAbrev(sci, dissemination) {
           } else if (
             /FORMERLY RESTRICTED DATA-SIGMA\s\d{1,2}/.test(disseminationItem)
           ) {
-            return disseminationItem.replace("FORMERLY RESTRICTED DATA-SIGMA", "FRD-SG");
-          } else if (
-            /RESTRICTED DATA-SIGMA\s\d{1,2}/.test(disseminationItem)
-          ) {
+            return disseminationItem.replace(
+              "FORMERLY RESTRICTED DATA-SIGMA",
+              "FRD-SG"
+            );
+          } else if (/RESTRICTED DATA-SIGMA\s\d{1,2}/.test(disseminationItem)) {
             return disseminationItem.replace("RESTRICTED DATA-SIGMA", "RD");
           } else if (
             disseminationItem ===
@@ -354,13 +389,13 @@ function convertCatToAbrev(sci, dissemination) {
         dissemination === "PROPIN"
       ) {
         abbrevDissemination = "PROPIN";
-      } else if (
-        dissemination.startsWith("REL TO ")
-      ) {
+      } else if (dissemination.startsWith("REL TO ")) {
         abbrevDissemination = dissemination;
       } else if (dissemination.startsWith("AUTHORIZED FOR RELEASE TO ")) {
         // Extract the additional text after "AUTHORIZED FOR RELEASE TO "
-        const additionalText = dissemination.substring("AUTHORIZED FOR RELEASE TO ".length);
+        const additionalText = dissemination.substring(
+          "AUTHORIZED FOR RELEASE TO ".length
+        );
         abbrevDissemination = "REL TO " + additionalText;
       } else if (
         dissemination === "RELEASABLE BY INFORMATION DISCLOSURE OFFICIAL" ||
@@ -376,9 +411,9 @@ function convertCatToAbrev(sci, dissemination) {
         );
       } else if (/RESTRICTED DATA-SIGMA\s\d{1,2}/.test(dissemination)) {
         abbrevDissemination = dissemination.replace(
-          "RESTRICTED DATA-SIGMA", 
+          "RESTRICTED DATA-SIGMA",
           "RD-SG"
-          );
+        );
       } else if (
         dissemination ===
         "FORMERLY RESTRICTED DATA-CRITICAL NUCLEAR WEAPON DESIGN INFORMATION"
@@ -695,9 +730,7 @@ function checkDisseminations(classification, dissemination) {
 
           //-SIGMA[#] (-SG[#]): may be used with TOP SECRET, SECRET, or CONDFIDENTIAL.
           //Requires RD or FRD. [#] represents the SIGMA number, ranges from 1-99.
-        } else if (
-          dissPartsArray[i].match(/(RD|FRD)-SG\s\d{1,2}/g)
-        ) {
+        } else if (dissPartsArray[i].match(/(RD|FRD)-SG\s\d{1,2}/g)) {
           if (classification === "UNCLASSIFIED") {
             errorMsg = "-SG cannot be used with UNCLASSIFIED information.";
           }
@@ -717,9 +750,7 @@ function checkDisseminations(classification, dissemination) {
           errorMsg = "RD or FRD is required for -CNWDI.";
         }
       } else if (dissPartsArray[i].includes("-SG")) {
-        if (
-          dissPartsArray[i].match(/(RD|FRD)-SG\s\d{1,2}/g)
-        ) {
+        if (dissPartsArray[i].match(/(RD|FRD)-SG\s\d{1,2}/g)) {
           if (classification === "UNCLASSIFIED") {
             errorMsg = "-SG cannot be used with UNCLASSIFIED information.";
           }
