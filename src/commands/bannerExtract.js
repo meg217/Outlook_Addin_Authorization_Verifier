@@ -37,13 +37,12 @@ function getBannerFromBody(body) {
   const banner_regex =
     /^\s*(TOP *SECRET|TS|SECRET|S|CONFIDENTIAL|C|UNCLASSIFIED|U)((\/\/)?(.*)?(\/\/)((.*)*))?/im;
   console.log("Searching for Banner...");
-  //const banner1 = banner1WithoutClassification2.match(banner_regex);
-  const banner1 = banner1WithoutClassification2.match(banner_regex).join('').replace(/\t|\n/g, '');
-
+  const bannerONE = banner1WithoutClassification2.match(banner_regex);
+  banner1 = ' '.join(bannerONE.split())
 
   console.log("Searching for Banner 2...");
-  //const banner2 = banner2WithoutClassification2.match(banner_regex);
-  const banner2 = banner2WithoutClassification2.match(banner_regex).join('').replace(/\t|\n/g, '');
+  const bannerTWO = banner2WithoutClassification2.match(banner_regex);
+  banner2 = ' '.join(bannerTWO.split())
 
 
   // Check if both banners are found
