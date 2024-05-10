@@ -57,6 +57,7 @@ function MessageSendVerificationHandler(event) {
     console.log("BANNER HANDELERS\n");
     const banner = getBannerFromBody(body);
     bannerNullHandler(banner, event);
+    bannerMatchHandler(banner, event);
     const bannerMarkings = parseBannerMarkings(banner);
     console.log(bannerMarkings.banner);
     if (bannerMarkings.message !== "") {
